@@ -75,7 +75,7 @@
     var Item = function(x, y, type) {
       this.p = new Vec(x, y); // position
       this.type = type;
-      this.rad = 7; // default radius
+      this.rad = 10; // default radius
       this.age = 0;
       this.cleanup_ = false;
     }
@@ -295,7 +295,7 @@
       this.actions.push([0,0.5]);
       
       // properties
-      this.rad = 7;
+      this.rad = 10;
       this.eyes = [];
       for(var k=0;k<9;k++) { this.eyes.push(new Eye((k-3)*0.25)); }
       
