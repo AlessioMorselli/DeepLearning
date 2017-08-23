@@ -1,10 +1,12 @@
  var canvas, ctx;
+ var canvas2, ctx2;
     
     // A 2D vector utility
     var Vec = function(x, y) {
       this.x = x;
       this.y = y;
-    }
+    };
+    
     Vec.prototype = {
       
       // utilities
@@ -14,7 +16,7 @@
       // new vector returning operations
       add: function(v) { return new Vec(this.x + v.x, this.y + v.y); },
       sub: function(v) { return new Vec(this.x - v.x, this.y - v.y); },
-      rotate: function(a) {  // CLOCKWISE
+      rotate: function(a) {  // CLOCKWISE - In senso orario
         return new Vec(this.x * Math.cos(a) + this.y * Math.sin(a),
                        -this.x * Math.sin(a) + this.y * Math.cos(a));
       },
@@ -22,7 +24,7 @@
       // in place operations
       scale: function(s) { this.x *= s; this.y *= s; },
       normalize: function() { var d = this.length(); this.scale(1.0/d); }
-    }
+    };
     
     // line intersection helper function: does line segment (p1,p2) intersect segment (p3,p4) ?
     var line_intersect = function(p1,p2,p3,p4) {
@@ -35,7 +37,7 @@
         return {ua:ua, ub:ub, up:up}; // up is intersection point
       }
       return false;
-    }
+    };
     
     var line_point_intersect = function(p1,p2,p0,rad) {
       var v = new Vec(p2.y-p1.y,-(p2.x-p1.x)); // perpendicular vector
@@ -55,21 +57,22 @@
         return {ua:ua, up:up};
       }
       return false;
-    }
+    };
     
     // Wall is made up of two points
     var Wall = function(p1, p2) {
       this.p1 = p1;
       this.p2 = p2;
-    }
+    };
     
     // World object contains many agents and walls and food and stuff
+    /* Crea una scatola */
     var util_add_box = function(lst, x, y, w, h) {
       lst.push(new Wall(new Vec(x,y), new Vec(x+w,y)));
       lst.push(new Wall(new Vec(x+w,y), new Vec(x+w,y+h)));
       lst.push(new Wall(new Vec(x+w,y+h), new Vec(x,y+h)));
       lst.push(new Wall(new Vec(x,y+h), new Vec(x,y)));
-    }
+    };
     
     /* Aggiungo un muro singolo */
     var util_add_wall = function(lst, x1, y1, x2, y2) {
@@ -80,16 +83,23 @@
     var Item = function(x, y, type) {
       this.p = new Vec(x, y); // position
       this.type = type;
-      this.rad = 10; // default radius
+      this.rad = 7; // default radius
       this.age = 0;
       this.cleanup_ = false;
-    }
+    };
     
-    var World = function() {
+    /* Crea un mondo settando pareti e oggetti iniziali */
+    var World = function(canvas) {
+      /* Agenti del mondo */
       this.agents = [];
+      
+      /* Larghezza del mondo */
       this.W = canvas.width;
+      
+      /* Altezza del mondo */
       this.H = canvas.height;
       
+      /* Clock del mondo */
       this.clock = 0;
       
       // set up walls in the world
@@ -97,30 +107,27 @@
       var pad = 10;
       util_add_box(this.walls, pad, pad, this.W-pad*2, this.H-pad*2);
       
-      util_add_wall(this.walls, 350, 40, 420, 160);
-      util_add_wall(this.walls, 280, 160, 420, 160);
-      
-      util_add_wall(this.walls, 440, 180, 510, 300);
-      util_add_wall(this.walls, 370, 300, 510, 300);
-      
-      util_add_wall(this.walls, 260, 180, 330, 300);
-      util_add_wall(this.walls, 190, 300, 330, 300);
-      
-      /*util_add_box(this.walls, 100, 100, 200, 300); // inner walls
-      this.walls.pop();
-      util_add_box(this.walls, 400, 100, 200, 300);
+      // inner walls
+      //util_add_box(this.walls, 100, 100, 200, 300);
+      /* Toglie un muro, partendo dal muro a sx, eliminando progressivamente
+       * i muri in senso antiorario
+       */
+      /*this.walls.pop();
       this.walls.pop();*/
       
+      util_add_wall(this.walls, 100, 50, 100, 200);
+      util_add_wall(this.walls, 100, 200, 250, 200);
+      
       // set up food and poison
-      this.items = []
-      for(var k=0;k<30;k++) {
+      this.items = [];
+      for(var k=0;k<25;k++) {
         var x = convnetjs.randf(20, this.W-20);
         var y = convnetjs.randf(20, this.H-20);
         var t = convnetjs.randi(1, 3); // food or poison (1 and 2)
         var it = new Item(x, y, t);
         this.items.push(it);
       }
-    }
+    };
     
     World.prototype = {      
       // helper function to get closest colliding walls/items
@@ -258,7 +265,7 @@
             }
           }
           
-          if(it.age > 5000 && this.clock % 100 === 0 && convnetjs.randf(0,1)<0.1) {
+          if(it.age > 1000 && this.clock % 100 === 0 && convnetjs.randf(0,1)<0.1) {
             it.cleanup_ = true; // replace this one, has been around too long
             update_items = true;
           }
@@ -284,7 +291,7 @@
           this.agents[i].backward();
         }
       }
-    }
+    };
     
     // Eye sensor has a maximum range and senses walls
     var Eye = function(angle) {
@@ -292,57 +299,7 @@
       this.max_range = 85;
       this.sensed_proximity = 85; // what the eye is seeing. will be set in world.tick()
       this.sensed_type = -1; // what does the eye see?
-    }
-    
-    /* Ora costruisco la funzione che crea l'archittetura della rete in modo dinamico a seconda
-     * dei parametri inseriti nella rispettiva form
-     */
-    var brain;
-    function createNetwork() {
-      var num_inputs = 27; // 9 eyes, each sees 3 numbers (wall, green, red thing proximity)
-      var num_actions = 5; // 5 possible angles agent can turn
-      var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
-      var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
-
-      // the value function network computes a value of taking any of the possible actions
-      // given an input state. Here we specify one explicitly the hard way
-      // but user could also equivalently instead use opt.hidden_layer_sizes = [20,20]
-      // to just insert simple relu hidden layers.
-      var layer_defs = [];
-      layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
-      
-      var nLayer = document.getElementById("hidden-layer").value;
-      var nNeuroni = document.getElementById("neuroni").value;
-      
-      for(var i = 0; i < nLayer; i++) {
-        layer_defs.push({type:'fc', num_neurons: nNeuroni, activation:'relu'});
-      }
-      
-      layer_defs.push({type:'regression', num_neurons:num_actions});
-
-      // options for the Temporal Difference learner that trains the above net
-      // by backpropping the temporal difference learning rule.
-      var learningRate = document.getElementById("learning-rate").value;
-      var batch = document.getElementById("batch-size").value;
-      var l2 = document.getElementById("regularization").value;
-      var epsilon = document.getElementById("epsilon").value;
-      
-      var tdtrainer_options = {learning_rate: learningRate, momentum:0.0, batch_size: batch, l2_decay: l2};
-
-      var opt = {};
-      opt.temporal_window = temporal_window;
-      opt.experience_size = 30000;
-      opt.start_learn_threshold = 1000;
-      opt.gamma = 0.7;
-      opt.learning_steps_total = 200000;
-      opt.learning_steps_burnin = 3000;
-      opt.epsilon_min = 0.05;
-      opt.epsilon_test_time = epsilon;
-      opt.layer_defs = layer_defs;
-      opt.tdtrainer_options = tdtrainer_options;
-
-      brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
-    }
+    };
     
     // A single agent
     var Agent = function() {
@@ -360,13 +317,14 @@
       this.actions.push([0,0.5]);
       
       // properties
-      this.rad = 10;
+      this.rad = 7;
       this.eyes = [];
       for(var k=0;k<9;k++) { this.eyes.push(new Eye((k-3)*0.25)); }
       
       // braaain
       //this.brain = new deepqlearn.Brain(this.eyes.length * 3, this.actions.length);
-      createNetwork();
+      var spec = document.getElementById('qspec').value;
+      eval(spec);
       this.brain = brain;
       
       this.reward_bonus = 0.0;
@@ -377,8 +335,7 @@
       this.rot2 = 0.0; // rotation speed of 2nd wheel
       
       this.prevactionix = -1;
-    }
-    
+    };
     Agent.prototype = {
       forward: function() {
         // in forward pass the agent simply behaves in the environment
@@ -435,7 +392,7 @@
         // pass to brain for learning
         this.brain.backward(reward);
       }
-    }
+    };
     
     function draw_net() {
       if(simspeed <=1) {
@@ -469,7 +426,7 @@
           if(v < 0) ctx.fillStyle = "rgb(" + (-v) + ",0,0)";
           ctx.fillRect(x,y,10,10);
           y += 12;
-          if(y>H-25) { y = 40; x += 12};
+          if(y>H-25) { y = 40; x += 12;};
         }
         x += 50;
         y = 40;
@@ -477,20 +434,36 @@
     }
     
     var reward_graph = new cnnvis.Graph();
-    function draw_stats() {
+    var reward_graph2 = new cnnvis.Graph();
+    function draw_stats(w, reward_graph, graph_area) {
+      //var canvas = document.getElementById("vis_canvas");
+      //var ctx = canvas.getContext("2d");
+      //var W = canvas.width;
+      //var H = canvas.height;
+      //ctx.clearRect(0, 0, canvas.width, canvas.height);
       var a = w.agents[0];
       var b = a.brain;
-      var netin = b.last_input_array;
+      /*var netin = b.last_input_array;
+      ctx.strokeStyle = "rgb(0,0,0)";
+      ctx.font="12px Verdana";
+      ctx.fillText("Current state:",10,10);
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      for(var k=0,n=netin.length;k<n;k++) {
+        ctx.moveTo(10+k*12, 120);
+        ctx.lineTo(10+k*12, 120 - netin[k] * 100);
+      }
+      ctx.stroke();*/
       
       if(w.clock % 200 === 0) {
         reward_graph.add(w.clock/200, b.average_reward_window.get_average());
-        var gcanvas = document.getElementById("graph_canvas");
+        var gcanvas = document.getElementById(graph_area);
         reward_graph.drawSelf(gcanvas);
       }
     }
     
     // Draw everything
-    function draw() {  
+    function draw(ctx, canvas, w) {  
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = 1;
       var agents = w.agents;
@@ -549,51 +522,47 @@
         ctx.stroke();
       }
       
-      w.agents[0].brain.visSelf(document.getElementById('brain_info_div'));
+      //w.agents[0].brain.visSelf(document.getElementById('brain_info_div'));
     }
     
     // Tick the world
     function tick() {
       w.tick();
+      w2.tick();
       if(!skipdraw || w.clock % 50 === 0) {
-        draw();
-        draw_stats();
-        draw_net();
+        draw(ctx, canvas, w);
+        draw_stats(w, reward_graph, "graph_canvas");
+        //draw_net();
+      }
+      
+      if(!skipdraw || w2.clock % 50 === 0) {
+        draw(ctx2, canvas2, w2);
+        draw_stats(w2, reward_graph2, "graph_canvas2");
+        //draw_net();
       }
     }
     
     var simspeed = 2;
+    
     function gofast() {
       window.clearInterval(current_interval_id);
       current_interval_id = setInterval(tick, 0);
       skipdraw = false;
       simspeed = 2;
     }
-    function gonormal() {
-      window.clearInterval(current_interval_id);
-      current_interval_id = setInterval(tick, 30);
-      skipdraw = false;
-      simspeed = 1;
-    }
-    function goslow() {
-      window.clearInterval(current_interval_id);
-      current_interval_id = setInterval(tick, 200);
-      skipdraw = false;
-      simspeed = 0;
-    }
     
-    function loadnet() {
-      var t = document.getElementById('tt').value;
+    function loadnet(w, net) {
+      var t = document.getElementById(net).value;
       var j = JSON.parse(t);
       w.agents[0].brain.value_net.fromJSON(j);
-      stoplearn(); // also stop learning
-      gonormal();
+      stoplearn(w); // also stop learning
+      gofast();
     }
     
-    function startlearn() {
+    function startlearn(w) {
       w.agents[0].brain.learning = true;
     }
-    function stoplearn() {
+    function stoplearn(w) {
       w.agents[0].brain.learning = false;
     }
     
@@ -602,16 +571,27 @@
       reward_graph = new cnnvis.Graph(); // reinit
     }
     
-    var w; // global world object
+    var w, w2; // global world object
     var current_interval_id;
     var skipdraw = false;
     
     function start() {
+      /* Identifichiamo i due esempi da confrontare */
       canvas = document.getElementById("canvas");
-      ctx = canvas.getContext("2d");
+      canvas2 = document.getElementById("canvas2");
       
-      w = new World();
+      /* Devo ancora capire cosa fa, per il momento lo ripeto anche per canvas2 */
+      ctx = canvas.getContext("2d");
+      ctx2 = canvas2.getContext("2d");
+      
+      /* Mondo di gioco: ne avremo bisogno di due! */
+      w = new World(canvas);
       w.agents = [new Agent()];
       
-      gofast();
+      w2 = new World(canvas2);
+      w2.agents = [new Agent()];
+      
+      /* Carichiamo la rete già imparata per il primo canvas */
+      loadnet(w, "tt");
+      loadnet(w2, "tt2");
     }
