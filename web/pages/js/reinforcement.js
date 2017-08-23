@@ -5,6 +5,7 @@
       this.x = x;
       this.y = y;
     }
+    
     Vec.prototype = {
       
       // utilities
@@ -97,19 +98,27 @@
       var pad = 10;
       util_add_box(this.walls, pad, pad, this.W-pad*2, this.H-pad*2);
       
-      util_add_wall(this.walls, 350, 40, 420, 160);
-      util_add_wall(this.walls, 280, 160, 420, 160);
+      for(var i = 1; i <= 3; i++) {
+        if(document.getElementById("level" + i).checked)
+          var level = i;
+      }
       
-      util_add_wall(this.walls, 440, 180, 510, 300);
-      util_add_wall(this.walls, 370, 300, 510, 300);
-      
-      util_add_wall(this.walls, 260, 180, 330, 300);
-      util_add_wall(this.walls, 190, 300, 330, 300);
-      
-      /*util_add_box(this.walls, 100, 100, 200, 300); // inner walls
-      this.walls.pop();
-      util_add_box(this.walls, 400, 100, 200, 300);
-      this.walls.pop();*/
+      if(level === 1) {
+        util_add_box(this.walls, 100, 100, 200, 300);
+        this.walls.pop();
+        util_add_box(this.walls, 400, 100, 200, 300);
+        this.walls.pop();
+      }
+      else if(level === 2) {
+        util_add_wall(this.walls, 350, 40, 420, 160);
+        util_add_wall(this.walls, 280, 160, 420, 160);
+
+        util_add_wall(this.walls, 440, 180, 510, 300);
+        util_add_wall(this.walls, 370, 300, 510, 300);
+
+        util_add_wall(this.walls, 260, 180, 330, 300);
+        util_add_wall(this.walls, 190, 300, 330, 300);
+      }
       
       // set up food and poison
       this.items = []
@@ -598,8 +607,12 @@
     }
     
     function reload() {
-      w.agents = [new Agent()]; // this should simply work. I think... ;\
+      //w = new World();
+      createNetwork();
+      w.agents[0].brain = brain;
       reward_graph = new cnnvis.Graph(); // reinit
+      
+      gofast();
     }
     
     var w; // global world object
@@ -607,6 +620,8 @@
     var skipdraw = false;
     
     function start() {
+      console.log("Ciaone!");
+      
       canvas = document.getElementById("canvas");
       ctx = canvas.getContext("2d");
       
