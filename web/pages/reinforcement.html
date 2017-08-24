@@ -10,18 +10,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="framework/js/bootstrap.min.js"></script>
 
-
     <!-- File javascript per il funzionamento delle demo -->
     <script src="js/convnet.js"></script>
     <script src="js/util.js"></script>
     <script src="js/vis.js"></script>
     <script src="js/deepqlearn.js"></script>
 
-    <!-- File javascript dell'esempio del reinforcement modificato per confrontare due diverse reti -->
+    <!-- File javascript dell'esempio -->
     <script src="js/reinforcement.js"></script>
 
+    <!-- css comune -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/reinforcement.css">
 
   </head>
   <!-- <body> -->
@@ -96,9 +95,9 @@
       
       <div class="form-horizontal my-jumbotron">
         <!-- Forma del livello -->
-        <div class="form-group">
-          <label for="hidden-layer" class="col-sm-3 control-label">
-            Numero di <i>hidden layer</i>
+        <!--<div class="form-group">
+          <label for="level1" class="col-sm-3 control-label">
+            Forma del livello
           </label>
           <div class="col-sm-6">
             <label class="radio-inline">
@@ -114,7 +113,7 @@
                 <img src="documentation/rete.png" style="width: 70px; height: 50px">
             </label>
           </div>
-        </div>
+        </div>-->
         
         <!-- Numero di hidden layer -->
         <div class="form-group">
@@ -182,9 +181,11 @@
       
       <h2>La nostra rete</h2>
       <canvas id="net_canvas" width="700" height="200"></canvas><br /> <!-- Lo mettiamo? -->
-      <canvas id="graph_canvas" width="700" height="300"></canvas><br />
-      
-      <canvas id="canvas" width="700" height="500"></canvas>
+      <div class="my-jumbotron">
+        <canvas id="graph_canvas" width="700" height="300" style="margin: 0 20%"></canvas><br />
+
+        <canvas id="canvas" width="700" height="500" style="margin: 0 20%"></canvas>
+      </div>
       <div id="brain_info_div"></div>
 
       <h3>Controlli</h3>

@@ -10,7 +10,6 @@
     <link href="framework/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="framework/js/bootstrap.min.js"></script>
-    <link href="css/style.css" rel="stylesheet">
     
     <!-- File javascript per il funzionamento delle demo -->
     <script src="js/convnet-min.js"></script>
@@ -21,7 +20,8 @@
     <!-- File javascript dell'esempio del reinforcement modificato per confrontare due diverse reti -->
     <script src="js/home.js"></script>
     
-    <link rel="stylesheet" href="css/confronto.css">
+    <!-- css comune -->
+    <link href="css/style.css" rel="stylesheet">
   </head>
   
   <body onload="start();">
@@ -168,7 +168,7 @@
         parametro che misura la potenza dei nostri tiri: è il <b>tasso di apprendimento</b> (spesso indicato
         con la lettera greca &eta;). Anche per il tasso di apprendimento ci vuole tuttavia il giusto valore.
         Troppo basso e dovremo rimanere ore per mandare la pallina in buca. Troppo alto e la nostra pallina
-        sorpasserà la buca, allontanandoci dal nostro obiettivo. Ripetendo qui la sequenza calcolo del
+        sorpasserà la buca, allontanandoci dal nostro obiettivo. Ripetendo quindi la sequenza calcolo del
         gradiente - tiro della pallina ci avvicineremo sempre di più alla buca, finché non la raggiungiamo
         (e avremo trovato quindi il minimo della funzione costo!). Il procedimento concettuale è quindi questo.</p>
       <p class="centrato">Nella pratica, per allenare la rete si prendono una serie di input di allenamento
@@ -178,7 +178,7 @@
         però il gradiente su ognuno dei possibili input è tuttavia molto dispendioso. Si procede quindi
         a calcolare il gradiente su un gruppo di input di allenamento scelti casualmente detto
         <b><i>mini-batch</i></b>. Quindi: scegliamo un <i>mini-batch</i>, alleniamo la rete con quello,
-        scegliamo un altro <i>mini-batch</i>, lo alleniamo e così via, finché non finiamo una cosiddetta
+        scegliamo un altro <i>mini-batch</i>, la alleniamo... e così via, finché non finiamo una cosiddetta
         <b>epoca di allenamento</b>, ovvero finiamo di passare tutti gli input. Poi si ricomincia una nuova
         epoca e si ripete fino a quando non si ritenga che la rete sia pronta.</p>
       <p class="centrato">Le basi per capire un po' come funziona il deep learning sono finite! Potete passare

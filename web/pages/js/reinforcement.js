@@ -98,17 +98,17 @@
       var pad = 10;
       util_add_box(this.walls, pad, pad, this.W-pad*2, this.H-pad*2);
       
-      for(var i = 1; i <= 3; i++) {
+      /*for(var i = 1; i <= 3; i++) {
         if(document.getElementById("level" + i).checked)
           var level = i;
-      }
+      }*/
       
-      if(level === 1) {
+      /*if(level === 1) {*/
         util_add_box(this.walls, 100, 100, 200, 300);
         this.walls.pop();
         util_add_box(this.walls, 400, 100, 200, 300);
         this.walls.pop();
-      }
+      /*}
       else if(level === 2) {
         util_add_wall(this.walls, 350, 40, 420, 160);
         util_add_wall(this.walls, 280, 160, 420, 160);
@@ -118,7 +118,7 @@
 
         util_add_wall(this.walls, 260, 180, 330, 300);
         util_add_wall(this.walls, 190, 300, 330, 300);
-      }
+      }*/
       
       // set up food and poison
       this.items = []
@@ -464,7 +464,7 @@
       var y = 40;
       ctx.font="12px Verdana";
       ctx.fillStyle = "rgb(0,0,0)";
-      ctx.fillText("Value Function Approximating Neural Network:", 10, 14);
+      ctx.fillText("Lo schema della nostra rete:", 10, 14);
       for(var k=0;k<L.length;k++) {
         if(typeof(L[k].out_act)==='undefined') continue; // maybe not yet ready
         var kw = L[k].out_act.w;
@@ -607,9 +607,36 @@
     }
     
     function reload() {
+      /*
+       * Controlliamo un po' i parametri che mi hanno passato!
+       */
+      var nLayer = document.getElementById("hidden-layer").value;
+      var nNeuroni = document.getElementById("neuroni").value;
+      var learningRate = document.getElementById("learning-rate").value;
+      var batch = document.getElementById("batch-size").value;
+      var l2 = document.getElementById("regularization").value;
+      var epsilon = document.getElementById("epsilon").value;
+      
+      if(isNaN(nLayer) || isNaN(nNeuroni) || isNaN(learningRate) || isNaN(batch) || isNaN(l2) || isNaN(epsilon)) {
+        alert("Inserisci dei numeri nelle caselle!");
+        return;
+      }
+      
+      if(nLayer >=7) {
+        alert("Non mettere troppi hidden layer!");
+        return;
+      }
+      if(nLayer*nNeuroni >=300) {
+        alert("Questa rete è troppo pesante! Prova a diminuire il numero di neuroni!");
+        return;
+      }
+      if(learningRate >= 1) {
+        alert("Il tasso di apprendimento è un po' troppo alto!");
+        return;
+      }
+      
       //w = new World();
-      createNetwork();
-      w.agents[0].brain = brain;
+      w.agents = [new Agent()];
       reward_graph = new cnnvis.Graph(); // reinit
       
       gofast();

@@ -1,14 +1,13 @@
-TEORIA
- - Stendere la scaletta per gli approfondimenti
-
 REINFORCEMENT
  - Controllare cos'è il Reinforcement Deep Learning -> https://it.wikipedia.org/wiki/Apprendimento_per_rinforzo  --- FATTO!
  - Controllare cos'è il Q-Learning -> https://it.wikipedia.org/wiki/Q-learning --- FATTO!
  - Aggiungere la possibilità di scegliere più campi di gioco (3-4 campi)
  - Il problema del q-loss NaN sembra essersi risolto, ma solo per learning rate minori di 0.1 (soglia minima
     verificata in cui diventa NaN) - Tuttora è sconosciuta la causa di tale fenomeno
- - Togliere la scritta nel grafico della rete e sostituirla con una piccola spiegazione
- - Mettere dei controlli sui valori passati alla form
+    Update: Ho riportato il codice come prima, ma ho lasciato la mia possibile soluzione. Sembra che anche
+            l'accorgimento che ho apportato non cambi la situazione. Magari chiedo alla prof.
+ - Togliere la scritta nel grafico della rete e sostituirla con una piccola spiegazione --- FATTO!
+ - Mettere dei controlli sui valori passati alla form --- FATTO!
 
 PRATICA
  - Riutilizzo dell'header senza dover fare copia e incolla: come farlo in HTML?

@@ -228,7 +228,16 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
         var n = this.window_size;
         e.state0 = this.net_window[n-2];
         e.action0 = this.action_window[n-2];
-        e.reward0 = this.reward_window[n-2] == null ? 1 : this.reward_window[n-2];
+        e.reward0 = 
+                /*
+                 * La mia soluzione: inizialmente sembrava risolvere il NaN, ma poi si è ripresentato
+                 * Attualmente non so come risolve della rete
+                 */
+                //this.reward_window[n-2] == null ? 1 : this.reward_window[n-2];
+                /*
+                 * Codice originale
+                 */
+                this.reward_window[n-2];
         e.state1 = this.net_window[n-1];
         if(this.experience.length < this.experience_size) {
           this.experience.push(e);
@@ -253,7 +262,7 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
           var ystruct = {dim: e.action0, val: r};
           var loss = this.tdtrainer.train(x, ystruct);
           avcost += loss.loss;
-          console.log(avcost);
+          //console.log(avcost);
         }
         avcost = avcost/this.tdtrainer.batch_size;
         this.average_loss_window.add(avcost);
