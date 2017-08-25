@@ -1,16 +1,143 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Deep Learning - Regolarizzazione</title>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- framework - Da condividere -->
+    <link href="framework/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="framework/js/bootstrap.min.js"></script>
+    
+    <!-- css comune -->
+    <link href="css/style.css" rel="stylesheet">
+    
   </head>
   <body>
-    <div>TODO write content</div>
+    <div id="wrap" class='container'>
+      <!-- Header -->
+      <div>
+        <h1 style="text-align: center">
+          <a href="home.html">
+            DEEP LEARNING
+          </a>
+        </h1>
+        <nav class="navbar navbar-default">
+          <ul class="nav navbar-nav" style="float: none;">
+            <li class="dropdown item-list">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Esempi <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="MNIST-classify.html">Riconoscimento Cifre</a></li>
+                <li><a href="data-classify.html">Classificazione di Dati</a></li>
+                <li><a href="pictures-classify.html">Riconoscimento Immagini</a></li>
+                <li><a href="reinforcement.html">Reinforcement Learning</a></li>
+              </ul>
+            </li>
+            <li class="dropdown item-list">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false">Approfondimenti <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="overfitting.html">Overfitting</a></li>
+                <li><a href="training-difficulty.html">Difficoltà di Allenamento</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="weight-bias-init.html">Inizializzazione dei Parametri</a></li>
+                <li><a href="regularization.html">Regolarizzazione</a></li>
+                <li><a href="hyper-param.html">Scelta dei Parametri Secondari</a></li>
+              </ul>
+            </li>
+            <li class="item-list">
+              <a href="frontiere.html">Frontiere</a>
+            </li>
+            <li class="item-list">
+              <a href="in-futuro.html">Cosa ci aspetta in futuro?</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <!-- Header - FINE -->
+      
+      <p class="centrato">Le reti neurali, durante il loro processo di apprendimento, sfruttano, come abbiamo
+        visto, la funzione costo per decidere come sistemare i propri parametri, ovvero <i>pesi</i> e <i>bias</i>.
+        Abbiamo visto che c'è anche un grande problema, che è quello dell'
+        <i><a href="overfitting.html">overfitting</a></i>. Sono state sviluppate alcune tecniche che, operando
+        sulla funzione costo, aiutano a ridurre gli effetti del sovraallenamento di una rete neurale.
+        Tali tecniche prendono il nome di <b>tecniche di regolarizzazione</b>.</p>
+      
+      <p class="centrato">Generalmente, tali tecniche prevedono l'aggiunta di un fattore, dipendente dai pesi,
+        dopo l'espressione della funzione costo:</p>
+      
+      <p class="centrato" style="text-align: center"><big>funzione costo = funzione costo originale +
+        &lambda; * funzione di regolarizzazione</big></p>
+      
+      <p class="centrato">La regolarizzazione può essere vista come un compromesso tra trovare pesi piccoli e
+        minimizzare la funzione costo. Il parametro &lambda; viene detto <b>tasso di regolarizzazione</b> e
+        serve per determinare il bilanciamento di tale compromesso: quando &lambda; è piccolo, allora preferiamo
+        minimizzare la funzione costo, mentre quando è grande, cerchiamo di trovare pesi piccoli.</p>
+      
+      <p class="centrato">Una delle tecniche più utilizzate è chiamata <b>regolarizzazione L2</b> o
+        <b>decadimento dei pesi</b>: utilizza la somma dei quadrati dei pesi come funzione di regolarizzazione.
+        Ma questi sono dettagli. Sappiate solo che il nome <i>L2</i> deriva dal fatto che utilizza dei quadrati.</p>
+      
+      <p class="centrato">Esistono anche numerose altre tecniche di regolarizzazione. Di seguito ve ne riporto
+        tre delle più usate.</p>
+      
+      <ul style="padding: 0 15%;">
+        <li>La <b>regolarizzazione L1</b> è analoga alla L2, solo che usa la somma dei pesi, invece della somma
+          dei loro quadrati.</li>
+        
+        <li>La tecnica di <b><i>dropout</i></b> invece funziona diversamente, in quanto modifica non la funzione
+          di costo della rete, ma la rete stessa. Abbiamo visto il principio di funzionamento di una rete neurale
+          e come essa riesca ad allenarsi. Ecco, questa tecnica prevede di applicare il solito procedimento
+          dimezzando prima i neuroni degli <i>hidden layer</i>! Per ogni epoca di allenamento si scelgono
+          (casualmente) la metà dei neuroni da tenere e quella dei neuroni da scartare e si allena la rete così
+          ottenuta. Si ripete quindi il procedimento, tenendo e scartando neuroni diversi ad ogni epoca:
+          una volta che si ritiene che la rete sia pronta, si prende la rete originale e si dimezzano i pesi
+          uscenti dai neuroni nascosti: abbiamo ottenuto una rete pronta a svolgere il proprio compito. In poche
+          parole, è come se usassimo tante reti diverse e poi prendessimo come risultato la media di tutti i
+          risultati di queste reti.
+          
+          <div class="figura" style="padding: 0 5%">
+            <img src="documentation/tikz30.png" style="width: 300px">
+            <big style="font-size: xx-large;">→</big>
+            <img src="documentation/tikz31.png" style="width: 300px"><br/>
+            <p><small>La figura qui sopra mostra il procedimento svolto durante il
+                dropout. Ad ogni epoca, poi, faremo in modo di avere una rete diversa ogni volta,
+                considerando neuroni diversi.</small></p>
+          </div>
+          
+        </li>
+        
+        <li>Si può anche pensare di <b>ampliare artificialmente i dati di allenamento</b>, in quanto ottenere
+          nuovi dati per allenare la rete è sempre una buona idea. Il problema è che non sempre è possibile,
+          oppure è troppo costoso ottenerne di nuovi. Quindi se ne generano di nuovi a partire da quelli che
+          abbiamo già a disposizione. Ad esempio, se la nostra rete dovesse riconoscere delle cifre scritte a
+          mano, potremmo applicare delle piccole rotazioni o delle lievi dilatazioni o restrizioni ai dati
+          che abbiamo già in possesso, creando delle immagini nuove da fornire alla nostra rete neurale. In
+          generale, si cerca di espandere il set di allenamento cercando di riprodurre quelle che sono le
+          variazioni che di solito hanno nella pratica.
+          
+          <div class="figura">
+            <img src="documentation/more-data-5.png" style="width: 150px">
+            <img src="documentation/more-data-rotated-5.png" style="width: 150px"><br/>
+            <p><small>Nonostante la differenza sia minima, per l'analisi svolta dalla rete sono due immagini
+                completamente diverse.</small></p>
+          </div>
+          
+        </li>
+      </ul>
+      
+      <p class="centrato">Potreste chiedervi come tutto questo può aiutare a ridurre l'<i>overfitting</i>.
+        Ebbene, la regolarizzazione aiuta le reti neurali a generalizzare meglio, in quanto una rete con pesi
+        piccoli non varia il proprio comportamento se cambiano alcuni dei dati di input. Questo le rende
+        particolarmente difficile memorizzare le peculiarità dei dati, mentre la aiuta ad apprendere meglio
+        quelli che sono i modelli e gli schemi dei dati di allenamento.</p>
+      
+      <p class="centrato">Il principale problema della regolarizzazione è che non si è ancora capito
+        esattamente il perché essa aiuti a migliorare le prestazioni di una rete neurale, ma abbiamo a
+        disposizione solo evidenze pratiche di questo fatto. Nonostante questo, la regolarizzazione è
+        ampiamente utilizzata e ci aiuta a migliorare le prestazioni delle nostre reti neurali.</p>
+    </div>
   </body>
 </html>

@@ -11,8 +11,16 @@ REINFORCEMENT
 
 PRATICA
  - Riutilizzo dell'header senza dover fare copia e incolla: come farlo in HTML?
+ - Migliorare la grafica dei grafici (vedi questo sito:
+    http://cs.stanford.edu/people/karpathy/reinforcejs/waterworld.html)
 
+OVERFITTING
+ - Chiedere a Covizzi se riesce a mettere su qualche demo che mostra la differenza tra una rete con
+    tanti dati di allenamento e una con pochi
 
+RICONOSCIMENTO IMMAGINI
+ - Aggiungere grafici per le tre accuracy
+ - Togliere tutta la parte sull'attivazione (poco interessante da vedere)
 
 COSE
  - Mi servirà più tardi --- FATTO!
