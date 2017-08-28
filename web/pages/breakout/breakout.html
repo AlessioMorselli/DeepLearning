@@ -7,25 +7,28 @@
   <link href="style.css" media="screen, print" rel="stylesheet" type="text/css" /> 
   
   <!-- framework - Da condividere -->
-    <link href="../framework/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="../framework/js/bootstrap.min.js"></script>
+  <link href="../framework/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="../framework/js/bootstrap.min.js"></script>
 
-    <!-- File javascript per il funzionamento delle demo -->
-    <script src="../js/convnet.js"></script>
-    <script src="../js/util.js"></script>
-    <script src="../js/vis.js"></script>
-    <script src="../js/deepqlearn.js"></script>
+  <!-- File javascript per il funzionamento delle demo -->
+  <script src="../js/convnet.js"></script>
+  <script src="../js/util.js"></script>
+  <script src="../js/vis.js"></script>
+  <script src="../js/deepqlearn.js"></script>
 
-    <!-- File javascript dell'esempio -->
-    <script src="../js/reinforcement.js"></script>
-    
-    <script src="game.js"></script>
-    <script src="breakout.js"></script>
-    <script src="levels.js"></script>
+  <!-- File javascript dell'esempio -->
+  <script src="reinforcement.js"></script>
 
-    <!-- css comune -->
-    <link rel="stylesheet" href="../css/style.css">
+  <script src="game2.js"></script>
+  <script src="breakout2.js"></script>
+  <script src="levels2.js"></script>
+  <script src="game.js"></script>
+  <script src="breakout.js"></script>
+  <script src="http://users.eecs.northwestern.edu/~msn688/breakout_project/js/long_table.js"></script>
+
+  <!-- css comune -->
+  <link rel="stylesheet" href="../css/style.css">
   
 </head> 
  
@@ -59,10 +62,19 @@
   </div>
 
   
-  <script>
+  <!--<script>
   Game.ready(function() {
     var game = Game.start('canvas', Breakout);
   });
+  </script>-->
+  
+  <script>
+    var game;
+    Game.ready(function() {
+      Breakout.init_botname = "long_learned";//jQuery('input:radio[name=botname]:checked').val();
+      game = Game.start('canvas', Breakout);
+    });
+    
   </script>
 
 </body> 

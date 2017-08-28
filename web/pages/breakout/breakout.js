@@ -17,8 +17,8 @@ Breakout = {
     },
 
     court: {
-      xchunks: 30,
-      ychunks: 25
+      xchunks: 15, //30,
+      ychunks: 15 //25
     },
 
     ball: {
@@ -94,6 +94,9 @@ Breakout = {
     this.ball    = Object.construct(Breakout.Ball,   this, cfg.ball);
     this.score   = Object.construct(Breakout.Score,  this, cfg.score);
     //Game.loadSounds({sounds: cfg.sounds});
+    var init_bot = Breakout.init_botname;
+        
+    this.bot = Object.construct(Breakout.bot[init_bot], this, cfg.bot);
   },
 
   onstartup: function() { // the event that fires the initial state transition occurs when Game.Runner constructs our StateMachine

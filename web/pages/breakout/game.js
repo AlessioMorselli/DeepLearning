@@ -229,7 +229,7 @@ Game = {
       isSafari:  (key == "safari"),
       isOpera:   (key == "opera"),
       isIE:      (key == "ie"),
-      hasCanvas: (document.createElement('canvas').getContext),
+      hasCanvas: (document.createElement('canvas2').getContext),
       hasAudio:  (typeof(Audio) != 'undefined'),
       hasTouch:  ('ontouchstart' in window)
     }
@@ -247,7 +247,7 @@ Game = {
   },
 
   renderToCanvas: function(width, height, render, canvas) { // http://kaioa.com/node/103
-    canvas = canvas || document.createElement('canvas');
+    canvas = canvas || document.createElement('canvas2');
     canvas.width  = width;
     canvas.height = height;
     render(canvas.getContext('2d'));
