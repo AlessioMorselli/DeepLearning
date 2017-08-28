@@ -8,6 +8,7 @@ REINFORCEMENT
             l'accorgimento che ho apportato non cambi la situazione. Magari chiedo alla prof.
  - Togliere la scritta nel grafico della rete e sostituirla con una piccola spiegazione --- FATTO!
  - Mettere dei controlli sui valori passati alla form --- FATTO!
+ - Proviamo ad aggiungere il gioco breakout! Ce la faremo? --> Provare a mettere computer vs umano?
 
 PRATICA
  - Riutilizzo dell'header senza dover fare copia e incolla: come farlo in HTML?
@@ -21,6 +22,8 @@ OVERFITTING
 RICONOSCIMENTO IMMAGINI
  - Aggiungere grafici per le tre accuracy
  - Togliere tutta la parte sull'attivazione (poco interessante da vedere)
+ - Aggiungere il link alla parte di spiegazione sulle reti convoluzionali una volta che questa sarà pronta
 
 COSE
  - Mi servirà più tardi --- FATTO!
+ - Controllare cosa sia il "momentum" per una rete neurale -> Abbiamo capito a cosa si riferisce! Vedi gli appunti
