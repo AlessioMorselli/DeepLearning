@@ -11,6 +11,15 @@ REINFORCEMENT
  - Proviamo ad aggiungere il gioco breakout! Ce la faremo?
  - Provare a mettere computer vs umano
  - Ce la facciamo a farlo imparare anche?
+ 
+    Scaletta
+     - Abbiamo fatto funzionare la demo sia come giocatore, che come pc
+     - Prima cosa: affiancare due demo diverse! Indispensabile per iniziare una competizione!
+        - Creare 2 canvas e sistemare lo script in fondo alla pagina
+        - Sistemare le due versioni di file js, magari utilizzando una volta sola le funzioni in comune
+     - Seconda cosa: bisogna stabilire una fine! Quando uno finisce, il gioco per quel giocatore si ferma!
+     - Terza cosa: come stabilire chi vince? Chi finisce prima o chi fa meno morti? Probabilmente
+        metteremo chi finisce prima!
 
 PRATICA
  - Riutilizzo dell'header senza dover fare copia e incolla: come farlo in HTML?
