@@ -1,191 +1,191 @@
-//=============================================================================
+////=============================================================================
+////
+//// We need some ECMAScript 5 methods but we need to implement them ourselves
+//// for older browsers (compatibility: http://kangax.github.com/es5-compat-table/)
+////
+////  Function.bind:        https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
+////  Object.create:        http://javascript.crockford.com/prototypal.html
+////  Object.extend:        (defacto standard like jquery $.extend or prototype's Object.extend)
+////
+////  Object.construct:     our own wrapper around Object.create that ALSO calls
+////                        an initialize constructor method if one exists
+////
+////=============================================================================
 //
-// We need some ECMAScript 5 methods but we need to implement them ourselves
-// for older browsers (compatibility: http://kangax.github.com/es5-compat-table/)
+//if (!Function.prototype.bind) {
+//  Function.prototype.bind = function(obj) {
+//    var slice = [].slice,
+//        args  = slice.call(arguments, 1),
+//        self  = this,
+//        nop   = function () {},
+//        bound = function () {
+//          return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));   
+//        };
+//    nop.prototype   = self.prototype;
+//    bound.prototype = new nop();
+//    return bound;
+//  };
+//}
 //
-//  Function.bind:        https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
-//  Object.create:        http://javascript.crockford.com/prototypal.html
-//  Object.extend:        (defacto standard like jquery $.extend or prototype's Object.extend)
+//if (!Object.create) {
+//  Object.create = function(base) {
+//    function F() {};
+//    F.prototype = base;
+//    return new F();
+//  }
+//}
 //
-//  Object.construct:     our own wrapper around Object.create that ALSO calls
-//                        an initialize constructor method if one exists
+//if (!Object.construct) {
+//  Object.construct = function(base) {
+//    var instance = Object.create(base);
+//    if (instance.initialize)
+//      instance.initialize.apply(instance, [].slice.call(arguments, 1));
+//    return instance;
+//  }
+//}
 //
-//=============================================================================
-
-if (!Function.prototype.bind) {
-  Function.prototype.bind = function(obj) {
-    var slice = [].slice,
-        args  = slice.call(arguments, 1),
-        self  = this,
-        nop   = function () {},
-        bound = function () {
-          return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));   
-        };
-    nop.prototype   = self.prototype;
-    bound.prototype = new nop();
-    return bound;
-  };
-}
-
-if (!Object.create) {
-  Object.create = function(base) {
-    function F() {};
-    F.prototype = base;
-    return new F();
-  }
-}
-
-if (!Object.construct) {
-  Object.construct = function(base) {
-    var instance = Object.create(base);
-    if (instance.initialize)
-      instance.initialize.apply(instance, [].slice.call(arguments, 1));
-    return instance;
-  }
-}
-
-if (!Object.extend) {
-  Object.extend = function(destination, source) {
-    for (var property in source) {
-      if (source.hasOwnProperty(property))
-        destination[property] = source[property];
-    }
-    return destination;
-  };
-}
-
-/* NOT READY FOR PRIME TIME
-if (!window.requestAnimationFrame) {// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  window.requestAnimationFrame = window.webkitRequestAnimationFrame || 
-                                 window.mozRequestAnimationFrame    || 
-                                 window.oRequestAnimationFrame      || 
-                                 window.msRequestAnimationFrame     || 
-                                 function(callback, element) {
-                                   window.setTimeout(callback, 1000 / 60);
-                                 }
-}
-*/
-
-//=============================================================================
-// Minimal DOM Library ($)
-//=============================================================================
-
-Element = function() {
-
-  var instance = {
-
-    _extended: true,
-
-    showIf: function(on)      { if (on) this.show(); else this.hide(); },
-    show:   function()        { this.style.display = '';      },
-    hide:   function()        { this.style.display = 'none';  },
-    update: function(content) { this.innerHTML     = content; },
-
-    hasClassName:    function(name)     { return (new RegExp("(^|\s*)" + name + "(\s*|$)")).test(this.className) },
-    addClassName:    function(name)     { this.toggleClassName(name, true);  },
-    removeClassName: function(name)     { this.toggleClassName(name, false); },
-    toggleClassName: function(name, on) {
-      var classes = this.className.split(' ');
-      var n = classes.indexOf(name);
-      on = (typeof on == 'undefined') ? (n < 0) : on;
-      if (on && (n < 0))
-        classes.push(name);
-      else if (!on && (n >= 0))
-        classes.splice(n, 1);
-      this.className = classes.join(' ');
-    }
-  };
-
-  var get = function(ele) {
-    if (typeof ele == 'string')
-      ele = document.getElementById(ele);
-    if (!ele._extended)
-      Object.extend(ele, instance);
-    return ele;
-  };
-
-  return get;
-
-}();
-
-$ = Element;
+//if (!Object.extend) {
+//  Object.extend = function(destination, source) {
+//    for (var property in source) {
+//      if (source.hasOwnProperty(property))
+//        destination[property] = source[property];
+//    }
+//    return destination;
+//  };
+//}
+//
+///* NOT READY FOR PRIME TIME
+//if (!window.requestAnimationFrame) {// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+//  window.requestAnimationFrame = window.webkitRequestAnimationFrame || 
+//                                 window.mozRequestAnimationFrame    || 
+//                                 window.oRequestAnimationFrame      || 
+//                                 window.msRequestAnimationFrame     || 
+//                                 function(callback, element) {
+//                                   window.setTimeout(callback, 1000 / 60);
+//                                 }
+//}
+//*/
+//
+////=============================================================================
+//// Minimal DOM Library ($)
+////=============================================================================
+//
+//Element = function() {
+//
+//  var instance = {
+//
+//    _extended: true,
+//
+//    showIf: function(on)      { if (on) this.show(); else this.hide(); },
+//    show:   function()        { this.style.display = '';      },
+//    hide:   function()        { this.style.display = 'none';  },
+//    update: function(content) { this.innerHTML     = content; },
+//
+//    hasClassName:    function(name)     { return (new RegExp("(^|\s*)" + name + "(\s*|$)")).test(this.className) },
+//    addClassName:    function(name)     { this.toggleClassName(name, true);  },
+//    removeClassName: function(name)     { this.toggleClassName(name, false); },
+//    toggleClassName: function(name, on) {
+//      var classes = this.className.split(' ');
+//      var n = classes.indexOf(name);
+//      on = (typeof on == 'undefined') ? (n < 0) : on;
+//      if (on && (n < 0))
+//        classes.push(name);
+//      else if (!on && (n >= 0))
+//        classes.splice(n, 1);
+//      this.className = classes.join(' ');
+//    }
+//  };
+//
+//  var get = function(ele) {
+//    if (typeof ele == 'string')
+//      ele = document.getElementById(ele);
+//    if (!ele._extended)
+//      Object.extend(ele, instance);
+//    return ele;
+//  };
+//
+//  return get;
+//
+//}();
+//
+//$ = Element;
 
 //=============================================================================
 // State Machine
 //=============================================================================
 
-StateMachine = {
+//StateMachine = {
+//
+//  //---------------------------------------------------------------------------
+//
+//  create: function(cfg) {
+//
+//    var target  = cfg.target  || {};
+//    var events  = cfg.events;
+//
+//    var n, event, name, can = {};
+//    for(n = 0 ; n < events.length ; n++) {
+//      event = events[n];
+//      name  = event.name;
+//      can[name] = (can[name] || []).concat(event.from);
+//      target[name] = this.buildEvent(name, event.from, event.to, target);
+//    }
+//
+//    target.current = 'none';
+//    target.is      = function(state) { return this.current == state; };
+//    target.can     = function(event) { return can[event].indexOf(this.current) >= 0; };
+//    target.cannot  = function(event) { return !this.can(event); };
+//
+//    if (cfg.initial) { // see "initial" qunit tests for examples
+//      var initial = (typeof cfg.initial == 'string') ? { state: cfg.initial } : cfg.initial; // allow single string to represent initial state, or complex object to configure { state: 'first', event: 'init', defer: true|false }
+//      name = initial.event || 'startup';
+//      can[name] = ['none'];
+//      event = this.buildEvent(name, 'none', initial.state, target);
+//      if (initial.defer)
+//        target[name] = event; // allow caller to trigger initial transition event
+//      else
+//        event.call(target);
+//    }
+//
+//    return target;
+//  },
+//
+//  //---------------------------------------------------------------------------
+//
+//  buildEvent: function(name, from, to, target) {
+//
+//    return function() {
+//
+//      if (this.cannot(name))
+//        throw "event " + name + " innapropriate in current state " + this.current;
+//
+//      var beforeEvent = this['onbefore' + name];
+//      if (beforeEvent && (false === beforeEvent.apply(this, arguments)))
+//        return;
+//
+//      if (this.current != to) {
+//
+//        var exitState = this['onleave'  + this.current];
+//        if (exitState)
+//          exitState.apply(this, arguments);
+//
+//        this.current = to;
+//
+//        var enterState = this['onenter' + to] || this['on' + to];
+//        if (enterState)
+//          enterState.apply(this, arguments);
+//      }
+//
+//      var afterEvent = this['onafter'  + name] || this['on' + name];
+//      if (afterEvent)
+//        afterEvent.apply(this, arguments);
+//    }
+//
+//  }
 
   //---------------------------------------------------------------------------
 
-  create: function(cfg) {
-
-    var target  = cfg.target  || {};
-    var events  = cfg.events;
-
-    var n, event, name, can = {};
-    for(n = 0 ; n < events.length ; n++) {
-      event = events[n];
-      name  = event.name;
-      can[name] = (can[name] || []).concat(event.from);
-      target[name] = this.buildEvent(name, event.from, event.to, target);
-    }
-
-    target.current = 'none';
-    target.is      = function(state) { return this.current == state; };
-    target.can     = function(event) { return can[event].indexOf(this.current) >= 0; };
-    target.cannot  = function(event) { return !this.can(event); };
-
-    if (cfg.initial) { // see "initial" qunit tests for examples
-      var initial = (typeof cfg.initial == 'string') ? { state: cfg.initial } : cfg.initial; // allow single string to represent initial state, or complex object to configure { state: 'first', event: 'init', defer: true|false }
-      name = initial.event || 'startup';
-      can[name] = ['none'];
-      event = this.buildEvent(name, 'none', initial.state, target);
-      if (initial.defer)
-        target[name] = event; // allow caller to trigger initial transition event
-      else
-        event.call(target);
-    }
-
-    return target;
-  },
-
-  //---------------------------------------------------------------------------
-
-  buildEvent: function(name, from, to, target) {
-
-    return function() {
-
-      if (this.cannot(name))
-        throw "event " + name + " innapropriate in current state " + this.current;
-
-      var beforeEvent = this['onbefore' + name];
-      if (beforeEvent && (false === beforeEvent.apply(this, arguments)))
-        return;
-
-      if (this.current != to) {
-
-        var exitState = this['onleave'  + this.current];
-        if (exitState)
-          exitState.apply(this, arguments);
-
-        this.current = to;
-
-        var enterState = this['onenter' + to] || this['on' + to];
-        if (enterState)
-          enterState.apply(this, arguments);
-      }
-
-      var afterEvent = this['onafter'  + name] || this['on' + name];
-      if (afterEvent)
-        afterEvent.apply(this, arguments);
-    }
-
-  }
-
-  //---------------------------------------------------------------------------
-
-};
+//};
 
 //=============================================================================
 // GAME
@@ -206,7 +206,7 @@ Game = {
       return Game.current = Object.construct(Game.Runner, id, game, cfg).game; // return the game instance, not the runner (caller can always get at the runner via game.runner)
   },
 
-  ua: function() { // should avoid user agent sniffing... but sometimes you just gotta do what you gotta do
+  ua: function(canvas) { // should avoid user agent sniffing... but sometimes you just gotta do what you gotta do
     var ua  = navigator.userAgent.toLowerCase();
     var key =        ((ua.indexOf("opera")   > -1) ? "opera"   : null);
         key = key || ((ua.indexOf("firefox") > -1) ? "firefox" : null);
@@ -229,7 +229,7 @@ Game = {
       isSafari:  (key == "safari"),
       isOpera:   (key == "opera"),
       isIE:      (key == "ie"),
-      hasCanvas: (document.createElement('canvas2').getContext),
+      hasCanvas: (document.createElement(canvas).getContext),
       hasAudio:  (typeof(Audio) != 'undefined'),
       hasTouch:  ('ontouchstart' in window)
     }
@@ -531,8 +531,10 @@ Game = {
     },
 
     loop: function() {
-      this._start  = Game.timestamp(); this.update((this._start - this.lastFrame)/1000.0); // send dt as seconds
-      this._middle = Game.timestamp(); this.draw();
+      this._start  = Game.timestamp();
+      this.update((this._start - this.lastFrame)/1000.0); // send dt as seconds
+      this._middle = Game.timestamp();
+      this.draw();
       this._end    = Game.timestamp();
       this.updateStats(this._middle - this._start, this._end - this._middle);
       this.lastFrame = this._start;
