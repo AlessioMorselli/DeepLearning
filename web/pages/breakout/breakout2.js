@@ -1,8 +1,8 @@
 //=============================================================================
-// Breakout
+// Breakout2
 //=============================================================================
 
-Breakout = {
+Breakout2 = {
 
     Defaults: {
 
@@ -11,8 +11,8 @@ Breakout = {
 
         score: {
             lives: {
-                initial: 1,
-                max: 1
+                initial: 0,
+                max: 0
             }
         },
 
@@ -23,7 +23,7 @@ Breakout = {
 
         ball: {
             radius:  0.3,
-            speed:   300,
+            speed:   550,
             labels: {
                 3: { text: 'ready...', fill: '#D82800', stroke: 'black', font: 'bold 28pt arial' },
                 2: { text: 'set..',    fill: '#FC9838', stroke: 'black', font: 'bold 28pt arial' },
@@ -34,7 +34,7 @@ Breakout = {
         paddle: {
             width:  6,
             height: 1,
-            speed:  300
+            speed:  550
         },
 
         color: {
@@ -57,9 +57,9 @@ Breakout = {
             ]},
 
         keys: [
-            { keys: [Game.KEY.SPACE, Game.KEY.RETURN], state: 'menu', action: function() { this.play();                     } },
-            { keys: [Game.KEY.SPACE, Game.KEY.RETURN], state: 'game', action: function() { this.ball.launchNow();           } },
-            { key:  Game.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
+            { keys: [Game2.KEY.SPACE, Game2.KEY.RETURN], state: 'menu', action: function() { this.play();                     } },
+            { keys: [Game2.KEY.SPACE, Game2.KEY.RETURN], state: 'game', action: function() { this.ball.launchNow();           } },
+            { key:  Game2.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
 
         ],
 
@@ -74,25 +74,25 @@ Breakout = {
         this.height  = runner.height;
         this.storage = runner.storage();
         this.color   = cfg.color;
-        this.court   = Object.construct(Breakout.Court,  this, cfg.court);
-        this.paddle  = Object.construct(Breakout.Paddle, this, cfg.paddle);
-        this.ball    = Object.construct(Breakout.Ball,   this, cfg.ball);
-        this.score   = Object.construct(Breakout.Score,  this, cfg.score);
-        var init_bot = Breakout.init_botname;
+        this.court   = Object.construct(Breakout2.Court,  this, cfg.court);
+        this.paddle  = Object.construct(Breakout2.Paddle, this, cfg.paddle);
+        this.ball    = Object.construct(Breakout2.Ball,   this, cfg.ball);
+        this.score   = Object.construct(Breakout2.Score,  this, cfg.score);
+        var init_bot = Breakout2.init_botname;
         
-        this.bot = Object.construct(Breakout.bot[init_bot], this, cfg.bot);
+        this.bot = Object.construct(Breakout2.bot[init_bot], this, cfg.bot);
     },
 
-    onstartup: function() { // the event that fires the initial state transition occurs when Game.Runner constructs our StateMachine
+    onstartup: function() { // the event that fires the initial state transition occurs when Game2.Runner constructs our StateMachine2
         this.addEvents();
         this.runner.start(); // start the 60fps update/draw game loop
     },
 
     addEvents: function() {
 
-        Game.addEvent('instructions',     'touchstart', this.play.bind(this));
-        Game.addEvent(this.runner.canvas, 'touchmove',  this.ontouchmove.bind(this));
-        Game.addEvent(document.body,      'touchmove',  function(event) { event.preventDefault(); }); // prevent ipad bouncing up and down when finger scrolled
+        //Game2.addEvent('instructions',     'touchstart', this.play.bind(this));
+        Game2.addEvent(this.runner.canvas, 'touchmove',  this.ontouchmove.bind(this));
+        Game2.addEvent(document.body,      'touchmove',  function(event) { event.preventDefault(); }); // prevent ipad bouncing up and down when finger scrolled
     },
 
     update: function(dt) {
@@ -106,8 +106,8 @@ Breakout = {
     draw: function(ctx) {
         ctx.save();
         ctx.clearRect(0, 0, this.width, this.height);
-        ctx.fillStyle = this.color.background;
-        ctx.fillRect(0, 0, this.width, this.height);
+        /*ctx.fillStyle = this.color.background;
+        ctx.fillRect(0, 0, this.width, this.height);*/
         this.court.draw(ctx);
         this.paddle.draw(ctx);
         this.ball.draw(ctx);
@@ -124,7 +124,7 @@ Breakout = {
     },
 
     onmenu: function() {
-        this.resetLevel(0/*Math.round(Math.random()*Breakout.Levels.length)*/);
+        this.resetLevel(0);    //Math.round(Math.random()*Breakout2.Levels.length)
         this.paddle.reset();
         this.ball.reset();
         this.refreshDOM();
@@ -135,11 +135,11 @@ Breakout = {
         this.score.death = 0;
         this.score.brickhit = 0;
         this.score.winning = 0;
-	this.score.highscore = 0;
-        this.resetLevel(0/*Math.round(Math.random()*Breakout.Levels.length)*/);
+        this.score.highscore = 0;
+        this.resetLevel(Math.round(Math.random()*Breakout2.Levels.length));
         this.paddle.reset();
-	this.bot = Object.construct(Breakout.bot[botName], this, this.cfg.bot);
-	this.ongame();
+        this.bot = Object.construct(Breakout2.bot[botName], this, this.cfg.bot);
+        this.ongame();
     },
 
     ongame: function() {
@@ -157,39 +157,43 @@ Breakout = {
     },
 
     onbeforeabandon: function() {
-        return this.runner.confirm("Abandon game?")
+        return this.runner.confirm("Abandon game?");
     },
 
     loseBall: function() {
 
-        if (this.score.loseLife()){
+        //if (this.score.loseLife()){
             this.score.save();
-            this.score.reset();
-            //this.resetLevel(Math.round(Math.random()*Breakout.Levels.length));
+            //this.score.reset();
+            //this.resetLevel(Math.round(Math.random()*Breakout2.Levels.length));
             this.paddle.stopMovingLeft();
             this.paddle.stopMovingRight();
-            this.ball.reset({launch: false, launchNow: true});
-        }
+            this.ball.reset({launch: true});
+        /*}
         else {
             this.ball.reset({launch: true});
-        }
-        this.score.death++;
-        this.score.paddlehit = 0;
-        this.score.brickhit = 0;
+        }*/
         this.bot.loseBall();
     },
 
     winLevel: function() {
+        levelComputer++;
         this.score.gainLife();
-        //this.resetLevel(0/*Math.round(Math.random()*Breakout.Levels.length)*/);
-        this.nextLevel(true);
-        this.ball.reset({launch: true});
-        this.paddle.stopMovingLeft();
-        this.paddle.stopMovingRight();
-        this.score.winning++;
-        // console.log("winLevel");
-        this.bot.winLevel();
-
+        //this.resetLevel(Math.round(Math.random()*Breakout2.Levels.length));
+        if(levelComputer < 5)
+        {
+          this.nextLevel(true);
+          this.ball.reset({launch: true});
+          this.paddle.stopMovingLeft();
+          this.paddle.stopMovingRight();
+          this.score.winning++;
+          // console.log("winLevel");
+          this.bot.winLevel();
+        }
+        else {
+          window.alert("Il computer ha vinto! Se vuoi puoi continuare,\n\
+            oppure aggiorna la pagina e ricomincia la sfida!");
+        }
     },
 
     hitBrick: function(brick) {
@@ -204,18 +208,18 @@ Breakout = {
     resetLevel: function(level) { this.setLevel(level); },
     setLevel: function(level) {
         level = (typeof level == 'undefined') ? (this.storage.level ? parseInt(this.storage.level) : 0) : level;
-        level = level < Breakout.Levels.length ? level : 0;
+        level = level < Breakout2.Levels.length ? level : 0;
         this.court.reset(level);
         this.storage.level = this.level = level;
         this.refreshDOM();
     },
 
     canPrevLevel: function()      { return this.is('menu') && (this.level > 0);                          },
-    canNextLevel: function()      { return this.is('menu') && (this.level < (Breakout.Levels.length-1)); },
+    canNextLevel: function()      { return this.is('menu') && (this.level < (Breakout2.Levels.length-1)); },
     prevLevel:    function(force) { if (force || this.canPrevLevel()) this.setLevel(this.level - 1);     },
     nextLevel:    function(force) { if (force || this.canNextLevel()) this.setLevel(this.level + 1);     },
 
-    initCanvas: function(ctx) { // called by Game.Runner whenever the canvas is reset (on init and on resize)
+    initCanvas: function(ctx) { // called by Game2.Runner whenever the canvas is reset (on init and on resize)
         ctx.fillStyle    = this.color.foreground;
         ctx.strokeStyle  = this.color.foreground;
         ctx.lineWidth    = 1;
@@ -223,11 +227,11 @@ Breakout = {
     },
 
     refreshDOM: function() {
-        $('instructions').className = Game.ua.hasTouch ? 'touch' : 'keyboard';
-        $('instructions').showIf(this.is('menu'));
+        /*$('instructions').className = Game2.ua.hasTouch ? 'touch' : 'keyboard';
+        $('instructions').showIf(this.is('menu'));*/
         // $('prev').toggleClassName('disabled', !this.canPrevLevel());
         // $('next').toggleClassName('disabled', !this.canNextLevel());
-        $('level').update(this.level + 1);
+        $('level2').update(this.level + 1);
     },
 
     ontouchmove: function(ev) {
@@ -288,7 +292,7 @@ Breakout = {
 
         draw: function(ctx) {
             if (this.rerender) {
-                this.canvas = Game.renderToCanvas(this.width, this.height, this.render.bind(this), this.canvas);
+                this.canvas = Game2.renderToCanvas(this.width, this.height, this.render.bind(this), this.canvas);
                 this.rerender = false;
             }
             ctx.drawImage(this.canvas, this.left, this.top);
@@ -336,7 +340,7 @@ Breakout = {
         },
         
         reset: function(level) {
-            var layout = Breakout.Levels[level];
+            var layout = Breakout2.Levels[level];
             var line, brick, score, c, n, x, y, nx, ny = Math.min(layout.bricks.length, this.cfg.ychunks);
             this.bricks = [];
             for(y = 0 ; y < ny ; y++) {
@@ -376,9 +380,9 @@ Breakout = {
             this.wall = {}
             this.wall.size  = this.chunk;
             // console.log("console size" + this.chunk);
-            this.wall.top   = Game.Math.bound({x: this.left - this.wall.size, y: this.top - this.wall.size*2, w: this.width + this.wall.size*2, h: this.wall.size*2               });
-            this.wall.left  = Game.Math.bound({x: this.left - this.wall.size, y: this.top - this.wall.size*2, w: this.wall.size,                h: this.wall.size*2 + this.height });
-            this.wall.right = Game.Math.bound({x: this.right,                 y: this.top - this.wall.size*2, w: this.wall.size,                h: this.wall.size*2 + this.height });
+            this.wall.top   = Game2.Math.bound({x: this.left - this.wall.size, y: this.top - this.wall.size*2, w: this.width + this.wall.size*2, h: this.wall.size*2               });
+            this.wall.left  = Game2.Math.bound({x: this.left - this.wall.size, y: this.top - this.wall.size*2, w: this.wall.size,                h: this.wall.size*2 + this.height });
+            this.wall.right = Game2.Math.bound({x: this.right,                 y: this.top - this.wall.size*2, w: this.wall.size,                h: this.wall.size*2 + this.height });
 
             for(n = 0 ; n < this.numbricks ; n++) {
 
@@ -387,10 +391,10 @@ Breakout = {
                 brick.y = this.top  + (brick.pos.y  * this.chunk);
                 brick.w = (brick.pos.x2 - brick.pos.x1 + 1) * this.chunk;
                 brick.h = this.chunk;
-		brick.region = Math.floor((brick.pos.x2+brick.pos.x1)/10);
-		if(brick.hit === false)
-			this.regionNumber[brick.region]++;
-                Game.Math.bound(brick);
+                brick.region = Math.floor((brick.pos.x2+brick.pos.x1)/10);
+                if(brick.hit === false)
+                  this.regionNumber[brick.region]++;
+                Game2.Math.bound(brick);
             }
 
             this.rerender = true;
@@ -401,7 +405,7 @@ Breakout = {
 
         draw: function(ctx) {
             if (this.rerender) {
-                this.canvas = Game.renderToCanvas(this.game.width, this.game.height, this.render.bind(this), this.canvas);
+                this.canvas = Game2.renderToCanvas(this.game.width, this.game.height, this.render.bind(this), this.canvas);
                 this.rerender = false;
             }
             ctx.drawImage(this.canvas, 0, 0);
@@ -465,7 +469,7 @@ Breakout = {
         reset: function(options) {
             this.radius   = this.cfg.radius * this.game.court.chunk;
             this.speed    = this.cfg.speed  * this.game.court.chunk;
-            this.maxspeed = this.speed;
+            this.maxspeed = this.speed *1.5;
             this.color    = this.game.color.ball;
             this.moveToPaddle();
             this.setdir(0, 0);
@@ -489,11 +493,11 @@ Breakout = {
         setpos: function(x, y) {
             this.x = x;
             this.y = y;
-            Game.Math.bound(this);
+            Game2.Math.bound(this);
         },
 
         setdir: function(dx, dy) {
-            var dir = Game.Math.normalize({ x: dx, y: dy });
+            var dir = Game2.Math.normalize({ x: dx, y: dy });
             this.dx = dir.x;
             this.dy = dir.y;
             this.moving = dir.m != 0;
@@ -523,7 +527,7 @@ Breakout = {
 
         launchLabel: function(count) {
             var label       = this.cfg.labels[count];
-            var ctx         = this.game.runner.front2d; // dodgy getting the context this way, should probably have a Game.Runner.ctx() method ?
+            var ctx         = this.game.runner.front2d; // dodgy getting the context this way, should probably have a Game2.Runner.ctx() method ?
             ctx.save();
             ctx.font        = label.font;
             ctx.fillStyle   = label.fill;
@@ -548,15 +552,15 @@ Breakout = {
             if (!this.moving)
                 return this.moveToPaddle();
 
-            var p2 = Game.Math.move(this.x, this.y, this.dx * this.speed, this.dy * this.speed, dt);
+            var p2 = Game2.Math.move(this.x, this.y, this.dx * this.speed, this.dy * this.speed, dt);
 
             var mCurrent, mClosest = Infinity, point, item, closest = null;
             for (var n = 0 ; n < this.hitTargets.length ; n++) {
                 item = this.hitTargets[n];
                 if (!item.hit) {
-                    point = Game.Math.ballIntercept(this, item, p2.nx, p2.ny);
+                    point = Game2.Math.ballIntercept(this, item, p2.nx, p2.ny);
                     if (point) {
-                        mCurrent = Game.Math.magnitude(point.x - this.x, point.y - this.y);
+                        mCurrent = Game2.Math.magnitude(point.x - this.x, point.y - this.y);
                         if (mCurrent < mClosest) {
                             mClosest = mCurrent;
                             closest = {item: item, point: point};
@@ -593,7 +597,7 @@ Breakout = {
                     break;
                 }
 
-                var udt = dt * (mClosest / Game.Math.magnitude(p2.nx, p2.ny)); // how far along did we get before intercept ?
+                var udt = dt * (mClosest / Game2.Math.magnitude(p2.nx, p2.ny)); // how far along did we get before intercept ?
                 return this.update(dt - udt);                                  // so we can update for time remaining
             }
 
@@ -610,7 +614,7 @@ Breakout = {
         draw: function(ctx) {
             ctx.fillStyle = this.color;
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Game.THREESIXTY, true);
+            ctx.arc(this.x, this.y, this.radius, 0, Game2.THREESIXTY, true);
             ctx.fill();
             ctx.stroke();
             ctx.closePath();
@@ -664,7 +668,7 @@ Breakout = {
             this.h      = this.cfg.height * this.game.court.chunk;
             this.minX   = this.game.court.left;
             this.maxX   = this.game.court.right - this.w;
-            this.setpos(Game.random(this.minX, this.maxX), this.game.court.bottom - this.h);
+            this.setpos(Game2.random(this.minX, this.maxX), this.game.court.bottom - this.h);
             this.setdir(0);
             this.rerender = true;
         },
@@ -672,7 +676,7 @@ Breakout = {
         setpos: function(x, y) {
             this.x      = x;
             this.y      = y;
-            Game.Math.bound(this);
+            Game2.Math.bound(this);
         },
 
         setdir: function(dx) {
@@ -692,7 +696,7 @@ Breakout = {
 
         draw: function(ctx) {
             if (this.rerender) {
-                this.canvas = Game.renderToCanvas(this.w, this.h, this.render.bind(this));
+                this.canvas = Game2.renderToCanvas(this.w, this.h, this.render.bind(this));
                 this.rerender = false;
             }
             ctx.drawImage(this.canvas, this.x, this.y);
@@ -736,5 +740,5 @@ Breakout = {
 
     //=============================================================================
 
-}; // Breakout
+}; // Breakout2
 

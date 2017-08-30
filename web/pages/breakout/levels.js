@@ -50,6 +50,111 @@ Breakout.Levels = [
 
   { colors: Breakout.Colors.pastel,
     bricks: [
+      "               ",
+      "               ",
+      "               ",
+      "yyyYYYyyyYYYyyy",
+      "pppPPPpppPPPppp",
+      "bbbBBBbbbBBBbbb",
+      "gggGGGgggGGGggg",
+      "oooOOOoooOOOooo",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  
+  { colors: Breakout.Colors.arkanoid,
+    bricks: [
+      "    rR   rR    ",
+      "     Rr rR     ",
+      "     Rr rR     ",
+      "   rRrRrRrRr   ",
+      "  rRrRrRrRrRr  ",
+      " rRrRwRrRwRrRr ",
+      " rRrRwRrRwRrRr ",
+      "rRrRrRrRrRrRrRr",
+      "rRrRrRrRrRrRrRr",
+      " rR         Rr ",
+      " rR         Rr ",
+      " r           r ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  
+  { colors: Breakout.Colors.arkanoid,
+    bricks: [
+      "o              ",
+      "oll            ",
+      "ollgg          ",
+      "ollggbb        ",
+      "ollggbbrr      ",
+      "ollggbbrryy    ",
+      "ollggbbrryyww  ",
+      "ollggbbrryywwdd",
+      "ollggbbrryywwdd",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  { colors: Breakout.Colors.vintage,
+    bricks: [
+      "               ",
+      "  abcdefghijk  ",
+      "  kabcdefghij  ",
+      "  jkabcdefghi  ",
+      "  ijkabcdefgh  ",
+      "  hijkabcdefg  ",
+      "  ghijkabcdef  ",
+      "  fghijkabcde  ",
+      "  efghijkabcd  ",
+      "  defghijkabc  ",
+      "  cdefghijkab  ",
+      "               ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  
+  { colors:{
+        b: '#111111', // black,
+        w: '#EEEEEE', // white,
+        c: '#EC7150', // cherry,
+        s: '#B33A2F'  // shadow,
+      },
+    bricks: [
+      "  b            ",
+      "   bB bB       ",
+      "     bwWb      ",
+      "    bwWcsb     ",
+      "    bwcCsb     ",
+      "     bsSb  b   ",
+      "      Bb   b   ",
+      "  bB   bB b    ",
+      " bwWb bwcb     ",
+      "bwWcsbwWcsb    ",
+      "bwcCsbcCsSb    ",
+      " bsSb bsSb     ",
+      "  bB   bB      ",
+      "               ",
+      "               "
+    ]
+  }
+
+/*
+  { colors: Breakout.Colors.pastel,
+    bricks: [
       "", "", "", "", "", "",
       "yyyyyYYYYYyyyyyYYYYYyyyyyYYYYY",
       "pppppPPPPPpppppPPPPPpppppPPPPP",
@@ -265,6 +370,7 @@ Breakout.Levels = [
     ]
   }
 
-
+*/
 ];
+
 

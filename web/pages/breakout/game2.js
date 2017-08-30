@@ -1,214 +1,214 @@
-////=============================================================================
-////
-//// We need some ECMAScript 5 methods but we need to implement them ourselves
-//// for older browsers (compatibility: http://kangax.github.com/es5-compat-table/)
-////
-////  Function.bind:        https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
-////  Object.create:        http://javascript.crockford.com/prototypal.html
-////  Object.extend:        (defacto standard like jquery $.extend or prototype's Object.extend)
-////
-////  Object.construct:     our own wrapper around Object.create that ALSO calls
-////                        an initialize constructor method if one exists
-////
-////=============================================================================
+//=============================================================================
 //
+// We need some ECMAScript 5 methods but we need to implement them ourselves
+// for older browsers (compatibility: http://kangax.github.com/es5-compat-table/)
 //
+//  Function.bind:        https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
+//  Object.create:        http://javascript.crockford.com/prototypal.html
+//  Object.extend:        (defacto standard like jquery $.extend or prototype's Object.extend)
 //
-//    if (!Function.prototype.bind) {
-//        Function.prototype.bind = function(obj) {
-//            var slice = [].slice,
-//            args  = slice.call(arguments, 1),
-//            self  = this,
-//            nop   = function () {},
-//            bound = function () {
-//                return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));   
-//            };
-//            nop.prototype   = self.prototype;
-//            bound.prototype = new nop();
-//            return bound;
-//        };
-//    }
+//  Object.construct:     our own wrapper around Object.create that ALSO calls
+//                        an initialize constructor method if one exists
 //
-//if (!Object.create) {
-//    Object.create = function(base) {
-//        function F() {};
-//        F.prototype = base;
-//        return new F();
-//    }
-//}
-//
-//if (!Object.construct) {
-//    Object.construct = function(base) {
-//        var instance = Object.create(base);
-//        if (instance.initialize)
-//            instance.initialize.apply(instance, [].slice.call(arguments, 1));
-//        return instance;
-//    }
-//}
-//
-//if (!Object.extend) {
-//    Object.extend = function(destination, source) {
-//        for (var property in source) {
-//            if (source.hasOwnProperty(property))
-//                destination[property] = source[property];
-//        }
-//        return destination;
-//    };
-//}
-//
-///* NOT READY FOR PRIME TIME
-//   if (!window.requestAnimationFrame) {// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-//   window.requestAnimationFrame = window.webkitRequestAnimationFrame || 
-//   window.mozRequestAnimationFrame    || 
-//   window.oRequestAnimationFrame      || 
-//   window.msRequestAnimationFrame     || 
-//   function(callback, element) {
-//   window.setTimeout(callback, 1000 / 60);
-//   }
-//   }
-//*/
-//
-////=============================================================================
-//// Minimal DOM Library ($)
-////=============================================================================
-//
-//Element = function() {
-//
-//    var instance = {
-//
-//        _extended: true,
-//
-//        showIf: function(on)      { if (on) this.show(); else this.hide(); },
-//        show:   function()        { this.style.display = '';      },
-//        hide:   function()        { this.style.display = 'none';  },
-//        update: function(content) { this.innerHTML     = content; },
-//
-//        hasClassName:    function(name)     { return (new RegExp("(^|\s*)" + name + "(\s*|$)")).test(this.className) },
-//        addClassName:    function(name)     { this.toggleClassName(name, true);  },
-//        removeClassName: function(name)     { this.toggleClassName(name, false); },
-//        toggleClassName: function(name, on) {
-//            var classes = this.className.split(' ');
-//            var n = classes.indexOf(name);
-//            on = (typeof on == 'undefined') ? (n < 0) : on;
-//            if (on && (n < 0))
-//                classes.push(name);
-//            else if (!on && (n >= 0))
-//                classes.splice(n, 1);
-//            this.className = classes.join(' ');
-//        }
-//    };
-//
-//    var get = function(ele) {
-//        if (typeof ele == 'string')
-//            ele = document.getElementById(ele);
-//        if (!ele._extended)
-//            Object.extend(ele, instance);
-//        return ele;
-//    };
-//
-//    return get;
-//
-//}();
-//
-//$ = Element;
-//
-////=============================================================================
-//// State Machine
-////=============================================================================
-//
-//StateMachine = {
-//
-//    //---------------------------------------------------------------------------
-//
-//    create: function(cfg) {
-//
-//        var target  = cfg.target  || {};
-//        var events  = cfg.events;
-//
-//        var n, event, name, can = {};
-//        for(n = 0 ; n < events.length ; n++) {
-//            event = events[n];
-//            name  = event.name;
-//            can[name] = (can[name] || []).concat(event.from);
-//            target[name] = this.buildEvent(name, event.from, event.to, target);
-//        }
-//
-//        target.current = 'none';
-//        target.is      = function(state) { return this.current == state; };
-//        target.can     = function(event) { return can[event].indexOf(this.current) >= 0; };
-//        target.cannot  = function(event) { return !this.can(event); };
-//
-//        if (cfg.initial) { // see "initial" qunit tests for examples
-//            var initial = (typeof cfg.initial == 'string') ? { state: cfg.initial } : cfg.initial; // allow single string to represent initial state, or complex object to configure { state: 'first', event: 'init', defer: true|false }
-//            name = initial.event || 'startup';
-//            can[name] = ['none'];
-//            event = this.buildEvent(name, 'none', initial.state, target);
-//            if (initial.defer)
-//                target[name] = event; // allow caller to trigger initial transition event
-//            else
-//                event.call(target);
-//        }
-//
-//        return target;
-//    },
-//
-//    //---------------------------------------------------------------------------
-//
-//    buildEvent: function(name, from, to, target) {
-//
-//        return function() {
-//
-//            if (this.cannot(name))
-//                throw "event " + name + " innapropriate in current state " + this.current;
-//
-//            var beforeEvent = this['onbefore' + name];
-//            if (beforeEvent && (false === beforeEvent.apply(this, arguments)))
-//                return;
-//
-//            if (this.current != to) {
-//
-//                var exitState = this['onleave'  + this.current];
-//                if (exitState)
-//                    exitState.apply(this, arguments);
-//
-//                this.current = to;
-//
-//                var enterState = this['onenter' + to] || this['on' + to];
-//                if (enterState)
-//                    enterState.apply(this, arguments);
-//            }
-//
-//            var afterEvent = this['onafter'  + name] || this['on' + name];
-//            if (afterEvent)
-//                afterEvent.apply(this, arguments);
-//        }
-//
-//    }
-//
-//    //---------------------------------------------------------------------------
-//
-//};
+//=============================================================================
+
+
+
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function(obj) {
+            var slice = [].slice,
+            args  = slice.call(arguments, 1),
+            self  = this,
+            nop   = function () {},
+            bound = function () {
+                return self.apply(this instanceof nop ? this : (obj || {}), args.concat(slice.call(arguments)));   
+            };
+            nop.prototype   = self.prototype;
+            bound.prototype = new nop();
+            return bound;
+        };
+    }
+
+if (!Object.create) {
+    Object.create = function(base) {
+        function F() {};
+        F.prototype = base;
+        return new F();
+    }
+}
+
+if (!Object.construct) {
+    Object.construct = function(base) {
+        var instance = Object.create(base);
+        if (instance.initialize)
+            instance.initialize.apply(instance, [].slice.call(arguments, 1));
+        return instance;
+    }
+}
+
+if (!Object.extend) {
+    Object.extend = function(destination, source) {
+        for (var property in source) {
+            if (source.hasOwnProperty(property))
+                destination[property] = source[property];
+        }
+        return destination;
+    };
+}
+
+/* NOT READY FOR PRIME TIME
+   if (!window.requestAnimationFrame) {// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+   window.requestAnimationFrame = window.webkitRequestAnimationFrame || 
+   window.mozRequestAnimationFrame    || 
+   window.oRequestAnimationFrame      || 
+   window.msRequestAnimationFrame     || 
+   function(callback, element) {
+   window.setTimeout(callback, 1000 / 60);
+   }
+   }
+*/
+
+//=============================================================================
+// Minimal DOM Library ($)
+//=============================================================================
+
+Element = function() {
+
+    var instance = {
+
+        _extended: true,
+
+        showIf: function(on)      { if (on) this.show(); else this.hide(); },
+        show:   function()        { this.style.display = '';      },
+        hide:   function()        { this.style.display = 'none';  },
+        update: function(content) { this.innerHTML     = content; },
+
+        hasClassName:    function(name)     { return (new RegExp("(^|\s*)" + name + "(\s*|$)")).test(this.className) },
+        addClassName:    function(name)     { this.toggleClassName(name, true);  },
+        removeClassName: function(name)     { this.toggleClassName(name, false); },
+        toggleClassName: function(name, on) {
+            var classes = this.className.split(' ');
+            var n = classes.indexOf(name);
+            on = (typeof on == 'undefined') ? (n < 0) : on;
+            if (on && (n < 0))
+                classes.push(name);
+            else if (!on && (n >= 0))
+                classes.splice(n, 1);
+            this.className = classes.join(' ');
+        }
+    };
+
+    var get = function(ele) {
+        if (typeof ele == 'string')
+            ele = document.getElementById(ele);
+        if (!ele._extended)
+            Object.extend(ele, instance);
+        return ele;
+    };
+
+    return get;
+
+}();
+
+$ = Element;
+
+//=============================================================================
+// State Machine
+//=============================================================================
+
+StateMachine2 = {
+
+    //---------------------------------------------------------------------------
+
+    create: function(cfg) {
+
+        var target  = cfg.target  || {};
+        var events  = cfg.events;
+
+        var n, event, name, can = {};
+        for(n = 0 ; n < events.length ; n++) {
+            event = events[n];
+            name  = event.name;
+            can[name] = (can[name] || []).concat(event.from);
+            target[name] = this.buildEvent(name, event.from, event.to, target);
+        }
+
+        target.current = 'none';
+        target.is      = function(state) { return this.current == state; };
+        target.can     = function(event) { return can[event].indexOf(this.current) >= 0; };
+        target.cannot  = function(event) { return !this.can(event); };
+
+        if (cfg.initial) { // see "initial" qunit tests for examples
+            var initial = (typeof cfg.initial == 'string') ? { state: cfg.initial } : cfg.initial; // allow single string to represent initial state, or complex object to configure { state: 'first', event: 'init', defer: true|false }
+            name = initial.event || 'startup';
+            can[name] = ['none'];
+            event = this.buildEvent(name, 'none', initial.state, target);
+            if (initial.defer)
+                target[name] = event; // allow caller to trigger initial transition event
+            else
+                event.call(target);
+        }
+
+        return target;
+    },
+
+    //---------------------------------------------------------------------------
+
+    buildEvent: function(name, from, to, target) {
+
+        return function() {
+
+            if (this.cannot(name))
+                throw "event " + name + " innapropriate in current state " + this.current;
+
+            var beforeEvent = this['onbefore' + name];
+            if (beforeEvent && (false === beforeEvent.apply(this, arguments)))
+                return;
+
+            if (this.current != to) {
+
+                var exitState = this['onleave'  + this.current];
+                if (exitState)
+                    exitState.apply(this, arguments);
+
+                this.current = to;
+
+                var enterState = this['onenter' + to] || this['on' + to];
+                if (enterState)
+                    enterState.apply(this, arguments);
+            }
+
+            var afterEvent = this['onafter'  + name] || this['on' + name];
+            if (afterEvent)
+                afterEvent.apply(this, arguments);
+        }
+
+    }
+
+    //---------------------------------------------------------------------------
+
+};
 
 //=============================================================================
 // GAME
 //=============================================================================
 
-Game = {
+Game2 = {
 
     compatible: function() {
         return Object.create &&
             Object.extend &&
             Function.bind &&
             document.addEventListener && // HTML5 standard, all modern browsers that support canvas should also support add/removeEventListener
-            Game.ua.hasCanvas
+            Game2.ua.hasCanvas;
     },
 
     start: function(id, game, cfg) {
-        if (Game.compatible())
-            return Game.current = Object.construct(Game.Runner, id, game, cfg).game; // return the game instance, not the runner (caller can always get at the runner via game.runner)
+        if (Game2.compatible())
+            return Game2.current = Object.construct(Game2.Runner, id, game, cfg).game; // return the game instance, not the runner (caller can always get at the runner via game.runner)
     },
 
-    ua: function(canvas) { // should avoid user agent sniffing... but sometimes you just gotta do what you gotta do
+    ua: function() { // should avoid user agent sniffing... but sometimes you just gotta do what you gotta do
         var ua  = navigator.userAgent.toLowerCase();
         var key =        ((ua.indexOf("opera")   > -1) ? "opera"   : null);
         key = key || ((ua.indexOf("firefox") > -1) ? "firefox" : null);
@@ -231,7 +231,7 @@ Game = {
             isSafari:  (key == "safari"),
             isOpera:   (key == "opera"),
             isIE:      (key == "ie"),
-            hasCanvas: (document.createElement(canvas).getContext),
+            hasCanvas: (document.createElement('canvas').getContext),
             hasAudio:  (typeof(Audio) != 'undefined'),
             hasTouch:  ('ontouchstart' in window)
         }
@@ -244,8 +244,8 @@ Game = {
     windowHeight: function() { return window.innerHeight || /* ie */ document.documentElement.offsetHeight; },
 
     ready: function(fn) {
-        if (Game.compatible())
-            Game.addEvent(document, 'DOMContentLoaded', fn);
+        if (Game2.compatible())
+            Game2.addEvent(document, 'DOMContentLoaded', fn);
     },
 
     renderToCanvas: function(width, height, render, canvas) { // http://kaioa.com/node/103
@@ -260,7 +260,7 @@ Game = {
         var head = document.getElementsByTagName('head')[0];
         var s = document.createElement('script');
         head.appendChild(s);
-        if (Game.ua.isIE) {
+        if (Game2.ua.isIE) {
             s.onreadystatechange = function(e) {
                 if (e.currentTarget.readyState == 'loaded')
                     cb(e.currentTarget);
@@ -284,7 +284,7 @@ Game = {
                 var source = sources[n];
                 var image = document.createElement('img');
                 images[source] = image;
-                Game.addEvent(image, 'load', function() { if (--count == 0) callback(images); });
+                Game2.addEvent(image, 'load', function() { if (--count == 0) callback(images); });
                 image.src = source;
             }
         }
@@ -295,11 +295,11 @@ Game = {
     },
 
     randomChoice: function(choices) {
-        return choices[Math.round(Game.random(0, choices.length-1))];
+        return choices[Math.round(Game2.random(0, choices.length-1))];
     },
 
     randomBool: function() {
-        return Game.randomChoice([true, false]);
+        return Game2.randomChoice([true, false]);
     },
 
     timestamp: function() { 
@@ -429,7 +429,7 @@ Game = {
         ballIntercept: function(ball, rect, nx, ny) {
             var pt;
             if (nx < 0) {
-                pt = Game.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
+                pt = Game2.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
                                          rect.right  + ball.radius, 
                                          rect.top    - ball.radius, 
                                          rect.right  + ball.radius, 
@@ -437,7 +437,7 @@ Game = {
                                          "right");
             }
             else if (nx > 0) {
-                pt = Game.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
+                pt = Game2.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
                                          rect.left   - ball.radius, 
                                          rect.top    - ball.radius, 
                                          rect.left   - ball.radius, 
@@ -446,7 +446,7 @@ Game = {
             }
             if (!pt) {
                 if (ny < 0) {
-                    pt = Game.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
+                    pt = Game2.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
                                              rect.left   - ball.radius, 
                                              rect.bottom + ball.radius, 
                                              rect.right  + ball.radius, 
@@ -454,7 +454,7 @@ Game = {
                                              "bottom");
                 }
                 else if (ny > 0) {
-                    pt = Game.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
+                    pt = Game2.Math.intercept(ball.x, ball.y, ball.x + nx, ball.y + ny, 
                                              rect.left   - ball.radius, 
                                              rect.top    - ball.radius, 
                                              rect.right  + ball.radius, 
@@ -492,13 +492,13 @@ Game = {
             this.game = Object.construct(game, this, this.cfg); // finally construct the game object itself
 
             if (this.cfg.state)
-                StateMachine.create(Object.extend({target: this.game}, this.cfg.state));
+                StateMachine2.create(Object.extend({target: this.game}, this.cfg.state));
 
             this.initCanvas();
         },
 
         start: function() { // game instance should call runner.start() when its finished initializing and is ready to start the game loop
-            this.lastFrame = Game.timestamp();
+            this.lastFrame = Game2.timestamp();
             this.timer     = setInterval(this.loop.bind(this), this.interval);
         },
 
@@ -507,15 +507,14 @@ Game = {
         },
 
         loop: function() {
-            this.counter += 1;
-            this.slidernumber = 5;//document.getElementById("slidernumber").value;
-            this.skip_frame = 1; //Math.round(document.getElementById("frame_rate").value);
-            this._start  = Game.timestamp();
-            this.update(this.dt *this.slidernumber/100); // send dt as seconds
-            this._middle = Game.timestamp();
-            if(this.counter%this.skip_frame===0)
-              this.draw();
-            this._end    = Game.timestamp();
+	    this.counter += 1;
+            this.slidernumber = 5;
+            this.skip_frame = 1;
+            this._start  = Game2.timestamp();
+            this.update(this.dt * this.slidernumber/100); // send dt as seconds
+            this._middle = Game2.timestamp();
+            if(this.counter%this.skip_frame===0)this.draw();
+            this._end    = Game2.timestamp();
             this.updateStats(this._middle - this._start, this._end - this._middle);
             this.lastFrame = this._start;
         },
@@ -569,21 +568,21 @@ Game = {
                 ctx.fillText(this.strings.update + Math.round(this.stats.update) + this.strings.ms, this.width - 100, this.height - 40);
                 ctx.fillText(this.strings.draw   + Math.round(this.stats.draw)   + this.strings.ms, this.width - 100, this.height - 30);
             }
-            ctx.font = "9pt arial";
-            ctx.fillText("Game Speed:" + this.slidernumber + "%", 90, this.height - 55);
+            /*ctx.font = "9pt arial";
+            ctx.fillText("Game2 Speed:" + this.slidernumber + "%", 90, this.height - 55);
             ctx.fillText("Drawing every " + this.skip_frame + " frames", 90, this.height - 45);
             var font  = 18 + "pt arial";
             ctx.font = font;
             ctx.fillText("Paddle Hits:" + this.game.score.paddlehit,0,50);
             ctx.fillText("Brick Hits:" + this.game.score.brickhit,0,68);
             ctx.fillText("Deaths:" + this.game.score.death,0,86);
-            ctx.fillText("Levels Won:" + this.game.score.winning,0,104);
+            ctx.fillText("Levels Won:" + this.game.score.winning,0,104);*/
         },
 
         addEvents: function() {
-            Game.addEvent(document, 'keydown', this.onkeydown.bind(this));
-            Game.addEvent(document, 'keyup',   this.onkeyup.bind(this));
-            Game.addEvent(window,   'resize',  this.onresize.bind(this));
+            Game2.addEvent(document, 'keydown', this.onkeydown.bind(this));
+            Game2.addEvent(document, 'keyup',   this.onkeyup.bind(this));
+            Game2.addEvent(window,   'resize',  this.onresize.bind(this));
         },
 
         onresize: function() {
@@ -663,5 +662,5 @@ Game = {
 
         //-------------------------------------------------------------------------
 
-    } // Game.Runner
-} // Game
+    } // Game2.Runner
+} // Game2

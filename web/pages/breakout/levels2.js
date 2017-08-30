@@ -1,4 +1,4 @@
-Breakout.Colors = {
+Breakout2.Colors = {
 
     arkanoid: {
         w: "#FCFCFC", // white
@@ -46,62 +46,299 @@ Breakout.Colors = {
 
 };
 
-Breakout.Levels = [
+Breakout2.Levels = [
 
-    { colors: Breakout.Colors.pastel,
+  { colors: Breakout2.Colors.pastel,
+    bricks: [
+      "               ",
+      "               ",
+      "               ",
+      "yyyYYYyyyYYYyyy",
+      "pppPPPpppPPPppp",
+      "bbbBBBbbbBBBbbb",
+      "gggGGGgggGGGggg",
+      "oooOOOoooOOOooo",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  
+  { colors: Breakout2.Colors.arkanoid,
+    bricks: [
+      "    rR   rR    ",
+      "     Rr rR     ",
+      "     Rr rR     ",
+      "   rRrRrRrRr   ",
+      "  rRrRrRrRrRr  ",
+      " rRrRwRrRwRrRr ",
+      " rRrRwRrRwRrRr ",
+      "rRrRrRrRrRrRrRr",
+      "rRrRrRrRrRrRrRr",
+      " rR         Rr ",
+      " rR         Rr ",
+      " r           r ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  
+  { colors: Breakout2.Colors.arkanoid,
+    bricks: [
+      "o              ",
+      "oll            ",
+      "ollgg          ",
+      "ollggbb        ",
+      "ollggbbrr      ",
+      "ollggbbrryy    ",
+      "ollggbbrryyww  ",
+      "ollggbbrryywwdd",
+      "ollggbbrryywwdd",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  { colors: Breakout2.Colors.vintage,
+    bricks: [
+      "               ",
+      "  abcdefghijk  ",
+      "  kabcdefghij  ",
+      "  jkabcdefghi  ",
+      "  ijkabcdefgh  ",
+      "  hijkabcdefg  ",
+      "  ghijkabcdef  ",
+      "  fghijkabcde  ",
+      "  efghijkabcd  ",
+      "  defghijkabc  ",
+      "  cdefghijkab  ",
+      "               ",
+      "               ",
+      "               ",
+      "               "
+    ]
+  },
+  
+  { colors:{
+        b: '#111111', // black,
+        w: '#EEEEEE', // white,
+        c: '#EC7150', // cherry,
+        s: '#B33A2F'  // shadow,
+      },
+    bricks: [
+      "  b            ",
+      "   bB bB       ",
+      "     bwWb      ",
+      "    bwWcsb     ",
+      "    bwcCsb     ",
+      "     bsSb  b   ",
+      "      Bb   b   ",
+      "  bB   bB b    ",
+      " bwWb bwcb     ",
+      "bwWcsbwWcsb    ",
+      "bwcCsbcCsSb    ",
+      " bsSb bsSb     ",
+      "  bB   bB      ",
+      "               ",
+      "               "
+    ]
+  }
+];
+
+/*Breakout2.Levels = [
+
+    { colors: Breakout2.Colors.pastel,
       bricks: [
-          "", "", "",
-          "yyyyyYYYYYyyyyy",
-          "pppppPPPPPppppp",
-          "bbbbbBBBBBbbbbb",
-          "gggggGGGGGggggg",
-          "oooooOOOOOooooo"
+          "", "", "", "", "", "",
+          "yyyyyYYYYYyyyyyYYYYYyyyyyYYYYY",
+          "pppppPPPPPpppppPPPPPpppppPPPPP",
+          "bbbbbBBBBBbbbbbBBBBBbbbbbBBBBB",
+          "gggggGGGGGgggggGGGGGgggggGGGGG",
+          "oooooOOOOOoooooOOOOOoooooOOOOO"
       ]
     },
 
-    { colors: Breakout.Colors.arkanoid,
-      bricks: [
-          "   yy     yy   ",
-          "     yy yy     ",
-          "   ssSSsSSss   ",
-          " SSsswwswwssSS ",
-          "sSSssSSsSSssSSs",
-          "s  ssSSsSSss  s",
-          "s  ss     ss  s",
-          "s  ss     ss  s",
-          "     ss ss     ",
-          "     ss ss     "
-      ]
-    },
-
-    { colors: Breakout.Colors.arkanoid,
-      bricks: [
-          "",
-          "oo             ",
-          "ooll           ",
-          "oollgg         ",
-          "oollggbb       ",
-          "oollggbbrr     ",
-          "oollggbbrroo   ",
-          "oollggbbrrooll "
-      ]
-    },
-
-    { colors: Breakout.Colors.arkanoid,
+    { colors: Breakout2.Colors.arkanoid,
       bricks: [
           "", "",
-          "      sss      ",
-          "   bbBBsggGG   ",
-          " BBbbWWwWWGGgg ",
-          "bBBwwWWwWWwwggG",
-          "bBBwwWWwWWwwggG",
-          "s  ss  s  ss  s",
-          "       s       ",
-          "   oo  o       ",
-          "   ooOOo       ",
-          "     OO        "
+          "          yy      yy          ",
+          "            yy  yy            ",
+          "            yy  yy            ", 
+          "          ssSSssSSss          ",
+          "          ssSSssSSss          ",
+          "        SSsswwsswwssSS        ",
+          "        SSsswwsswwssSS        ",
+          "      ssSSssSSssSSssSSss      ",
+          "      ssSSssSSssSSssSSss      ",
+          "      ss  ssSSssSSss  ss      ",
+          "      ss  ss      ss  ss      ",
+          "      ss  ss      ss  ss      ",
+          "            ss  ss            ",
+          "            ss  ss            ",
       ]
-    }/*,
+    },
+
+    { colors: Breakout2.Colors.arkanoid,
+      bricks: [
+          "",
+          "oo",
+          "ooll",
+          "oollgg",
+          "oollggbb",
+          "oollggbbrr",
+          "oollggbbrroo",
+          "oollggbbrrooll",
+          "oollggbbrroollgg",
+          "oollggbbrroollggbb",
+          "oollggbbrroollggbbrr",
+          "oollggbbrroollggbbrroo",
+          "oollggbbrroollggbbrrooll",
+          "oollggbbrroollggbbrroollgg",
+          "oollggbbrroollggbbrroollggbb",
+          "ssSSssSSssSSssSSssSSssSSssSSrr"
+      ]
+    },
+
+    { colors: Breakout2.Colors.arkanoid,
+      bricks: [
+          "", "",
+          "              ss              ",
+          "          bbBBssggGG          ",
+          "        BBbbWWwwWWGGgg        ",
+          "      bbBBwwWWwwWWwwggGG      ",
+          "      bbBBwwWWwwWWwwggGG      ",
+          "      bbBBwwWWwwWWwwggGG      ",
+          "      ss  ss  ss  ss  ss      ",
+          "              ss              ",
+          "              ss              ",
+          "          oo  oo              ",
+          "          ooOOoo              ",
+          "            OO                "
+      ]
+    },
+
+    { colors: Breakout2.Colors.pastel,
+      bricks: [
+          "", "",
+          "  yyYYyyYYyyYY  YYyyYYyyYYyy  ",
+          "  bbBBbbBBbbBB  BBbbBBbbBBbb  ",
+          "  ggGGggGGggGG  GGggGGggGGgg  ",
+          "  ooOOooOOooOO  OOooOOooOOoo  ",
+          "", "",
+          "  yyYYyyYYyyYY  YYyyYYyyYYyy  ",
+          "  bbBBbbBBbbBB  BBbbBBbbBBbb  ",
+          "  ggGGggGGggGG  GGggGGggGGgg  ",
+          "  ooOOooOOooOO  OOooOOooOOoo  ",
+          "", "",
+          "  yyYYyyYYyyYY  YYyyYYyyYYyy  ",
+          "  bbBBbbBBbbBB  BBbbBBbbBBbb  ",
+          "  ggGGggGGggGG  GGggGGggGGgg  ",
+          "  ooOOooOOooOO  OOooOOooOOoo  "
+      ]
+    },
+
+    { colors: Breakout2.Colors.vintage,
+      bricks: [
+          "", "", "",
+          "   AAaaAAaaAAaaAAaaAAaaAAaa   ",
+          "    BBbbBBbbBBbbBBbbBBbbBB    ",
+          "     CCccCCccCCccCCccCCcc     ",
+          "      DDddDDddDDddDDddDD      ",
+          "       EEeeEEeeEEeeEEee       ",
+          "        FFffFFffFFffFF        ",
+          "         GGggGGggGGgg         ",
+          "          HHhhHHhhHH          ",
+          "           IIiiIIii           ",
+          "            JJjjJJ            ",
+          "             KKkk             ",
+          "              LL              "
+      ]
+    },
+
+    { colors: Breakout2.Colors.vintage,
+      bricks: [
+          "", "",
+          "  aabbccddeeffggFFEEDDCCBBAA  ",
+          "   aabbccddeeffFFEEDDCCBBAA   ",
+          "    aabbccddeeffEEDDCCBBAA    ",
+          "     aabbccddeeEEDDCCBBAA     ",
+          "      aabbccddeeDDCCBBAA      ",
+          "       aabbccddDDCCBBAA       ",
+          "        aabbccddCCBBAA        ",
+          "         aabbccCCBBAA         ",
+          "          aabbccBBAA          ",
+          "      hh   aabbCCAA   hh      ",
+          "     hhHH   aabbAA   hhHH     ",
+          "    hhiiHH   aaAA   hhiiHH    ",
+          "   hhiiIIHH   aa   hhiiIIHH   ",
+          "  hhiijjIIHH      hhiijjIIHH  ",
+          " hhiijjJJIIHH    hhiijjJJIIHH "
+      ]
+    },
+
+    { colors: Breakout2.Colors.pastel,
+      bricks: [
+          "                              ",
+          "                              ",
+          "  bbBBbbBBbbBBbbBBbbBBbbBBbb  ",
+          "  ooggGGggGGggGGggGGggGGggoo  ",
+          "  ooggGGggGGggGGggGGggGGggoo  ",
+          "  ooppPPppPPppPPppPPppPPppoo  ",
+          "  ooppPPppPPppBBppPPppPPppoo  ",
+          "  ooppPPppPPbbBBbbPPppPPppoo  ",
+          "  ooppPPppBBbbOObbBBppPPppoo  ",
+          "  ooppPPbbBBooOOooBBbbPPppoo  ",
+          "  ooppBBbbOOooYYooOObbBBppoo  ",
+          "  oobbBBOOooyyYYyyooOOBBbboo  ",
+          "  oobbooOOYYyyYYyyYYOOoobboo  ",
+          "  ooOOooyyYYyyYYyyYYyyooOOoo  ",
+          "  ooOOYYyyYYyyYYyyYYyyYYOOoo  ",
+          "  ooyyYYyyYYyyYYyyYYyyYYyyoo  ",
+          "  ooyyYYyyYYyyYYyyYYyyYYyyoo  ",
+          "  bbBBbbBBbbBBbbBBbbBBbbBBbb  "
+      ]
+    },
+
+    { colors: {
+        b: '#111111', // black,
+        w: '#EEEEEE', // white,
+        c: '#EC7150', // cherry,
+        s: '#B33A2F'  // shadow,
+    },
+
+      bricks: [
+          "",
+          "       bBb                    ",
+          "      BcCcB                   ",
+          "     bCwCcsb  b               ",
+          "     bCcCcsb b                ",
+          "      BcCsB B                 ",
+          "    BbBsSsBbB       bBb       ",
+          "   bcCcbBbcCcb     BcCcB      ",
+          "  bcwcCsbcwcCsb   bCwCcsb  b  ",
+          "  bcCcCsbcCcCsb   bCcCcsb b   ",
+          "  bcCcsSbcCcsSb    BcCsB B    ",
+          "   bsSsb bsSsb   BbBsSsBbB    ",
+          "    bBb   bBb   bcCcbBbcCcb   ",
+          "               bcwcCsbcwcCsb  ",
+          "               bcCcCsbcCcCsb  ",
+          "               bcCcsSbcCcsSb  ",
+          "                bsSsb bsSsb   ",
+          "                 bBb   bBb    ",
+          "                              ",
+          "                              ",
+          "                              ",
+          "                              ",
+      ]
+    },
 
     { colors: {
         r: '#D80000', // red
@@ -134,7 +371,7 @@ Breakout.Levels = [
           "                   FfFfF      "
       ]
     },
-    { colors: Breakout.Colors.pastel,
+    { colors: Breakout2.Colors.pastel,
       bricks: [
           "yyyyyYYYYYyyyyyYYYYYyyyyyYYYYY",
           "pppppPPPPPpppppPPPPPpppppPPPPP",
@@ -161,7 +398,7 @@ Breakout.Levels = [
           "bbbbbBBBBBbbbbbBBBBBbbbbbBBBBB"
       ]
     }, 
-    { colors: Breakout.Colors.pastel,
+    { colors: Breakout2.Colors.pastel,
       bricks: [
           "",
           "",
@@ -187,12 +424,12 @@ Breakout.Levels = [
           "",
           "", "","", "y"
       ]
-    },*/
+    },
 
 
 
 ];
-/*function makeid()
+function makeid()
 {
     var text = "";
     var possible = "ABCDEFGHIJKLabcdefghijkl";
@@ -240,7 +477,7 @@ function makeLevel()
 
    return lvl;
 };
-Breakout.Levels = new Array(15);
+
+Breakout2.Levels = new Array(15);
 for(var i =0; i<15; i++)
-    Breakout.Levels[i] = makeLevel();
-*/
+    Breakout2.Levels[i] = makeLevel();*/

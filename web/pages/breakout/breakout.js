@@ -6,19 +6,19 @@ Breakout = {
 
   Defaults: {
 
-    fps: 60,
+    fps: 100000, //60
     stats: false,
 
     score: {
       lives: {
-        initial: 3,
-        max: 5
+        initial: 0,
+        max: 0
       }
     },
 
     court: {
-      xchunks: 15, //30,
-      ychunks: 15 //25
+      xchunks: 15, //30
+      ychunks: 15  //25
     },
 
     ball: {
@@ -64,11 +64,11 @@ Breakout = {
       { keys: [Game.KEY.SPACE, Game.KEY.RETURN], state: 'menu', action: function() { this.play();                     } },
       { keys: [Game.KEY.SPACE, Game.KEY.RETURN], state: 'game', action: function() { this.ball.launchNow();           } },
       { key:  Game.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
-      { key:  Game.KEY.UP,                       state: 'menu', action: function() { this.nextLevel();                } },
-      { key:  Game.KEY.DOWN,                     state: 'menu', action: function() { this.prevLevel();                } }
-    ],
+      //{ key:  Game.KEY.UP,                       state: 'menu', action: function() { this.nextLevel();                } },
+      //{ key:  Game.KEY.DOWN,                     state: 'menu', action: function() { this.prevLevel();                } }
+    ]/*,
 
-    /*sounds: {
+    sounds: {
       brick:    '/sound/breakout/brick.mp3',
       paddle:   '/sound/breakout/paddle.mp3',
       go:       '/sound/breakout/go.mp3',
@@ -94,9 +94,6 @@ Breakout = {
     this.ball    = Object.construct(Breakout.Ball,   this, cfg.ball);
     this.score   = Object.construct(Breakout.Score,  this, cfg.score);
     //Game.loadSounds({sounds: cfg.sounds});
-    var init_bot = Breakout.init_botname;
-        
-    this.bot = Object.construct(Breakout.bot[init_bot], this, cfg.bot);
   },
 
   onstartup: function() { // the event that fires the initial state transition occurs when Game.Runner constructs our StateMachine
@@ -105,18 +102,18 @@ Breakout = {
   },
 
   addEvents: function() {
-    Game.addEvent('prev',  'click',  this.prevLevel.bind(this, false));
-    Game.addEvent('next',  'click',  this.nextLevel.bind(this, false));
+    //Game.addEvent('prev',  'click',  this.prevLevel.bind(this, false));
+    //Game.addEvent('next',  'click',  this.nextLevel.bind(this, false));
     //Game.addEvent('sound', 'change', this.toggleSound.bind(this, false));
 
-    Game.addEvent('instructions',     'touchstart', this.play.bind(this));
+    //Game.addEvent('instructions',     'touchstart', this.play.bind(this));
     Game.addEvent(this.runner.canvas, 'touchmove',  this.ontouchmove.bind(this));
     Game.addEvent(document.body,      'touchmove',  function(event) { event.preventDefault(); }); // prevent ipad bouncing up and down when finger scrolled
   },
 
-  /*toggleSound: function() {
-    this.storage.sound = this.sound = !this.sound;
-  },*/
+  toggleSound: function() {
+    //this.storage.sound = this.sound = !this.sound;
+  },
 
   update: function(dt) {
     this.court.update(dt);
@@ -128,8 +125,8 @@ Breakout = {
   draw: function(ctx) {
     ctx.save();
     ctx.clearRect(0, 0, this.width, this.height);
-    ctx.fillStyle = this.color.background;
-    ctx.fillRect(0, 0, this.width, this.height);
+    /*ctx.fillStyle = this.color.background;
+    ctx.fillRect(0, 0, this.width, this.height);*/
     this.court.draw(ctx);
     this.paddle.draw(ctx);
     this.ball.draw(ctx);
@@ -146,7 +143,7 @@ Breakout = {
   },
 
   onmenu: function() {
-    this.resetLevel();
+    this.resetLevel(0);
     this.paddle.reset();
     this.ball.reset();
     this.refreshDOM();
@@ -168,23 +165,44 @@ Breakout = {
   },
 
   onbeforeabandon: function() {
-    return this.runner.confirm("Abandon game?")
+    return this.runner.confirm("Abandon game?");
   },
 
   loseBall: function() {
-    //this.playSound('loselife');
+    this.score.save();
+    this.ball.reset({launch: true});
+    
+    /*this.playSound('loselife');
     if (this.score.loseLife())
       this.lose();
     else {
       this.ball.reset({launch: true});
     }
+    
+    if (this.score.loseLife()){
+            this.score.save();
+            this.score.reset();
+            this.resetLevel(Math.round(Math.random()*Breakout2.Levels.length));
+            this.paddle.stopMovingLeft();
+            this.paddle.stopMovingRight();
+            this.ball.reset({launch: true});
+        }
+        else {
+            this.ball.reset({launch: true});
+        }*/
   },
 
   winLevel: function() {
-    //this.playSound('levelup');
-    this.score.gainLife();
-    this.nextLevel(true);
-    this.ball.reset({launch: true});
+    levelHuman++;
+    if(levelHuman < 5) {
+      //this.playSound('levelup');
+      this.score.gainLife();
+      this.nextLevel(true);
+      this.ball.reset({launch: true});
+    }
+    else {
+      window.alert("Hai vinto! Complimenti!");
+    }
   },
 
   hitBrick: function(brick) {
@@ -196,7 +214,7 @@ Breakout = {
       this.winLevel();
   },
 
-  resetLevel: function() { this.setLevel(); },
+  resetLevel: function(level) { this.setLevel(level); },
   setLevel: function(level) {
     level = (typeof level == 'undefined') ? (this.storage.level ? parseInt(this.storage.level) : 0) : level;
     level = level < Breakout.Levels.length ? level : 0;
@@ -218,10 +236,10 @@ Breakout = {
   },
 
   refreshDOM: function() {
-    $('instructions').className = Game.ua.hasTouch ? 'touch' : 'keyboard';
+    /*$('instructions').className = Game.ua.hasTouch ? 'touch' : 'keyboard';
     $('instructions').showIf(this.is('menu'));
     $('prev').toggleClassName('disabled', !this.canPrevLevel());
-    $('next').toggleClassName('disabled', !this.canNextLevel());
+    $('next').toggleClassName('disabled', !this.canNextLevel());*/
     $('level').update(this.level + 1);
     //$('sound').checked = this.sound;
   },
@@ -273,8 +291,8 @@ Breakout = {
       this.top    = this.game.court.top - this.game.court.wall.size*2;
       this.width  = this.game.court.width;
       this.height = this.game.court.wall.size*2;
-      this.scorefont = "bold " + Math.max(9, this.game.court.wall.size - 2) + "pt arial";
-      this.highfont  = ""      + Math.max(9, this.game.court.wall.size - 8) + "pt arial";
+      this.scorefont = "bold " + Math.max(9, this.game.court.wall.size - 10) + "pt arial";
+      this.highfont  = ""      + Math.max(9, this.game.court.wall.size - 12) + "pt arial";
       ctx.save();
       ctx.font = this.scorefont;
       this.scorewidth = ctx.measureText(this.format(0)).width;
@@ -312,7 +330,7 @@ Breakout = {
         game: this.game,
         w:    this.game.court.chunk * 1.5,
         h:    this.game.court.chunk * 2/3
-      }
+      };
       ctx.translate(this.scorewidth + 20, (this.height-paddle.h) / 2);
       for(var n = 0 ; n < this.lives ; n++) {
         this.game.paddle.render.call(paddle, ctx);
@@ -370,7 +388,7 @@ Breakout = {
       this.right  = this.left + this.width;
       this.bottom = this.top  + this.height;
 
-      this.wall = {}
+      this.wall = {};
       this.wall.size  = this.chunk;
       this.wall.top   = Game.Math.bound({x: this.left - this.wall.size, y: this.top - this.wall.size*2, w: this.width + this.wall.size*2, h: this.wall.size*2               });
       this.wall.left  = Game.Math.bound({x: this.left - this.wall.size, y: this.top - this.wall.size*2, w: this.wall.size,                h: this.wall.size*2 + this.height });
@@ -464,7 +482,7 @@ Breakout = {
         this.game.paddle,
         this.game.court.wall.top,
         this.game.court.wall.left,
-        this.game.court.wall.right,
+        this.game.court.wall.right
       ].concat(this.game.court.bricks);
       if (options && options.launch)
         this.launch();
@@ -699,3 +717,4 @@ Breakout = {
   //=============================================================================
 
 }; // Breakout
+
