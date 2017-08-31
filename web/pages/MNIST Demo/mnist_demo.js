@@ -200,14 +200,14 @@ function createDivActivations(net, div) {
     var L = net.layers[i];
     switch(L.layer_type) {
       case 'input':
-        addActSection(div, 1);
+        addActSection(div);
         var t = "<b>Strato Input</b> ";
         t += '(' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth +")";
         draw_layers[i].part_text.innerHTML = t;
         draw_layers[i].part_draw.appendChild(createEmptyCanvas(L.out_sx*scaleX, L.out_sy*scaleY, "white", "act-canvas"));
         break;
       case 'conv':
-        addActSection(div, 2);
+        addActSection(div);
         var t = "<b>Str. Convoluzionale</b> ";
         t += '(' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ")</br>";
         t += "Numero filtri: "+L.out_depth + "</br>";
@@ -216,17 +216,9 @@ function createDivActivations(net, div) {
         for(var c=0; c<L.out_depth; c++) {
           draw_layers[i].part_draw.appendChild(createEmptyCanvas(L.out_sx*scaleX, L.out_sy*scaleY, "white", "act-canvas"));
         }
-
-        L = net.layers[i+1];
-        var t = "<b>Strato ReLu</b>";
-        t +=  ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
-        draw_layers[i+1].part_text.innerHTML = t;
-        for(var c=0; c<L.out_depth; c++) {
-          draw_layers[i+1].part_draw.appendChild(createEmptyCanvas(L.out_sx*scaleX, L.out_sy*scaleY, "white", "act-canvas"));
-        }
       break;
       case 'pool':
-        addActSection(div, 1);
+        addActSection(div);
         var t = "<b>Str. Pooling</b>";
         t += ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')</br>';
         t += "Dimensione pooling: "+L.sx + 'x' + L.sy;
@@ -236,26 +228,27 @@ function createDivActivations(net, div) {
         }
       break;
       case 'fc':
-        if(net.layers[i+1].layer_type === "relu") addActSection(div, 2);
-        else addActSection(div, 1);
-
+        addActSection(div);
         var t = "<b>Str. Completamente connesso</b></br>";
         t += 'Numero neuroni: '+L.out_depth;
         draw_layers[i].part_text.innerHTML = t;
         for(var c=0; c<L.out_depth; c++) {
-          draw_layers[i].part_draw.appendChild(createEmptyCanvas(4, 24, "white", ""));
-        }
-        L = net.layers[i+1];
-        if(L.layer_type === "relu") {
-          var t = "<b>Strato ReLu</b>" + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
-          draw_layers[i+1].part_text.innerHTML = t;
-          for(var c=0; c<L.out_depth; c++) {
-            draw_layers[i+1].part_draw.appendChild(createEmptyCanvas(4, 24, "white", ""));
-          }
+          draw_layers[i].part_draw.appendChild(createEmptyCanvas(7, 7, "white", ""));
         }
       break;
+      case 'relu':
+        addActSection(div);
+        var t = '<b>Strato ReLu</b> (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
+        draw_layers[i].part_text.innerHTML = t;
+
+        // Use the same parameters of the canvas of the last layer
+        var last_layer_canvas = draw_layers[i-1].part_draw.childNodes[0];
+        for(var c=0; c<L.out_depth; c++) {
+          draw_layers[i].part_draw.appendChild(createEmptyCanvas(last_layer_canvas.width, last_layer_canvas.height, "white", last_layer_canvas.className));
+        }
+        break;
       case 'softmax':
-        addActSection(div, 1);
+        addActSection(div);
         var t = "<b>Strato Softmax</b></br>";
         t += 'Numero classi: '+L.out_depth;
         draw_layers[i].part_text.innerHTML = t;
@@ -268,28 +261,26 @@ function createDivActivations(net, div) {
   }
 }
 
-function addActSection(div, n_parts) {
-
+function addActSection(div) {
   var section = document.createElement("div");
   section.className = "section col-xs-12";
-  for(var p=0; p<n_parts; p++) {
-    var row = document.createElement("div");
-    row.className = "row";
-    var part_text = document.createElement("div");
-    part_text.className = "col-xs-3 act-part-text";
-    var part_draw_wrap = document.createElement("div");
-    part_draw_wrap.className = "col-xs-9 act-part-draw wrap";
-    var part_draw = document.createElement("div");
-    part_draw.className = "fit-content";
-    part_draw_wrap.appendChild(part_draw);
 
-    row.appendChild(part_text);
-    row.appendChild(part_draw_wrap);
+  var row = document.createElement("div");
+  row.className = "row";
+  var part_text = document.createElement("div");
+  part_text.className = "col-xs-3 act-part-text";
+  var part_draw_wrap = document.createElement("div");
+  part_draw_wrap.className = "col-xs-9 act-part-draw wrap";
+  var part_draw = document.createElement("div");
+  part_draw.className = "fit-content";
+  part_draw_wrap.appendChild(part_draw);
 
-    section.appendChild(row);
+  row.appendChild(part_text);
+  row.appendChild(part_draw_wrap);
 
-    draw_layers.push({part_text:part_text, part_draw:part_draw});
-  }
+  section.appendChild(row);
+
+  draw_layers.push({part_text:part_text, part_draw:part_draw});
 
   div.appendChild(section);
 }
