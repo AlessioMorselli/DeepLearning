@@ -59,7 +59,7 @@ Breakout2 = {
         keys: [
             { keys: [Game2.KEY.SPACE, Game2.KEY.RETURN], state: 'menu', action: function() { this.play();                     } },
             { keys: [Game2.KEY.SPACE, Game2.KEY.RETURN], state: 'game', action: function() { this.ball.launchNow();           } },
-            { key:  Game2.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
+            //{ key:  Game2.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
 
         ],
 
@@ -157,7 +157,7 @@ Breakout2 = {
     },
 
     onbeforeabandon: function() {
-        return this.runner.confirm("Abandon game?");
+      return this.runner.confirm("Annullare il gioco?");
     },
 
     loseBall: function() {
@@ -191,8 +191,7 @@ Breakout2 = {
           this.bot.winLevel();
         }
         else {
-          window.alert("Il computer ha vinto! Se vuoi puoi continuare,\n\
-            oppure aggiorna la pagina e ricomincia la sfida!");
+          window.alert("Il computer ha vinto! Se vuoi puoi continuare, oppure aggiorna la pagina e ricomincia la sfida!");
         }
     },
 

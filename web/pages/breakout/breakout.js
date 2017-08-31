@@ -63,7 +63,7 @@ Breakout = {
       { keys: [Game.KEY.RIGHT, Game.KEY.D],                     action: function() { this.paddle.stopMovingRight();   } },
       { keys: [Game.KEY.SPACE, Game.KEY.RETURN], state: 'menu', action: function() { this.play();                     } },
       { keys: [Game.KEY.SPACE, Game.KEY.RETURN], state: 'game', action: function() { this.ball.launchNow();           } },
-      { key:  Game.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
+      //{ key:  Game.KEY.ESC,                      state: 'game', action: function() { this.abandon();                  } },
       //{ key:  Game.KEY.UP,                       state: 'menu', action: function() { this.nextLevel();                } },
       //{ key:  Game.KEY.DOWN,                     state: 'menu', action: function() { this.prevLevel();                } }
     ]/*,
@@ -165,7 +165,7 @@ Breakout = {
   },
 
   onbeforeabandon: function() {
-    return this.runner.confirm("Abandon game?");
+    return this.runner.confirm("Annullare il gioco?");
   },
 
   loseBall: function() {

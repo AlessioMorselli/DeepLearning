@@ -668,8 +668,15 @@ Game = {
       result = window.confirm(msg);
       this.start();
       return result;
-    }
+    },
+    
+    ferma: function() {
+      this.stop();
+    },
 
+    ricomincia: function() {
+      this.start();
+    }
     //-------------------------------------------------------------------------
 
   } // Game.Runner
