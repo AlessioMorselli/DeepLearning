@@ -12,56 +12,23 @@ and open the template in the editor.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- framework - Da condividere -->
-    <link href="framework/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../framework/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="framework/js/bootstrap.min.js"></script>
+    <script src="../framework/js/bootstrap.min.js"></script>
     <!-- css comune -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
     
   </head>
   <body>
     <div class="container">
       <!-- Header -->
-      <div>
-        <h1 style="text-align: center">
-          <a href="home.html">
-            DEEP LEARNING
-          </a>
-        </h1>
-        <nav class="navbar navbar-default">
-          <ul class="nav navbar-nav" style="float: none;">
-            <li class="dropdown item-list">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                aria-expanded="false">Esempi <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="MNIST-classify.html">Riconoscimento Cifre</a></li>
-                <li><a href="data-classify.html">Classificazione di Dati</a></li>
-                <li><a href="pictures-classify.html">Riconoscimento Immagini</a></li>
-                <li><a href="reinforcement.html">Reinforcement Learning</a></li>
-                <li><a href="breakout.html">Sfida Breakout</a></li>
-              </ul>
-            </li>
-            <li class="dropdown item-list">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                aria-expanded="false">Approfondimenti <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="overfitting.html">Overfitting</a></li>
-                <li><a href="training-difficulty.html">Difficoltà di Allenamento</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="weight-bias-init.html">Inizializzazione dei Parametri</a></li>
-                <li><a href="regularization.html">Regolarizzazione</a></li>
-                <li><a href="hyper-param.html">Scelta dei Parametri Secondari</a></li>
-              </ul>
-            </li>
-            <li class="item-list">
-              <a href="frontiere.html">Frontiere</a>
-            </li>
-            <li class="item-list">
-              <a href="in-futuro.html">Cosa ci aspetta in futuro?</a>
-            </li>
-          </ul>
-        </nav>
+      <div id="header">
+        
       </div>
+      
+      <script>
+        $("#header").load("../shared/header.html");
+      </script>
       <!-- Header - FINE -->
       
       <h1 class="centrato">Difficoltà di allenamento</h1>
@@ -84,7 +51,7 @@ and open the template in the editor.
         <i>layer</i> imparano più velocemente dei neuroni nel primo strato della rete.</p>
       
       <div class="figura">
-        <img src="documentation/training-speed.png" style="width: 400px"><br/>
+        <img src="../documentation/training-speed.png" style="width: 400px"><br/>
         <p><small>La velocità di apprendimento dei due <i>layer</i>: si può vedere come il primo sia più
             lento del secondo.</small></p>
       </div>
@@ -96,8 +63,8 @@ and open the template in the editor.
         (<b>problema del gradiente divergente</b>).</p>
       
       <div class="figura" style="padding: 0 10%;">
-        <img src="documentation/training-speed2.png" style="width: 400px">
-        <img src="documentation/training-speed3.png" style="width: 400px"><br/>
+        <img src="../documentation/training-speed2.png" style="width: 400px">
+        <img src="../documentation/training-speed3.png" style="width: 400px"><br/>
         <p><small>Anche aggiungendo livelli alla rete il problema non si risolve, anzi la differenza tra il
             primo e l'ultimo <i>layer</i> si fa sempre più evidente.</small></p>
       </div>

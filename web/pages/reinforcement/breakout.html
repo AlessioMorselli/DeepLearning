@@ -1,0 +1,86 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+    <title>Deep Learning - Sfida Breakout</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width", initial-scale=1.0, user-scalable="no"/>
+    <!-- <link href="breakout.css" media="screen, print" rel="stylesheet" type="text/css" /> -->
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+
+    <!-- framework - Da condividere -->
+    <link href="../framework/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../framework/js/bootstrap.min.js"></script>
+
+    <script>
+      var levelHuman = 0;
+      var levelComputer = 0;
+    </script>
+
+    <!-- Codice javascript del giocatore -->
+    <script src="breakout/game.js" type="text/javascript"></script>
+    <script src="breakout/breakout.js" type="text/javascript"></script>
+    <script src="breakout/levels.js" type="text/javascript"></script>
+
+    <!-- Codice javascript del computer -->
+    <script src="breakout/game2.js" type="text/javascript"></script>
+    <script src="breakout/breakout2.js" type="text/javascript"></script>
+    <script src="breakout/levels2.js" type="text/javascript"></script>
+    <script src="breakout/learned-bot.js" type="text/javascript"></script>
+
+    <!-- File javascript che contiene la rete del pc -->
+    <script src="breakout/table.js" type="text/javascript"></script>
+  </head> 
+
+  <body> 
+
+    <div class="container">
+      <!-- Header -->
+      <div id="header">
+        
+      </div>
+      
+      <script>
+        $("#header").load("../shared/header.html");
+      </script>
+      <!-- Header - FINE -->
+
+      <p class="centrato">Il computer si è allenato molto per potervi sfidare. Ed ora è qui, pronto ad accogliere
+        la vostra sfida! La rete neurale che comanda il giocatore del computer è stata allenata in modo simile a
+        quanto accade nella demo del <i><a href="reinforcement.html">Reinforcement Learning</a></i> ed è stata
+        allenata con un totale di 15 milioni di mosse!</p>
+      <p class="centrato">Il gioco che vi presentiamo qui è Breakout. Il vostro obiettivo è distruggere tutti
+        i blocchi presenti in ogni livello e terminare quindi tutti i livelli prima del computer. Non ci sono
+        vite, tutto quello che conta è finire per primi! I comandi sono semplici: si usano solo le frecce
+        direzionali per muovere la piattaforma. Quando siete pronti, premete la barra spaziatrice e la sfida
+        comincerà!</p>
+
+      <div id="breakout">
+        <div class="center-block my-jumbotron text-center row">
+          <div class="col-lg-6">
+            <canvas id="canvas" style="width: 480px; height: 360px"></canvas>
+            <p style="font-size: 15px"><span id="label">Il tuo livello:</span><span id="level"></span>/5</p>
+          </div>
+
+          <div class="col-lg-6">
+            <canvas id="canvas2" style="width: 480px; height: 360px"></canvas>
+            <p style="font-size: 15px"><span id="label2">Il livello del computer:</span><span id="level2"></span>/5</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var game;
+      Game.ready(function() {
+        game = Game.start('canvas', Breakout);
+      });
+
+      var game2;
+      Game2.ready(function() {
+        Breakout2.init_botname = "long_learned";
+        game2 = Game2.start('canvas2', Breakout2);
+      });
+    </script>
+  </body> 
+</html>

@@ -6,67 +6,34 @@
     <title>Deep Learning - Reinforcement Learning</title>
     
     <!-- framework - Da condividere -->
-    <link href="framework/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../framework/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="framework/js/bootstrap.min.js"></script>
+    <script src="../framework/js/bootstrap.min.js"></script>
 
     <!-- File javascript per il funzionamento delle demo -->
-    <script src="js/convnet.js"></script>
-    <script src="js/util.js"></script>
-    <script src="js/vis.js"></script>
-    <script src="js/deepqlearn.js"></script>
+    <script src="../js/convnet.js"></script>
+    <script src="../js/util.js"></script>
+    <script src="../js/vis.js"></script>
+    <script src="../js/deepqlearn.js"></script>
 
     <!-- File javascript dell'esempio -->
-    <script src="js/reinforcement.js"></script>
+    <script src="../js/reinforcement.js"></script>
 
     <!-- css comune -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 
   </head>
   <!-- <body> -->
   <!--  --><body onload="start();">
     <div id="wrap" class="container">
       <!-- Header -->
-      <div>
-        <h1 style="text-align: center">
-          <a href="home.html">
-            DEEP LEARNING
-          </a>
-        </h1>
-        <nav class="navbar navbar-default">
-          <ul class="nav navbar-nav" style="float: none;">
-            <li class="dropdown item-list">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                aria-expanded="false">Esempi <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="MNIST-classify.html">Riconoscimento Cifre</a></li>
-                <li><a href="data-classify.html">Classificazione di Dati</a></li>
-                <li><a href="pictures-classify.html">Riconoscimento Immagini</a></li>
-                <li><a href="reinforcement.html">Reinforcement Learning</a></li>
-                <li><a href="breakout.html">Sfida Breakout</a></li>
-              </ul>
-            </li>
-            <li class="dropdown item-list">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                aria-expanded="false">Approfondimenti <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="overfitting.html">Overfitting</a></li>
-                <li><a href="training-difficulty.html">Difficoltà di Allenamento</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="weight-bias-init.html">Inizializzazione dei Parametri</a></li>
-                <li><a href="regularization.html">Regolarizzazione</a></li>
-                <li><a href="hyper-param.html">Scelta dei Parametri Secondari</a></li>
-              </ul>
-            </li>
-            <li class="item-list">
-              <a href="frontiere.html">Frontiere</a>
-            </li>
-            <li class="item-list">
-              <a href="in-futuro.html">Cosa ci aspetta in futuro?</a>
-            </li>
-          </ul>
-        </nav>
+      <div id="header">
+        
       </div>
+      
+      <script>
+        $("#header").load("../shared/header.html");
+      </script>
       <!-- Header - FINE -->
       
       <h1 class="centrato">Reinforcement Learning</h1>
@@ -83,7 +50,7 @@
       <p class="centrato">Ma passiamo subito ai fatti: qui sotto trovate una rete fatta esattamente nello
         stesso modo di prima. Ora potrete modificare i diversi parametri: numero di <i>hidden layer</i>,
         numero di neuroni presenti in ognuno di essi, tasso di apprendimento, <i>batch size</i>,
-        parametro di <a href="regularization.html">regolarizzazione</a> (se non hai letto l'approfondimento relativo puoi lasciarlo così)
+        parametro di <a href="../toeria/regularization.html">regolarizzazione</a> (se non hai letto l'approfondimento relativo puoi lasciarlo così)
         e tasso &epsilon;. Quest'ultimo rappresenta la probabilità che l'agente compia un'azione casuale,
         invece che eseguire quella che gli darebbe una ricompensa più alta  (tutti noi, ogni tanto, facciamo
         un'azione senza motivo).</p>
