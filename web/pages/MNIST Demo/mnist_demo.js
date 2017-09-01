@@ -46,18 +46,11 @@ $(window).load(function() {
   reset();
 });
 
-var wait = 750;
-function initTest(double_speed) {
+var wait = 100;
+function initTest() {
   if(test_batch.length === 0) loadTestBatch();
-  if(double_speed) {
-    wait *= 0.5;
-  } else {
-    wait = 750;
-  }
-  if(stop) {
-    stop = false;
-    test();
-  } 
+  stop = false;
+  test();
 }
 
 function loadTestBatch() {
@@ -103,12 +96,10 @@ function testNet(data) {
   testAccWindow.add(train_acc);
 
   drawInput(net);
-  drawPreds(out, net, data.y);
+  drawPreds(out, net, data.y, true);
 
   $("#accuracy").text("Accuratezza: "+f2t(testAccWindow.get_average()));
 
-  var vis_elt = document.getElementById("div-activations");
-  //visualize_activations(net, vis_elt);
   drawLayers();
 }
 
@@ -159,7 +150,7 @@ function drawInput(net) {
   input_ctx.drawImage(canvas, 0, 0, input.width, input.height, 0, 0, input.width, input.height);
 }
 
-function drawPreds(out, net, y) {
+function drawPreds(out, net, y, fast_mode) {
   var section = document.getElementById("pred-section");
 
   // get predictions and sort them by probability
@@ -179,7 +170,8 @@ function drawPreds(out, net, y) {
 
     var probscanv = document.getElementById('prob_'+k);
     probscanv.setAttribute("style", "height: 8px; border-radius:2px; background-color:" + col + ";");
-    $("#prob_"+k).animate({width:Math.floor(preds[k].p/1*80)}, 200);
+    if(fast_mode) $("#prob_"+k).width(Math.floor(preds[k].p/1*80));
+    else $("#prob_"+k).animate({width:Math.floor(preds[k].p/1*80)}, 200);
     //probsdiv.innerHTML = t;
   }
 }
