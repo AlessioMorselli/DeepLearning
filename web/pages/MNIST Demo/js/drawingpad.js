@@ -21,11 +21,18 @@ drawingpad = {
   },
 
   resize: function(size) {
+    var temp = document.createElement("canvas");
+    temp.width = size;
+    temp.height = size;
+    var ctx_temp = temp.getContext("2d");
+    ctx_temp.drawImage(drawingpad.canvas,0, 0, drawingpad.canvas.width, drawingpad.canvas.height, 0, 0, size, size);
+
     drawingpad.canvas.width = size;
     drawingpad.canvas.height = size;
     drawingpad.marker.width = size/10;
     drawingpad.context = drawingpad.canvas.getContext("2d");
-    drawingpad.clear();
+
+    drawingpad.context.drawImage(temp,0, 0, size, size);
   }
 }
 

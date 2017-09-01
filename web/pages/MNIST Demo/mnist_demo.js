@@ -38,11 +38,11 @@ $("#clear_canvas").click( function() {
 });
 
 $(window).on('resize', function(){
-  drawingpad.resize($(this).width()/4-48);
+  drawingpad.resize($("#draw-section").width());
 });
 
 $(window).load(function() {
-  drawingpad.resize($(this).width()/4-48);
+  drawingpad.resize($("#draw-section").width());
   reset();
 });
 
@@ -230,7 +230,7 @@ function createDivActivations(net, div) {
       case 'fc':
         addActSection(div);
         var t = "<b>Str. Completamente connesso</b></br>";
-        t += 'Numero neuroni: '+L.out_depth;
+        t += ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
         draw_layers[i].part_text.innerHTML = t;
         for(var c=0; c<L.out_depth; c++) {
           draw_layers[i].part_draw.appendChild(createEmptyCanvas(7, 7, "white", ""));

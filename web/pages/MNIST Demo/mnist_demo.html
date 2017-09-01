@@ -12,54 +12,54 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      
-    <div class="col-xs-3">
-      <div class="section">
-        <div class="center">
+
+      <div id="div-control" class="col-xs-5 col-md-3">
+
+        <div id="draw-section" class="col-xs-12 section">
           <button id="clear_canvas" class="btn btn-default" type="button">
             X
           </button>
-          <canvas id="drawingpad" class="round-canvas"></canvas>
+          <div class="center">
+            <canvas id="drawingpad" class="round-canvas"></canvas>
+          </div>
         </div>
-      </div>
 
-      <div id="pred-section" class="section">
-        <table>
-          <tr>
-            <td rowspan="3" style="padding-right:8px;"><canvas class="round-canvas" id="input-canvas"></canvas></td>
-            <td class="pred-num" id="td_0"></td>
-            <td><canvas width=0 height=8 id="prob_0"></canvas></td>
-          </tr>
-          <tr>
-            <td class="pred-num" id="td_1"></td>
-            <td><canvas width=0 height=8 id="prob_1"></canvas></td>
-          </tr>
-          <tr>
-            <td class="pred-num" id="td_2"></td>
-            <td><canvas width=0 height=8 id="prob_2"></canvas></td>
-          </tr>
-        </table>
-      </div>
-      
-      <div class="section">
-        <table class="center">
-          <td><button class="btn btn-default" style="width:4.5em;" type="button" onclick="stopTest();">||</button></td>
-          <td><button class="btn btn-default" style="width:4.5em;"  type="button" onclick="initTest();">></button></td>
-          <td><button class="btn btn-default" style="width:4.5em;"  type="button" onclick="initTest(true);">>></button></td>
-        </table>
-        <text id="ex-seen"></text></br>
-        <text id="accuracy"></text>
-      </div>
+        <div id="pred-section" class="col-xs-12 section">
+          <table>
+            <tr>
+              <td rowspan="3" style="padding-right:8px;"><canvas class="round-canvas" id="input-canvas"></canvas></td>
+              <td class="pred-num" id="td_0"></td>
+              <td><canvas width=0 height=8 id="prob_0"></canvas></td>
+            </tr>
+            <tr>
+              <td class="pred-num" id="td_1"></td>
+              <td><canvas width=0 height=8 id="prob_1"></canvas></td>
+            </tr>
+            <tr>
+              <td class="pred-num" id="td_2"></td>
+              <td><canvas width=0 height=8 id="prob_2"></canvas></td>
+            </tr>
+          </table>
+        </div> <!-- pred-section -->
+
+        <div id="test-section" class="col-xs-12 section"> 
+          <table class="center">
+            <td><button class="btn btn-default" style="width:4.5em;" type="button" onclick="stopTest();">||</button></td>
+            <td><button class="btn btn-default" style="width:4.5em;"  type="button" onclick="initTest();">></button></td>
+            <td><button class="btn btn-default" style="width:4.5em;"  type="button" onclick="initTest(true);">>></button></td>
+          </table>
+          <text id="ex-seen"></text></br>
+          <text id="accuracy"></text>
+        </div> <!-- test-section -->
+
+      </div> <!-- div-control -->
+
+      <div id="div-activations" class="col-xs-7 col-md-9">
         
-    </div>
-
-
-    <div id="div-activations" class="col-xs-9">
+      </div>
       
-    </div>
-  </div>
-  </div>
-
+    </div> <!-- row -->
+  </div> <!-- container -->
 
   <!-- Javascript -->
   <script
