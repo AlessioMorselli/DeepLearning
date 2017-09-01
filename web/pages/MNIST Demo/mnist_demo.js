@@ -37,11 +37,11 @@ $("#clear_canvas").click( function() {
   reset();
 });
 
-$(window).on('resize', function(){
+$(window).on("resize", function(){
   drawingpad.resize($("#draw-section").width());
 });
 
-$(window).load(function() {
+$(window).on("load", function() {
   drawingpad.resize($("#draw-section").width());
   reset();
 });
