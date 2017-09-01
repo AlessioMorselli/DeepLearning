@@ -617,21 +617,33 @@
       var l2 = document.getElementById("regularization").value;
       var epsilon = document.getElementById("epsilon").value;
       
-      if(isNaN(nLayer) || isNaN(nNeuroni) || isNaN(learningRate) || isNaN(batch) || isNaN(l2) || isNaN(epsilon)) {
+      /*if(isNaN(nLayer) || isNaN(nNeuroni) || isNaN(learningRate) || isNaN(batch) || isNaN(l2) || isNaN(epsilon)) {
         alert("Inserisci dei numeri nelle caselle!");
         return;
-      }
+      }*/
       
-      if(nLayer >=7) {
-        alert("Non mettere troppi hidden layer!");
+      if(nLayer > 4 || nLayer < 1) {
+        alert("Il numero di layere deve essere compreso tra 1 e 4!");
         return;
       }
-      if(nLayer*nNeuroni >=300) {
-        alert("Questa rete è troppo pesante! Prova a diminuire il numero di neuroni!");
+      if(nNeuroni > 100) {
+        alert("Il numero di neuroni deve essere compreso tra 0 e 100!");
         return;
       }
-      if(learningRate >= 1) {
-        alert("Il tasso di apprendimento è un po' troppo alto!");
+      if(learningRate > 10) {
+        alert("Il tasso di apprendimento deve essere compreso tra 0 e 10!");
+        return;
+      }
+      if(batch > 256 || batch < 1) {
+        alert("Il batch deve essere compreso tra 1 e 256!");
+        return;
+      }
+      if(l2 > 10) {
+        alert("Il tasso di regolarizzazione deve essere compreso tra 0 e 10!");
+        return;
+      }
+      if(epsilon > 1) {
+        alert("Il tasso epsilon deve essere compreso tra 0 e 1!");
         return;
       }
       
