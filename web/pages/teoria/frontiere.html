@@ -30,12 +30,135 @@ and open the template in the editor.
       </script>
       <!-- Header - FINE -->
       
-      <p class="centrato"></p>
+      <h1 class="centrato">Frontiere</h1>
+      
+      <p class="centrato">In questo capitolo parleremo di tecniche alternative a quelle che abbiamo visto
+      che si sono messe a punto durante lo studio delle reti neurali. Vedremo in particolare altri algoritmi
+      per l'apprendimento della rete, altri modelli di neuroni e infine altre architetture di reti neurali.</p>
+      
+      <h2 class="centrato">Variazioni all'algoritmo del gradiente decrescente</h2>
+      
+      <ul class="lista">
+        <li>La <b>tecnica hessiana</b> prevede, in termini formali, di tenere conto anche del termine di secondo
+          grado nell'approssimazione di Taylor della funzione costo. In parole povere, riprendendo la metafora
+          della pallina da golf, è come se, durante il nostro tiro, non tenessimo conto solo della direzione e
+          della velocità della pallina, ma anche della sua accelerazione: consideriamo sia come cambia la
+          posizione della pallina, sia come cambia la sua velocità. Questa ci dà la possibilità di ottenere
+          calcoli più accurati, migliorando le performance della rete. Tuttavia, il problema è che viene
+          coinvolta nei calcoli una matrice (detta <b>hessiana</b>, da cui il nome di questo metodo) le cui
+          dimensioni sono molto grandi, rendendo di fatto questa tecnica di difficile applicazione pratica.</li>
+        
+        <li>I vantaggi di questa tecnica sono tuttavia troppo grandi per poterla ignorare. Quindi, si è pensato
+          un algoritmo detto <b>del gradiente decrescente basato sul momento</b> che cerca di prendere i vantaggi
+          della tecnica hessiana, evitando matrici di dimensioni esagerate. In questo contesto non consideriamo
+          più la posizione come valore da studiare, bensì la velocità, ed introduciamo una nozione di
+          <i>attrito</i> che tende a ridurre gradualmente la velocità. Il procedimento è uguale a quello
+          dell'algoritmo del gradiente decrescente, solo che stavolta lavoriamo sulla velocità (il tasso di
+          apprendimento, ad esempio, influenza non più la distanza che percorre la pallina da golf, ma la sua
+          velocità). Si aggiunge inoltre il <b>coefficiente del momento</b>, che smorza la velocità. Lavorare
+          con la velocità permette più facilmente di evitare che sbagliamo la buca e rende i nostri tiri più
+          precisi: la nostra rete avrà performance migliori, a patto di aggiungere dei calcoli al nostro
+          algoritmo.</li>
+      </ul>
+      
+      <h2 class="centrato">Variazioni all'algoritmo del gradiente decrescente</h2>
+      
+      <p class="centrato">I modelli di neuroni si distinguono l'uno dall'altro per la diversa funzione che
+        usano per calcolare l'output.</p>
+
+      <ul class="lista">
+        <li>I <b>neuroni tanh</b> sostituiscono la funzione sigma dei neuroni sigmoidi con la funzione di
+          tangente iperbolica.
+          <div class="figura">
+            <img src="../documentation/tanh.png" style="width: 600px"><br/>
+            <p><small>Il grafico della tangente iperbolica.</small></p>
+          </div>
+          Tali neuroni a volte presentano prestazioni migliori rispetto ai neuroni sigmoidi, soprattutto perché
+          la funzione permette all'output di assumere anche valori negativi. Tuttavia, poiché il grafico è
+          simmetrico, spesso i valori positivi e negativi si equivalgono, perciò la tangente iperbolica
+          presenta solo piccoli miglioramenti o addirittura nessun miglioramento.</li>
+        <br/>
+        <li>I <b>neuroni lineari</b> sono associati ad una funzione molto semplice (la retta), ma possono
+          sostituire tranquillamente i neuroni sigmoidi.
+          <div class="figura">
+            <img src="../documentation/linear.png" style="width: 600px"><br/>
+            <p><small>Il grafico della funzione associata a questi neuroni.</small></p>
+          </div>
+          Poiché il grafico non ha un valore massimo a cui tende (le funzioni sigma e tangente iperbolica
+          non superano mai l'1), questi neuroni non potranno mai saturarsi e quindi non rallenteranno mai
+          il loro processo di apprendimento. Tuttavia, per input pesati negativi il gradiente si annulla e
+          il neurone smette di imparare completamente.</li>
+      </ul>
+
+      <h2 class="centrato">Altre architetture di reti neurali</h2>
+      
+      <p class="centrato">Finora abbiamo visto reti neurali <b>completamente connesse</b>, ovvero in cui il
+        neurone di un <i>layer</i> riceve un input da ciascun neurone del <i>layer</i> precedente e invia
+        il proprio output a tutti i neuroni dello strato successivo. Si può pensare, però, ad una rete che
+        cerchi di sfruttare il vantaggio della struttura dei dati di input.</p>
+      
+      <p class="centrato">Le <b>reti neurali convoluzionali</b> hanno un'architettura speciale che le rende
+        particolarmente adatte a lavorare con le immagini. Questa sua architettura fa sì che queste reti
+        siano veloci da allenare e aiuta lo sviluppo di reti complesse, con molti <i>layer</i> nascosti.
+        Le idee alla base delle reti convoluzionali sono tre.</p>
+      
+      <ul class="lista">
+        <li>Quando lavoravamo con un'immagine, connettevamo ogni pixel di input ad ogni neurone nascosto del
+          primo <i>layer</i>. Ora, invece, ognuno di questi neuroni copre solo una piccola regione dell'immagine
+          di partenza: tale regione prende il nome di <b>campo ricettivo locale</b>. Ogni connessione tra un
+          neurone e un campo impara un peso, mentre il <i>layer</i> nascosto un <i>bias</i> complessivo.
+          <div class="figura">
+            <img src="../documentation/convolutional1.png"><br/>
+            <p><small>L'operazione è quella di riassumere un'intera regione dell'immagine in un
+                solo neurone.</small></p>
+          </div>
+          Il campo è successivamente spostato a destra (e, finita una riga, in basso) di un numero di pixel
+          chiamato <b>passo</b>: generalmente vale 1, ma si possono sperimentare anche valori differenti.
+          <div class="figura">
+            <img src="../documentation/convolutional2.png"><br/>
+            <p><small>L'operazione viene ripetuta fino a quando non abbiamo coperto tutta l'immagine.</small></p>
+          </div>
+        </li>
+        
+        <li>La seconda idea prevede di usare gli stessi pesi e lo stesso <i>bias</i> per ogni neurone nel primo
+          <i>hidden layer</i>. Questo vuol dire che tutti i neuroni di questo strato ricercano la stessa
+          caratteristica (ovvero uno schema dei pixel di input): le reti convoluzionali infatti sono insensibili
+          alle traslazioni delle immagini.<br/>
+          Il primo strato ricerca quindi una caratteristica ben definita e costruisce la <b>mappa</b>
+          dell'immagine, basandosi su ciò che deve cercare. Ovviamente, per usare una rete neurale per
+          riconoscere un'immagine, non ci basta una sola mappa, ma ne serviranno diverse: si costruisce il
+          primo <i>hidden layer</i> diviso in diversi gruppi, ognuno dei quali costruisce una mappa diversa.
+          La nostra rete ora sfrutta la struttura spaziale dell'immagine!
+          <div class="figura">
+            <img src="../documentation/convolutional3.png"><br/>
+            <p><small>L'architettura della rete finora.</small></p>
+          </div>
+        </li>
+        
+        <li>Lo strato successivo viene detto <b><i>pooling layer</i></b> e costruisce una mappa ancora più
+          condensata dell'immagine iniziale. Ogni neurone nel <i>pooling layer</i> non fa altro che riassumere
+          una regione di neuroni dello strato precedente. In pratica, questi neuroni dicono, con il loro
+          output, se una certa caratteristica è stata trovata nella regione di immagine che stanno studiando.
+          <div class="figura">
+            <img src="../documentation/pooling1.png"><br/>
+            <p><small>Il <i>pooling layer</i> svolge un'operazione identica a quella del primo strato
+                sull'immagine.</small></p>
+          </div>
+          <div class="figura">
+            <img src="../documentation/pooling2.png"><br/>
+            <p><small>L'architettura della rete finora.</small></p>
+          </div>
+        </li>
+      </ul>
+      
+      <p class="centrato">Infine, solitamente, si usa come ultimo strato una struttura completamente connessa
+        che lega ogni neurone a tutti quelli del <i>pooling layer</i>. Otteniamo quindi un'architettura di
+        questo tipo:</p>
       
       <div class="figura">
-        <img src="../documentation/neuralnetwork.png"><br/>
-        <p><small>La struttura di una semplice rete neurale a tre strati con:
-          3 neuroni di input, 4 neuroni <i>nascosti</i> e un solo neurone di output.</small></p>
+        <img src="../documentation/frontiere1.png"><br/>
+        <p><small>L'architettura più semplice di rete convoluzionale comprende quindi 4 <i>layer</i>: input,
+            convoluzionale, <i>pooling</i> e output.</small></p>
       </div>
     </div>
   </body>
