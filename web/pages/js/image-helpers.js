@@ -205,6 +205,11 @@ function removeBackground(img) {
 }
 
 function createEmptyCanvas(width, height, color, class_name) {
+  if(typeof width === "undefined") width = 100;
+  if(typeof height === "undefined") height = width;
+  if(typeof color === "undefined") color = "white";
+  if(typeof class_name === "undefined") class_name = "";
+
   var canvas = document.createElement("canvas");
   canvas.className = class_name;
   canvas.width = width;
