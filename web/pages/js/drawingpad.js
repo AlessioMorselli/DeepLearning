@@ -96,9 +96,11 @@ drawingpad.canvas.addEventListener( 'touchmove', function(e) {
 
   if(drawingpad.mouseDown){
     drawingpad.context.beginPath();
-    
-    drawingpad.context.moveTo(drawingpad.lastEvent.targetTouches[0].pageX - drawingpad.canvas.offsetLeft, drawingpad.lastEvent.targetTouches[0].pageY - drawingpad.canvas.offsetTop);
-    drawingpad.context.lineTo(e.targetTouches[0].pageX - drawingpad.canvas.offsetLeft, e.targetTouches[0].pageY - drawingpad.canvas.offsetTop);
+    var offsetLeft = drawingpad.canvas.getBoundingClientRect().left;
+    var offsetTop = drawingpad.canvas.getBoundingClientRect().top;
+    console.log(offsetLeft+", "+offsetTop);
+    drawingpad.context.moveTo(drawingpad.lastEvent.targetTouches[0].pageX - offsetLeft, drawingpad.lastEvent.targetTouches[0].pageY - offsetTop);
+    drawingpad.context.lineTo(e.targetTouches[0].pageX - offsetLeft, e.targetTouches[0].pageY - offsetTop);
     drawingpad.context.lineWidth = drawingpad.marker.width;
     drawingpad.context.strokeStyle = drawingpad.marker.color;
     drawingpad.context.lineCap = 'round';

@@ -124,8 +124,8 @@ function testImage(canvas) {
 function reset() {
   // Reset input canvas
   var canvas = document.getElementById("input-canvas");
-  canvas.width = image_dimension*3;
-  canvas.height = image_dimension*3;
+  canvas.width = image_dimension*5;
+  canvas.height = image_dimension*5;
   canvas.class = "round-canvas";
   clearCanvas(canvas, "white");
   // Reset predictions
@@ -144,7 +144,7 @@ function reset() {
 
 function drawInput(net) {
   var input = document.getElementById("input-canvas");
-  var canvas = volToImgs(net.layers[0].out_act, 3, 3, 1)[0];
+  var canvas = volToImgs(net.layers[0].out_act, 5, 5, 1)[0];
   var input_ctx = input.getContext("2d");
   input_ctx.clearRect(0, 0, input.width, input.height);
   input_ctx.drawImage(canvas, 0, 0, input.width, input.height, 0, 0, input.width, input.height);
@@ -170,8 +170,8 @@ function drawPreds(out, net, y, fast_mode) {
 
     var probscanv = document.getElementById('prob_'+k);
     probscanv.setAttribute("style", "height: 8px; border-radius:2px; background-color:" + col + ";");
-    if(fast_mode) $("#prob_"+k).width(Math.floor(preds[k].p/1*80));
-    else $("#prob_"+k).animate({width:Math.floor(preds[k].p/1*80)}, 200);
+    if(fast_mode) $("#prob_"+k).width(Math.floor(preds[k].p/1*120));
+    else $("#prob_"+k).animate({width:Math.floor(preds[k].p/1*120)}, 200);
     //probsdiv.innerHTML = t;
   }
 }

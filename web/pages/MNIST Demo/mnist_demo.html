@@ -16,13 +16,15 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <div class="container-fluid">
+  <div class="container">
+    <div id="header"><script>$("#header").load("../shared/header.html");</script></div>
+
     <div class="row">
 
-      <div id="div-control" class="col-xs-5 col-md-3">
+      <div id="div-control" class="col-xs-12">
 
-        <div id="draw-section" class="col-xs-12 section">
-          <button id="clear_canvas" class="btn btn-default" type="button" style="width:60px;">
+        <div id="draw-section" class="col-xs-6 col-md-offset-2 col-md-4 section">
+          <button id="clear_canvas" class="btn btn-default" type="button" style="width:6em;height:3em">
             <span class="glyphicon glyphicon-erase"></span>
           </button>
           <div class="center">
@@ -30,44 +32,49 @@
           </div>
         </div>
 
-        <div id="pred-section" class="col-xs-12 section">
-          <table>
-            <tr>
-              <td rowspan="3" style="padding-right:8px;"><canvas class="round-canvas" id="input-canvas"></canvas></td>
-              <td class="pred-num" id="td_0"></td>
-              <td><canvas width=0 height=8 id="prob_0"></canvas></td>
-            </tr>
-            <tr>
-              <td class="pred-num" id="td_1"></td>
-              <td><canvas width=0 height=8 id="prob_1"></canvas></td>
-            </tr>
-            <tr>
-              <td class="pred-num" id="td_2"></td>
-              <td><canvas width=0 height=8 id="prob_2"></canvas></td>
-            </tr>
-          </table>
-        </div> <!-- pred-section -->
+        <div class="col-xs-6 col-md-4">
+          <div id="pred-section" class="col-xs-12 section">
+            <table>
+              <tr>
+                <td rowspan="3" style="padding-right:8px;"><canvas class="round-canvas" id="input-canvas"></canvas></td>
+                <td class="pred-num" id="td_0"></td>
+                <td><canvas width=0 height=8 id="prob_0"></canvas></td>
+              </tr>
+              <tr>
+                <td class="pred-num" id="td_1"></td>
+                <td><canvas width=0 height=8 id="prob_1"></canvas></td>
+              </tr>
+              <tr>
+                <td class="pred-num" id="td_2"></td>
+                <td><canvas width=0 height=8 id="prob_2"></canvas></td>
+              </tr>
+            </table>
+          </div> <!-- pred-section -->
 
-        <div id="test-section" class="col-xs-12 section"> 
-          <table class="center">
-            <td>
-              <button class="btn btn-default" style="width:4.5em;" type="button" onclick="stopTest();">
-                <span class="glyphicon glyphicon-pause"></span>
-              </button>
-            </td>
-            <td>
-              <button class="btn btn-default" style="width:4.5em;"  type="button" onclick="initTest();">
-                <span class="glyphicon glyphicon-play"></span>
-              </button>
-            </td>
-          </table>
-          <text id="ex-seen"></text><br/>
-          <text id="accuracy"></text>
-        </div> <!-- test-section -->
+          <div id="test-section" class="col-xs-12 section">
+            <div style="padding:4px;margin:8px;"><b>Carica ed utilizza il dataset di test</b></div>
+            <table class="center">
+              <td>
+                <button class="btn btn-default" style="width:8em;" type="button" onclick="stopTest();">
+                  <span class="glyphicon glyphicon-pause"></span>
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-default" style="width:8em;"  type="button" onclick="initTest();">
+                  <span class="glyphicon glyphicon-play"></span>
+                </button>
+              </td>
+            </table>
+            <div class="round-canvas" style="background-color:white; padding:4px;margin:8px;">
+              <text id="ex-seen">Esempi visti: -</text><br/>
+              <text id="accuracy">Accuratezza: -</text>
+            </div>
+          </div> <!-- test-section -->
 
+        </div>
       </div> <!-- div-control -->
 
-      <div id="div-activations" class="col-xs-7 col-md-9">
+      <div id="div-activations" class="col-xs-12">
         
       </div>
 

@@ -20,7 +20,7 @@ net.makeLayers(layer_defs);
 var draw_layers = new Array();
 
 createDivLayers();
-createWeightArrows();
+//createWeightArrows();
 
 var trainer = new convnetjs.SGDTrainer(net, {learning_rate:0.01, momentum:0.1, batch_size:10, l2_decay:0.001});
 
@@ -30,8 +30,7 @@ $(window).on("load", function() {
     var l_after = draw_layers[i+1];
     for(var j=0; j<l.part_draw.childNodes.length; j++) {
       for(var k=0; k<l_after.part_draw.childNodes.length; k++) {
-        console.log("a_"+i+j+"-"+(i+1)+k);
-        drawConnector("a_"+i+j+"-"+(i+1)+k, l.part_draw.childNodes[j], l_after.part_draw.childNodes[k], Math.random()*4-0.5);
+        //drawConnector("a_"+i+j+"-"+(i+1)+k, l.part_draw.childNodes[j], l_after.part_draw.childNodes[k], Math.random()*4-0.5);
       }
     }
   }
