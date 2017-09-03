@@ -1,5 +1,19 @@
 
 
+var layer_defs, net, trainer;
+
+// create neural net
+var layer_defs = [];
+layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:1});
+layer_defs.push({type:'fc', num_neurons:8, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons:8, activation:'sigmoid'});
+layer_defs.push({type:'regression', num_neurons:1});
+
+net = new convnetjs.Net();
+net.makeLayers(layer_defs);
+
+trainer = new convnetjs.SGDTrainer(net, {learning_rate:0.01, momentum:0.0, batch_size:1, l2_decay:0.001});
+
 var net = new convnetjs.Net();
 net.makeLayers(layer_defs);
 
@@ -50,6 +64,7 @@ function createWeightArrows() {
 function createDivLayers() {
   for(var i=0; i<net.layers.length; i++) {
     var L = net.layers[i];
+    if(L.layer_type === "fc") continue;
     var section = createSection();
     section.part_text.innerHTML = L.layer_type + " : ( "+ L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ' )';
     for(var j=0; j<L.out_depth; j++) {section.part_draw.appendChild(createEmptyCanvas(64, 64, "white", "act-canvas"));}
