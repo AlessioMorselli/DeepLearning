@@ -22,7 +22,7 @@ REINFORCEMENT
      - Terza cosa: come stabilire chi vince? Chi finisce prima o chi fa meno morti? Probabilmente
         metteremo chi finisce prima! --- FATTO
 
- - Migliorare il testo che introduce la sifda breakout
+ - Migliorare il testo che introduce la sifda breakout --- FATTO
  - Inserire la spiegazione del perché il x2 --- FATTO
 
 PRATICA
@@ -33,11 +33,6 @@ PRATICA
 OVERFITTING
  - Chiedere a Covizzi se riesce a mettere su qualche demo che mostra la differenza tra una rete con
     tanti dati di allenamento e una con pochi
-
-RICONOSCIMENTO IMMAGINI
- - Aggiungere grafici per le tre accuracy
- - Togliere tutta la parte sull'attivazione (poco interessante da vedere)
- - Aggiungere il link alla parte di spiegazione sulle reti convoluzionali una volta che questa sarà pronta
 
 COSE
  - Mi servirà più tardi --- FATTO!

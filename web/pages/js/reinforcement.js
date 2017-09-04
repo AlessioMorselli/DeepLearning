@@ -98,27 +98,52 @@
       var pad = 10;
       util_add_box(this.walls, pad, pad, this.W-pad*2, this.H-pad*2);
       
-      /*for(var i = 1; i <= 3; i++) {
-        if(document.getElementById("level" + i).checked)
+      for(var i = 1; i <= 3; i++) {
+        if(document.getElementById("level" + i).checked) {
           var level = i;
-      }*/
+          break;
+        }
+      }
       
-      /*if(level === 1) {*/
+      if(level === 1) {
         util_add_box(this.walls, 100, 100, 200, 300);
         this.walls.pop();
         util_add_box(this.walls, 400, 100, 200, 300);
         this.walls.pop();
-      /*}
+      }
       else if(level === 2) {
-        util_add_wall(this.walls, 350, 40, 420, 160);
-        util_add_wall(this.walls, 280, 160, 420, 160);
+        util_add_wall(this.walls, 350, 50, 450, 225);
+        util_add_wall(this.walls, 450, 225, 250, 225);
 
-        util_add_wall(this.walls, 440, 180, 510, 300);
-        util_add_wall(this.walls, 370, 300, 510, 300);
-
-        util_add_wall(this.walls, 260, 180, 330, 300);
-        util_add_wall(this.walls, 190, 300, 330, 300);
-      }*/
+        var a = 130, b = 200;
+        util_add_wall(this.walls, 350+a, 50+b, 450+a, 225+b);
+        util_add_wall(this.walls, 450+a, 225+b, 250+a, 225+b);
+        
+        var c = -130;
+        util_add_wall(this.walls, 350+c, 50+b, 450+c, 225+b);
+        util_add_wall(this.walls, 450+c, 225+b, 250+c, 225+b);
+        
+        util_add_wall(this.walls, 50, 50, 250, 50);
+        util_add_wall(this.walls, 250, 50, 150, 225);
+        
+        var d = 400;
+        util_add_wall(this.walls, 50+d, 50, 250+d, 50);
+        util_add_wall(this.walls, 250+d, 50, 150+d, 225);
+      }
+      else if(level === 3) {
+        util_add_box(this.walls, 100, 100, 500, 300);
+        this.walls.pop();
+        this.walls.pop();
+        
+        util_add_box(this.walls, 100, 200, 100, 100);
+        this.walls.pop();
+        
+        util_add_wall(this.walls, 100, 400, 300, 400);
+        util_add_wall(this.walls, 300, 400, 300, 200);
+        util_add_wall(this.walls, 300, 200, 400, 200);
+        util_add_wall(this.walls, 300, 300, 500, 300);
+        util_add_wall(this.walls, 500, 200, 500, 400);
+      }
       
       // set up food and poison
       this.items = []
@@ -647,7 +672,7 @@
         return;
       }
       
-      //w = new World();
+      w = new World();
       w.agents = [new Agent()];
       reward_graph = new cnnvis.Graph(); // reinit
       
