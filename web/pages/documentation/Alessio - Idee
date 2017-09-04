@@ -22,6 +22,9 @@ REINFORCEMENT
      - Terza cosa: come stabilire chi vince? Chi finisce prima o chi fa meno morti? Probabilmente
         metteremo chi finisce prima! --- FATTO
 
+CLASSIFY2D
+ - La base è ottima: c'è da sistemare solo il css per uniformare lo stile e sistamare la grafica
+
  - Migliorare il testo che introduce la sifda breakout --- FATTO
  - Inserire la spiegazione del perché il x2 --- FATTO
 
