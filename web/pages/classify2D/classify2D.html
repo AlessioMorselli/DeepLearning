@@ -29,7 +29,8 @@ limitations under the License.
     <link href="../css/style.css" rel="stylesheet">
 
     <link rel="stylesheet" href="bundle.css" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons"
+          rel="stylesheet" type="text/css">
     <script src="lib.js"></script>
   </head>
   <body>
@@ -44,7 +45,30 @@ limitations under the License.
       </script>
       <!-- Header - FINE -->
 
+      
+      
       <h1 class="centrato">Classificazione di Dati 2D</h1>
+      
+      <p class="centrato">In questa demo si può vedere molto bene come imparano le reti neurali. Trovate infatti,
+        oltre a molti parametri modificabili, la struttura completa della rete. Potete osservare tutti i
+        parametri: i pesi sono rappresentati dai collegamenti tra i neuroni (il loro spessore è proporzionale al
+        loro valore), mentre potete vedere i <i>bias</i> usando il piccolo quadratino in basso a sinistra di
+        fianco ad ogni neurone. Ma non li potete solo vedere: tali valori sono anche modificabili!</p>
+      
+      <p class="centrato">C'è anche una rappresentazione del segno dei valori: se il colore (del <i>bias</i>,
+        del peso o anche dei valori da classificare) è arancione, allora è positivo, altrimenti è negativo.
+        Inoltre, passando il cursore sopra un neurone potrete visualizzare il suo output!</p>
+      
+      <p class="centrato">Per quanto riguarda i parametri che potete modificare (oltre a pesi e <i>bias</i>) vi
+        sono il tasso di apprendimento, la funzione che usano i neuroni per calcolare l'output e se usare la
+        regolarizzazione ed eventualmente il suo tasso. Ma avete a disposizione anche la possibilità di
+        scegliere la distribuzione dei dati, il rapporto tra dati di test e di allenamento, il rumore nella
+        generazione dei dati e la grandezza dei <i>mini-batch</i>. Infine potete variare il numero di
+        <i>hidden layer</i> e di neuroni per ciascuno strato.</p>
+      
+      <p class="centrato">Viene visualizzato come la rete classifica i dati e quindi i grafici delle funzioni
+        costo (con i loro valori attuali) sui set di allenamento e di test. Ma non c'è cosa migliorare che
+        provare voi stessi a modificare i valori e sperimentare!</p>
       
       <!-- Top Controls -->
       <nav id="top-controls" class="navbar navbar-default" style="padding: 15px;">
@@ -199,7 +223,7 @@ limitations under the License.
               </p>
             </div>
             <div class="ui-batchSize">
-              <label for="batchSize"><i>Batch-size</i>:&nbsp;&nbsp;<span class="value">XX</span></label>
+              <label for="batchSize"><i>Mini-batch</i>:&nbsp;&nbsp;<span class="value">XX</span></label>
               <p class="slider">
                 <input class="mdl-slider mdl-js-slider" type="range" id="batchSize" min="1" max="30" step="1">
               </p>
@@ -291,8 +315,8 @@ limitations under the License.
             <div id="linechart"></div>
           </div>
           <div id="heatmap" style="float: none;"></div>
+          
           <div style="margin-top:20px">
-            
             <!-- Gradient color scale -->
             <div class="my-jumbotron">
               <svg width="150" height="30" id="colormap">
@@ -334,6 +358,12 @@ limitations under the License.
       <script src="bundle.js"></script>
       <!-- Google analytics -->
       <script src="analytics.js"></script>
+      
+      <!--<script src="click.js"></script>
+      
+      <script>
+        NPGinit(20);
+      </script>-->
     </div>
   </body>
 </html>

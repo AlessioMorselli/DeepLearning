@@ -1,3 +1,4 @@
+/* Siti e libri per realizzare le parti di teoria */
  - Michael A. Nielsen, "Neural Networks and Deep Learning", Determination Press, 2015
 
  - Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller,
@@ -11,7 +12,11 @@
 
  - https://www.quora.com/What-is-training-validation-and-testing-data-sets-scenario-in-machine-learning
 
+/* Per realizzare la demo sulla sfida Breakout */
  - http://codeincomplete.com/posts/javascript-breakout/
 
  - http://users.eecs.northwestern.edu/~msn688/breakout_project/
+
+/* Versione originale della demo sulla classificazione di dati 2D */
+ - http://playground.tensorflow.org
 
