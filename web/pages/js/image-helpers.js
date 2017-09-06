@@ -33,9 +33,9 @@ function resize(canvas, new_width, new_height){
 
     window.pica.WW = false;
     window.pica.resizeCanvas(canvas, dst, {
-    quality: 2,
-    unsharpAmount: 2000,
-    unsharpThreshold: 400,
+    quality: 0,
+    unsharpAmount: 0,
+    unsharpThreshold: 0,
     transferable: false
   }, function (err) {  });
     window.pica.WW = true;

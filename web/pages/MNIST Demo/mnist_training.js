@@ -2,8 +2,7 @@ var t = "layer_defs = [];\n\
 layer_defs.push({type:'input', out_sx:28, out_sy:28, out_depth:1});\n\
 layer_defs.push({type:'conv', sx:5, filters:10, stride:1, pad:0, activation:'relu'});\n\
 layer_defs.push({type:'pool', sx:3, stride:3});\n\
-layer_defs.push({type:'fc', num_neurons:80, activation: 'relu'});\n\
-layer_defs.push({type:'dropout'});\n\
+layer_defs.push({type:'fc', num_neurons:80, activation: 'relu', drop_prob:0.5});\n\
 layer_defs.push({type:'softmax', num_classes:10});\n\
 \n\
 net = new convnetjs.Net();\n\
