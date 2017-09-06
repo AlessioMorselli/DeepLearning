@@ -23,41 +23,143 @@
     s(r[o]);
     s
   }
-  ({1:[function(require,module,exports) {
-        "use strict";
-        function shuffle(array) {
-          for(var counter=array.length,temp=0,index=0;counter>0;)
-            index = Math.floor(Math.random()*counter), counter--, temp=array[counter], array[counter]=array[index], 
-                  array[index]=temp
-        }
-        
-        function classifyTwoGaussData(numSamples,noise) {
-          function genGauss(cx,cy,label) {
-            for(var i=0;i<numSamples/2;i++) {
-              var x=normalRandom(cx,variance), y=normalRandom(cy,variance);
-              points.push({x:x,y:y,label:label})
-            }
+({1:[function(require,module,exports) {
+      "use strict";
+      function shuffle(array) {
+        for(var counter=array.length,temp=0,index=0;counter>0;)
+          index = Math.floor(Math.random()*counter), counter--, temp=array[counter], array[counter]=array[index], 
+                array[index]=temp
+      }
+
+      function classifyTwoGaussData(numSamples,noise) {
+        function genGauss(cx,cy,label) {
+          for(var i=0;i<numSamples/2;i++) {
+            var x=normalRandom(cx,variance), y=normalRandom(cy,variance);
+            points.push({x:x,y:y,label:label})
           }
-          
-          var points=[],varianceScale=d3.scale.linear().domain([0,.5]).range([.5,4]),
-          variance=varianceScale(noise);
-          return genGauss(2,2,1), genGauss(-2,-2,-1), points
+        }
+
+        var points=[],varianceScale=d3.scale.linear().domain([0,.5]).range([.5,4]),
+        variance=varianceScale(noise);
+        return genGauss(2,2,1), genGauss(-2,-2,-1), points
+      }
+
+      function classifyRandomData(numSamples,noise) {
+        function randomNumber() {
+          return Math.random()*5 - 2.5;
         }
         
-        function classifyRandomData(numSamples,noise) {
-          function genGauss(cx,cy,label) {
-            for(var i=0;i<numSamples/2;i++) {
-              var x=normalRandom(cx,variance), y=normalRandom(cy,variance);
-              points.push({x:x,y:y,label:label})
-            }
+        function getRandomLabel() {
+          return randomNumber() > 0 ? 1 : -1;
+        }
+
+        for(var points=[],i=0;i<numSamples;i++) {
+          var x = randomNumber();
+          //x += x > 0 ? 0.3 : -0.3;
+          var y = randomNumber();
+          //y += y > 0 ? 0.3 : -0.3;
+          var noiseX = (randomNumber()/(noise + 1)), noiseY = (randomNumber()/(noise + 1));
+          x += noiseX;
+          y += noiseY;
+          
+          var label = getRandomLabel();
+          points.push({x:x,y:y,label:label});
+        }
+        return points;
+      }
+      
+      function classifySimpleData(numSamples,noise) {
+        function randomNumber() {
+          return Math.random()*10 - 5.;
+        }
+        
+        function getRandomLabel() {
+          return randomNumber() > 0 ? 1 : -1;
+        }
+        
+        var num = 20;
+        for(var points=[],i=0;i<num;i++) {
+          var x = randomNumber();
+          //x += x > 0 ? 0.3 : -0.3;
+          var y = randomNumber();
+          //y += y > 0 ? 0.3 : -0.3;
+          var noiseX = noise * Math.random(), noiseY = noise * Math.random();
+          x += noiseX;
+          y += noiseY;
+          
+          var label = getRandomLabel();
+          points.push({x:x,y:y,label:label});
+        }
+        return points;
+      }
+
+      function regressPlane(numSamples,noise) {
+        for(var labelScale = d3.scale.linear().domain([-10,10]).range([-1,1]),getLabel=function(x,y) {
+          return labelScale(x+y)
+        }, points=[],i=0;i<numSamples;i++) {
+          var x=randUniform(-6,6), y=randUniform(-6,6),
+                  noiseX=randUniform(-6,6)*noise, noiseY=randUniform(-6,6)*noise,
+                  label = getLabel(x+noiseX,y+noiseY);
+          points.push({x:x,y:y,label:label})
+        }
+        return points
+      }
+
+      function regressGaussian(numSamples,noise) {
+        function getLabel(x,y) {
+          var label=0;return gaussians.forEach(function(_a){var cx=_a[0],cy=_a[1],sign=_a[2],newLabel=sign*labelScale(dist({x:x,y:y},{x:cx,y:cy}));Math.abs(newLabel)>Math.abs(label)&&(label=newLabel)}),label}for(var points=[],labelScale=d3.scale.linear().domain([0,2]).range([1,0]).clamp(!0),gaussians=[[-4,2.5,1],[0,2.5,-1],[4,2.5,1],[-4,-2.5,-1],[0,-2.5,1],[4,-2.5,-1]],i=0;i<numSamples;i++){var x=randUniform(-6,6),y=randUniform(-6,6),noiseX=randUniform(-6,6)*noise,noiseY=randUniform(-6,6)*noise,label=getLabel(x+noiseX,y+noiseY);points.push({x:x,y:y,label:label})}return points}
+      
+      
+      function classifySpiralData(numSamples,noise) {
+        function genSpiral(deltaT,label) {
+          for(var i=0;i<n;i++) {
+            var r=i/n*5, t=1.75*i/n*2*Math.PI+deltaT,
+              x=r*Math.sin(t)+randUniform(-1,1)*noise, y=r*Math.cos(t)+randUniform(-1,1)*noise;
+            points.push({x:x,y:y,label:label})
           }
-          
-          var points=[],varianceScale=d3.scale.linear().domain([0,.5]).range([.5,4]),
-          variance=varianceScale(noise);
-          return genGauss(2,2,1), genGauss(-2,-2,-1), points
         }
-        
-        function regressPlane(numSamples,noise){for(var labelScale=d3.scale.linear().domain([-10,10]).range([-1,1]),getLabel=function(x,y){return labelScale(x+y)},points=[],i=0;i<numSamples;i++){var x=randUniform(-6,6),y=randUniform(-6,6),noiseX=randUniform(-6,6)*noise,noiseY=randUniform(-6,6)*noise,label=getLabel(x+noiseX,y+noiseY);points.push({x:x,y:y,label:label})}return points}function regressGaussian(numSamples,noise){function getLabel(x,y){var label=0;return gaussians.forEach(function(_a){var cx=_a[0],cy=_a[1],sign=_a[2],newLabel=sign*labelScale(dist({x:x,y:y},{x:cx,y:cy}));Math.abs(newLabel)>Math.abs(label)&&(label=newLabel)}),label}for(var points=[],labelScale=d3.scale.linear().domain([0,2]).range([1,0]).clamp(!0),gaussians=[[-4,2.5,1],[0,2.5,-1],[4,2.5,1],[-4,-2.5,-1],[0,-2.5,1],[4,-2.5,-1]],i=0;i<numSamples;i++){var x=randUniform(-6,6),y=randUniform(-6,6),noiseX=randUniform(-6,6)*noise,noiseY=randUniform(-6,6)*noise,label=getLabel(x+noiseX,y+noiseY);points.push({x:x,y:y,label:label})}return points}function classifySpiralData(numSamples,noise){function genSpiral(deltaT,label){for(var i=0;i<n;i++){var r=i/n*5,t=1.75*i/n*2*Math.PI+deltaT,x=r*Math.sin(t)+randUniform(-1,1)*noise,y=r*Math.cos(t)+randUniform(-1,1)*noise;points.push({x:x,y:y,label:label})}}var points=[],n=numSamples/2;return genSpiral(0,1),genSpiral(Math.PI,-1),points}function classifyCircleData(numSamples,noise){function getCircleLabel(p,center){return dist(p,center)<2.5?1:-1}for(var points=[],i=0;i<numSamples/2;i++){var r=randUniform(0,2.5),angle=randUniform(0,2*Math.PI),x=r*Math.sin(angle),y=r*Math.cos(angle),noiseX=randUniform(-5,5)*noise,noiseY=randUniform(-5,5)*noise,label=getCircleLabel({x:x+noiseX,y:y+noiseY},{x:0,y:0});points.push({x:x,y:y,label:label})}for(var i=0;i<numSamples/2;i++){var r=randUniform(3.5,5),angle=randUniform(0,2*Math.PI),x=r*Math.sin(angle),y=r*Math.cos(angle),noiseX=randUniform(-5,5)*noise,noiseY=randUniform(-5,5)*noise,label=getCircleLabel({x:x+noiseX,y:y+noiseY},{x:0,y:0});points.push({x:x,y:y,label:label})}return points}function classifyXORData(numSamples,noise){function getXORLabel(p){return p.x*p.y>=0?1:-1}for(var points=[],i=0;i<numSamples;i++){var x=randUniform(-5,5);x+=x>0?.3:-.3;var y=randUniform(-5,5);y+=y>0?.3:-.3;var noiseX=randUniform(-5,5)*noise,noiseY=randUniform(-5,5)*noise,label=getXORLabel({x:x+noiseX,y:y+noiseY});points.push({x:x,y:y,label:label})}return points}function randUniform(a,b){return Math.random()*(b-a)+a}function normalRandom(mean,variance){void 0===mean&&(mean=0),void 0===variance&&(variance=1);var v1,v2,s;do v1=2*Math.random()-1,v2=2*Math.random()-1,s=v1*v1+v2*v2;while(s>1);var result=Math.sqrt(-2*Math.log(s)/s)*v1;return mean+Math.sqrt(variance)*result}function dist(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.sqrt(dx*dx+dy*dy)}exports.shuffle=shuffle,exports.classifyTwoGaussData=classifyTwoGaussData,exports.regressPlane=regressPlane,exports.regressGaussian=regressGaussian,exports.classifySpiralData=classifySpiralData,exports.classifyCircleData=classifyCircleData,exports.classifyXORData=classifyXORData, exports.classifyRandomData = classifyRandomData},{}],2:[function(require,module,exports){"use strict";function reduceMatrix(matrix,factor){if(matrix.length!==matrix[0].length)throw new Error("The provided matrix must be a square matrix");if(matrix.length%factor!=0)throw new Error("The width/height of the matrix must be divisible by the reduction factor");for(var result=new Array(matrix.length/factor),i=0;i<matrix.length;i+=factor){result[i/factor]=new Array(matrix.length/factor);for(var j=0;j<matrix.length;j+=factor){for(var avg=0,k=0;k<factor;k++)for(var l=0;l<factor;l++)avg+=matrix[i+k][j+l];avg/=factor*factor,result[i/factor][j/factor]=avg}}return result}
+        var points=[], n = numSamples/2;
+        return genSpiral(0,1), genSpiral(Math.PI,-1), points
+      }
+      
+      function classifyCircleData(numSamples,noise) {
+        function getCircleLabel(p,center) {
+          return dist(p,center)<2.5 ? 1 : -1
+        }
+        for(var points=[],i=0;i<numSamples/2;i++) {
+          var r=randUniform(0,2.5), angle=randUniform(0,2*Math.PI),
+            x=r*Math.sin(angle), y=r*Math.cos(angle),
+            noiseX=randUniform(-5,5)*noise,noiseY=randUniform(-5,5)*noise,
+            label=getCircleLabel({x:x+noiseX,y:y+noiseY},{x:0,y:0});
+          points.push({x:x,y:y,label:label}) 
+        }
+        for(var i=0;i<numSamples/2;i++) {
+          var r=randUniform(3.5,5), angle=randUniform(0,2*Math.PI),
+            x=r*Math.sin(angle), y=r*Math.cos(angle),
+            noiseX=randUniform(-5,5)*noise, noiseY=randUniform(-5,5)*noise,
+            label=getCircleLabel({x:x+noiseX,y:y+noiseY},{x:0,y:0});
+            points.push({x:x,y:y,label:label})
+        }
+        return points
+      }
+      
+      function classifyXORData(numSamples,noise) {
+        function getXORLabel(p) {
+          return p.x*p.y>=0 ? 1 : -1
+        }
+        for(var points=[],i=0;i<numSamples;i++) {
+          var x=randUniform(-5,5);
+          x += x > 0 ? 0.3 : -0.3;
+          var y = randUniform(-5,5);
+          y += y > 0 ? 0.3 : -0.3;
+          var noiseX = randUniform(-5,5)*noise, noiseY = randUniform(-5,5)*noise,
+            label=getXORLabel({x:x+noiseX,y:y+noiseY});
+          points.push({x:x,y:y,label:label})
+        }
+        return points
+      }
+      
+      function randUniform(a,b){return Math.random()*(b-a)+a}function normalRandom(mean,variance){void 0===mean&&(mean=0),void 0===variance&&(variance=1);var v1,v2,s;do v1=2*Math.random()-1,v2=2*Math.random()-1,s=v1*v1+v2*v2;while(s>1);var result=Math.sqrt(-2*Math.log(s)/s)*v1;return mean+Math.sqrt(variance)*result}function dist(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.sqrt(dx*dx+dy*dy)}exports.shuffle=shuffle,exports.classifyTwoGaussData=classifyTwoGaussData,exports.regressPlane=regressPlane,exports.regressGaussian=regressGaussian,exports.classifySpiralData=classifySpiralData,exports.classifyCircleData=classifyCircleData,exports.classifyXORData=classifyXORData, exports.classifyRandomData = classifyRandomData, exports.classifySimpleData = classifySimpleData},{}],2:[function(require,module,exports){"use strict";function reduceMatrix(matrix,factor){if(matrix.length!==matrix[0].length)throw new Error("The provided matrix must be a square matrix");if(matrix.length%factor!=0)throw new Error("The width/height of the matrix must be divisible by the reduction factor");for(var result=new Array(matrix.length/factor),i=0;i<matrix.length;i+=factor){result[i/factor]=new Array(matrix.length/factor);for(var j=0;j<matrix.length;j+=factor){for(var avg=0,k=0;k<factor;k++)for(var l=0;l<factor;l++)avg+=matrix[i+k][j+l];avg/=factor*factor,result[i/factor][j/factor]=avg}}return result}
         
         var tela = "tela";
         var HeatMap=function(){
@@ -201,4 +303,4 @@ function drawDatasetThumbnails() {
     }
 }
 
-function hideControls(){var hiddenProps=state.getHiddenProps();hiddenProps.forEach(function(prop){var controls=d3.selectAll(".ui-"+prop);0===controls.size()&&console.warn("0 html elements found with class .ui-"+prop),controls.style("display","none")});var hideControls=d3.select(".hide-controls");HIDABLE_CONTROLS.forEach(function(_a){var text=_a[0],id=_a[1],label=hideControls.append("label").attr("class","mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"),input=label.append("input").attr({type:"checkbox",class:"mdl-checkbox__input"});hiddenProps.indexOf(id)===-1&&input.attr("checked","true"),input.on("change",function(){state.setHideProperty(id,!this.checked),state.serialize(),userHasInteracted(),d3.select(".hide-controls-link").attr("href",window.location.href)}),label.append("span").attr("class","mdl-checkbox__label label").text(text)}),d3.select(".hide-controls-link").attr("href",window.location.href)}function generateData(firstTime){void 0===firstTime&&(firstTime=!1),firstTime||(state.seed=Math.random().toFixed(5),state.serialize(),userHasInteracted()),Math.seedrandom(state.seed);var numSamples=state.problem===state_1.Problem.REGRESSION?1200:500,generator=state.problem===state_1.Problem.CLASSIFICATION?state.dataset:state.regDataset,data=generator(numSamples,state.noise/100);dataset_1.shuffle(data);var splitIndex=Math.floor(data.length*state.percTrainData/100);trainData=data.slice(0,splitIndex),testData=data.slice(splitIndex),heatMap.updatePoints(trainData),heatMap.updateTestPoints(state.showTestData?testData:[])}function userHasInteracted(){if(firstInteraction){firstInteraction=!1;var page="index";null!=state.tutorial&&""!==state.tutorial&&(page="/v/tutorials/"+state.tutorial),ga("set","page",page),ga("send","pageview",{sessionControl:"start"})}}function simulationStarted(){ga("send",{hitType:"event",eventCategory:"Starting Simulation",eventAction:parametersChanged?"changed":"unchanged",eventLabel:null==state.tutorial?"":state.tutorial}),parametersChanged=!1}var mainWidth,nn=require("./nn"),heatmap_1=require("./heatmap"),state_1=require("./state"),dataset_1=require("./dataset"),linechart_1=require("./linechart");d3.select(".more button").on("click",function(){d3.transition().duration(1e3).tween("scroll",scrollTween(800))});var HoverType;!function(HoverType){HoverType[HoverType.BIAS=0]="BIAS",HoverType[HoverType.WEIGHT=1]="WEIGHT"}(HoverType||(HoverType={}));var INPUTS={x:{f:function(x,y){return x},label:"X_1"},y:{f:function(x,y){return y},label:"X_2"},xSquared:{f:function(x,y){return x*x},label:"X_1^2"},ySquared:{f:function(x,y){return y*y},label:"X_2^2"},xTimesY:{f:function(x,y){return x*y},label:"X_1X_2"},sinX:{f:function(x,y){return Math.sin(x)},label:"sin(X_1)"},sinY:{f:function(x,y){return Math.sin(y)},label:"sin(X_2)"}},HIDABLE_CONTROLS=[["Show test data","showTestData"],["Discretize output","discretize"],["Play button","playButton"],["Step button","stepButton"],["Reset button","resetButton"],["Learning rate","learningRate"],["Activation","activation"],["Regularization","regularization"],["Regularization rate","regularizationRate"],["Problem type","problem"],["Which dataset","dataset"],["Ratio train data","percTrainData"],["Noise level","noise"],["Batch size","batchSize"],["# of hidden layers","numHiddenLayers"]],Player=function(){function Player(){this.timerIndex=0,this.isPlaying=!1,this.callback=null}return Player.prototype.playOrPause=function(){this.isPlaying?(this.isPlaying=!1,this.pause()):(this.isPlaying=!0,0===iter&&simulationStarted(),this.play())},Player.prototype.onPlayPause=function(callback){this.callback=callback},Player.prototype.play=function(){this.pause(),this.isPlaying=!0,this.callback&&this.callback(this.isPlaying),this.start(this.timerIndex)},Player.prototype.pause=function(){this.timerIndex++,this.isPlaying=!1,this.callback&&this.callback(this.isPlaying)},Player.prototype.start=function(localTimerIndex){var _this=this;d3.timer(function(){return localTimerIndex<_this.timerIndex||(oneStep(),!1)},0)},Player}(),state=state_1.State.deserializeState();state.getHiddenProps().forEach(function(prop){prop in INPUTS&&delete INPUTS[prop]});var boundary={},selectedNodeId=null,xDomain=[-6,6],heatMap=new heatmap_1.HeatMap(300,100,xDomain,xDomain,d3.select("#heatmap"),{showAxes:!0}),linkWidthScale=d3.scale.linear().domain([0,5]).range([1,10]).clamp(!0),colorScale=d3.scale.linear().domain([-1,0,1]).range(["#f59322","#e8eaeb","#0877bd"]).clamp(!0),iter=0,trainData=[],testData=[],network=null,lossTrain=0,lossTest=0,player=new Player,lineChart=new linechart_1.AppendingLineChart(d3.select("#linechart"),["#777","black"]);exports.getOutputWeights=getOutputWeights;var firstInteraction=!0,parametersChanged=!1;drawDatasetThumbnails(),initTutorial(),makeGUI(),generateData(!0),reset(!0),hideControls()},{"./dataset":1,"./heatmap":2,"./linechart":3,"./nn":4,"./state":6}],6:[function(require,module,exports){"use strict";function getKeyFromValue(obj,value){for(var key in obj)if(obj[key]===value)return key}function endsWith(s,suffix){return s.substr(-suffix.length)===suffix}function getHideProps(obj){var result=[];for(var prop in obj)endsWith(prop,"_hide")&&result.push(prop);return result}var nn=require("./nn"),dataset=require("./dataset");exports.activations={relu:nn.Activations.RELU,tanh:nn.Activations.TANH,sigmoid:nn.Activations.SIGMOID,linear:nn.Activations.LINEAR},exports.regularizations={none:null,L1:nn.RegularizationFunction.L1,L2:nn.RegularizationFunction.L2},exports.datasets={circle:dataset.classifyCircleData,xor:dataset.classifyXORData,gauss:dataset.classifyTwoGaussData,spiral:dataset.classifySpiralData, random:dataset.classifyRandomData},exports.regDatasets={"reg-plane":dataset.regressPlane,"reg-gauss":dataset.regressGaussian},exports.getKeyFromValue=getKeyFromValue;var Type;!function(Type){Type[Type.STRING=0]="STRING",Type[Type.NUMBER=1]="NUMBER",Type[Type.ARRAY_NUMBER=2]="ARRAY_NUMBER",Type[Type.ARRAY_STRING=3]="ARRAY_STRING",Type[Type.BOOLEAN=4]="BOOLEAN",Type[Type.OBJECT=5]="OBJECT"}(Type=exports.Type||(exports.Type={}));var Problem;!function(Problem){Problem[Problem.CLASSIFICATION=0]="CLASSIFICATION",Problem[Problem.REGRESSION=1]="REGRESSION"}(Problem=exports.Problem||(exports.Problem={})),exports.problems={classification:Problem.CLASSIFICATION,regression:Problem.REGRESSION};var State=function(){function State(){this.learningRate=.03,this.regularizationRate=0,this.showTestData=!1,this.noise=0,this.batchSize=10,this.discretize=!1,this.tutorial=null,this.percTrainData=50,this.activation=nn.Activations.TANH,this.regularization=null,this.problem=Problem.CLASSIFICATION,this.initZero=!1,this.hideText=!1,this.collectStats=!1,this.numHiddenLayers=1,this.hiddenLayerControls=[],this.networkShape=[4,2],this.x=!0,this.y=!0,this.xTimesY=!1,this.xSquared=!1,this.ySquared=!1,this.cosX=!1,this.sinX=!1,this.cosY=!1,this.sinY=!1,this.dataset=dataset.classifyCircleData,this.regDataset=dataset.regressPlane}return State.deserializeState=function(){function hasKey(name){return name in map&&null!=map[name]&&""!==map[name].trim()}function parseArray(value){return""===value.trim()?[]:value.split(",")}for(var map={},_i=0,_a=window.location.hash.slice(1).split("&");_i<_a.length;_i++){var keyvalue=_a[_i],_b=keyvalue.split("="),name_1=_b[0],value=_b[1];map[name_1]=value}var state=new State;return State.PROPS.forEach(function(_a){var name=_a.name,type=_a.type,keyMap=_a.keyMap;switch(type){case Type.OBJECT:if(null==keyMap)throw Error("A key-value map must be provided for state variables of type Object");hasKey(name)&&map[name]in keyMap&&(state[name]=keyMap[map[name]]);break;case Type.NUMBER:hasKey(name)&&(state[name]=+map[name]);break;case Type.STRING:hasKey(name)&&(state[name]=map[name]);break;case Type.BOOLEAN:hasKey(name)&&(state[name]="false"!==map[name]);break;case Type.ARRAY_NUMBER:name in map&&(state[name]=parseArray(map[name]).map(Number));break;case Type.ARRAY_STRING:name in map&&(state[name]=parseArray(map[name]));break;default:throw Error("Encountered an unknown type for a state variable")}}),getHideProps(map).forEach(function(prop){state[prop]="true"===map[prop]}),state.numHiddenLayers=state.networkShape.length,null==state.seed&&(state.seed=Math.random().toFixed(5)),Math.seedrandom(state.seed),state},State.prototype.serialize=function(){var _this=this,props=[];State.PROPS.forEach(function(_a){var name=_a.name,type=_a.type,keyMap=_a.keyMap,value=_this[name];null!=value&&(type===Type.OBJECT?value=getKeyFromValue(keyMap,value):type!==Type.ARRAY_NUMBER&&type!==Type.ARRAY_STRING||(value=value.join(",")),props.push(name+"="+value))}),getHideProps(this).forEach(function(prop){props.push(prop+"="+_this[prop])}),window.location.hash=props.join("&")},State.prototype.getHiddenProps=function(){var result=[];for(var prop in this)endsWith(prop,"_hide")&&"true"===String(this[prop])&&result.push(prop.replace("_hide",""));return result},State.prototype.setHideProperty=function(name,hidden){this[name+"_hide"]=hidden},State}();State.PROPS=[{name:"activation",type:Type.OBJECT,keyMap:exports.activations},{name:"regularization",type:Type.OBJECT,keyMap:exports.regularizations},{name:"batchSize",type:Type.NUMBER},{name:"dataset",type:Type.OBJECT,keyMap:exports.datasets},{name:"regDataset",type:Type.OBJECT,keyMap:exports.regDatasets},{name:"learningRate",type:Type.NUMBER},{name:"regularizationRate",type:Type.NUMBER},{name:"noise",type:Type.NUMBER},{name:"networkShape",type:Type.ARRAY_NUMBER},{name:"seed",type:Type.STRING},{name:"showTestData",type:Type.BOOLEAN},{name:"discretize",type:Type.BOOLEAN},{name:"percTrainData",type:Type.NUMBER},{name:"x",type:Type.BOOLEAN},{name:"y",type:Type.BOOLEAN},{name:"xTimesY",type:Type.BOOLEAN},{name:"xSquared",type:Type.BOOLEAN},{name:"ySquared",type:Type.BOOLEAN},{name:"cosX",type:Type.BOOLEAN},{name:"sinX",type:Type.BOOLEAN},{name:"cosY",type:Type.BOOLEAN},{name:"sinY",type:Type.BOOLEAN},{name:"collectStats",type:Type.BOOLEAN},{name:"tutorial",type:Type.STRING},{name:"problem",type:Type.OBJECT,keyMap:exports.problems},{name:"initZero",type:Type.BOOLEAN},{name:"hideText",type:Type.BOOLEAN}],exports.State=State},{"./dataset":1,"./nn":4}]},{},[5]);
+function hideControls(){var hiddenProps=state.getHiddenProps();hiddenProps.forEach(function(prop){var controls=d3.selectAll(".ui-"+prop);0===controls.size()&&console.warn("0 html elements found with class .ui-"+prop),controls.style("display","none")});var hideControls=d3.select(".hide-controls");HIDABLE_CONTROLS.forEach(function(_a){var text=_a[0],id=_a[1],label=hideControls.append("label").attr("class","mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"),input=label.append("input").attr({type:"checkbox",class:"mdl-checkbox__input"});hiddenProps.indexOf(id)===-1&&input.attr("checked","true"),input.on("change",function(){state.setHideProperty(id,!this.checked),state.serialize(),userHasInteracted(),d3.select(".hide-controls-link").attr("href",window.location.href)}),label.append("span").attr("class","mdl-checkbox__label label").text(text)}),d3.select(".hide-controls-link").attr("href",window.location.href)}function generateData(firstTime){void 0===firstTime&&(firstTime=!1),firstTime||(state.seed=Math.random().toFixed(5),state.serialize(),userHasInteracted()),Math.seedrandom(state.seed);var numSamples=state.problem===state_1.Problem.REGRESSION?1200:500,generator=state.problem===state_1.Problem.CLASSIFICATION?state.dataset:state.regDataset,data=generator(numSamples,state.noise/100);dataset_1.shuffle(data);var splitIndex=Math.floor(data.length*state.percTrainData/100);trainData=data.slice(0,splitIndex),testData=data.slice(splitIndex),heatMap.updatePoints(trainData),heatMap.updateTestPoints(state.showTestData?testData:[])}function userHasInteracted(){if(firstInteraction){firstInteraction=!1;var page="index";null!=state.tutorial&&""!==state.tutorial&&(page="/v/tutorials/"+state.tutorial),ga("set","page",page),ga("send","pageview",{sessionControl:"start"})}}function simulationStarted(){ga("send",{hitType:"event",eventCategory:"Starting Simulation",eventAction:parametersChanged?"changed":"unchanged",eventLabel:null==state.tutorial?"":state.tutorial}),parametersChanged=!1}var mainWidth,nn=require("./nn"),heatmap_1=require("./heatmap"),state_1=require("./state"),dataset_1=require("./dataset"),linechart_1=require("./linechart");d3.select(".more button").on("click",function(){d3.transition().duration(1e3).tween("scroll",scrollTween(800))});var HoverType;!function(HoverType){HoverType[HoverType.BIAS=0]="BIAS",HoverType[HoverType.WEIGHT=1]="WEIGHT"}(HoverType||(HoverType={}));var INPUTS={x:{f:function(x,y){return x},label:"X_1"},y:{f:function(x,y){return y},label:"X_2"},xSquared:{f:function(x,y){return x*x},label:"X_1^2"},ySquared:{f:function(x,y){return y*y},label:"X_2^2"},xTimesY:{f:function(x,y){return x*y},label:"X_1X_2"},sinX:{f:function(x,y){return Math.sin(x)},label:"sin(X_1)"},sinY:{f:function(x,y){return Math.sin(y)},label:"sin(X_2)"}},HIDABLE_CONTROLS=[["Show test data","showTestData"],["Discretize output","discretize"],["Play button","playButton"],["Step button","stepButton"],["Reset button","resetButton"],["Learning rate","learningRate"],["Activation","activation"],["Regularization","regularization"],["Regularization rate","regularizationRate"],["Problem type","problem"],["Which dataset","dataset"],["Ratio train data","percTrainData"],["Noise level","noise"],["Batch size","batchSize"],["# of hidden layers","numHiddenLayers"]],Player=function(){function Player(){this.timerIndex=0,this.isPlaying=!1,this.callback=null}return Player.prototype.playOrPause=function(){this.isPlaying?(this.isPlaying=!1,this.pause()):(this.isPlaying=!0,0===iter&&simulationStarted(),this.play())},Player.prototype.onPlayPause=function(callback){this.callback=callback},Player.prototype.play=function(){this.pause(),this.isPlaying=!0,this.callback&&this.callback(this.isPlaying),this.start(this.timerIndex)},Player.prototype.pause=function(){this.timerIndex++,this.isPlaying=!1,this.callback&&this.callback(this.isPlaying)},Player.prototype.start=function(localTimerIndex){var _this=this;d3.timer(function(){return localTimerIndex<_this.timerIndex||(oneStep(),!1)},0)},Player}(),state=state_1.State.deserializeState();state.getHiddenProps().forEach(function(prop){prop in INPUTS&&delete INPUTS[prop]});var boundary={},selectedNodeId=null,xDomain=[-6,6],heatMap=new heatmap_1.HeatMap(300,100,xDomain,xDomain,d3.select("#heatmap"),{showAxes:!0}),linkWidthScale=d3.scale.linear().domain([0,5]).range([1,10]).clamp(!0),colorScale=d3.scale.linear().domain([-1,0,1]).range(["#f59322","#e8eaeb","#0877bd"]).clamp(!0),iter=0,trainData=[],testData=[],network=null,lossTrain=0,lossTest=0,player=new Player,lineChart=new linechart_1.AppendingLineChart(d3.select("#linechart"),["#777","black"]);exports.getOutputWeights=getOutputWeights;var firstInteraction=!0,parametersChanged=!1;drawDatasetThumbnails(),initTutorial(),makeGUI(),generateData(!0),reset(!0),hideControls()},{"./dataset":1,"./heatmap":2,"./linechart":3,"./nn":4,"./state":6}],6:[function(require,module,exports){"use strict";function getKeyFromValue(obj,value){for(var key in obj)if(obj[key]===value)return key}function endsWith(s,suffix){return s.substr(-suffix.length)===suffix}function getHideProps(obj){var result=[];for(var prop in obj)endsWith(prop,"_hide")&&result.push(prop);return result}var nn=require("./nn"),dataset=require("./dataset");exports.activations={relu:nn.Activations.RELU,tanh:nn.Activations.TANH,sigmoid:nn.Activations.SIGMOID,linear:nn.Activations.LINEAR},exports.regularizations={none:null,L1:nn.RegularizationFunction.L1,L2:nn.RegularizationFunction.L2},exports.datasets={circle:dataset.classifyCircleData,xor:dataset.classifyXORData,gauss:dataset.classifyTwoGaussData,spiral:dataset.classifySpiralData, random:dataset.classifyRandomData, simple:dataset.classifySimpleData},exports.regDatasets={"reg-plane":dataset.regressPlane,"reg-gauss":dataset.regressGaussian},exports.getKeyFromValue=getKeyFromValue;var Type;!function(Type){Type[Type.STRING=0]="STRING",Type[Type.NUMBER=1]="NUMBER",Type[Type.ARRAY_NUMBER=2]="ARRAY_NUMBER",Type[Type.ARRAY_STRING=3]="ARRAY_STRING",Type[Type.BOOLEAN=4]="BOOLEAN",Type[Type.OBJECT=5]="OBJECT"}(Type=exports.Type||(exports.Type={}));var Problem;!function(Problem){Problem[Problem.CLASSIFICATION=0]="CLASSIFICATION",Problem[Problem.REGRESSION=1]="REGRESSION"}(Problem=exports.Problem||(exports.Problem={})),exports.problems={classification:Problem.CLASSIFICATION,regression:Problem.REGRESSION};var State=function(){function State(){this.learningRate=.03,this.regularizationRate=0,this.showTestData=!1,this.noise=0,this.batchSize=10,this.discretize=!1,this.tutorial=null,this.percTrainData=50,this.activation=nn.Activations.TANH,this.regularization=null,this.problem=Problem.CLASSIFICATION,this.initZero=!1,this.hideText=!1,this.collectStats=!1,this.numHiddenLayers=1,this.hiddenLayerControls=[],this.networkShape=[4,2],this.x=!0,this.y=!0,this.xTimesY=!1,this.xSquared=!1,this.ySquared=!1,this.cosX=!1,this.sinX=!1,this.cosY=!1,this.sinY=!1,this.dataset=dataset.classifyCircleData,this.regDataset=dataset.regressPlane}return State.deserializeState=function(){function hasKey(name){return name in map&&null!=map[name]&&""!==map[name].trim()}function parseArray(value){return""===value.trim()?[]:value.split(",")}for(var map={},_i=0,_a=window.location.hash.slice(1).split("&");_i<_a.length;_i++){var keyvalue=_a[_i],_b=keyvalue.split("="),name_1=_b[0],value=_b[1];map[name_1]=value}var state=new State;return State.PROPS.forEach(function(_a){var name=_a.name,type=_a.type,keyMap=_a.keyMap;switch(type){case Type.OBJECT:if(null==keyMap)throw Error("A key-value map must be provided for state variables of type Object");hasKey(name)&&map[name]in keyMap&&(state[name]=keyMap[map[name]]);break;case Type.NUMBER:hasKey(name)&&(state[name]=+map[name]);break;case Type.STRING:hasKey(name)&&(state[name]=map[name]);break;case Type.BOOLEAN:hasKey(name)&&(state[name]="false"!==map[name]);break;case Type.ARRAY_NUMBER:name in map&&(state[name]=parseArray(map[name]).map(Number));break;case Type.ARRAY_STRING:name in map&&(state[name]=parseArray(map[name]));break;default:throw Error("Encountered an unknown type for a state variable")}}),getHideProps(map).forEach(function(prop){state[prop]="true"===map[prop]}),state.numHiddenLayers=state.networkShape.length,null==state.seed&&(state.seed=Math.random().toFixed(5)),Math.seedrandom(state.seed),state},State.prototype.serialize=function(){var _this=this,props=[];State.PROPS.forEach(function(_a){var name=_a.name,type=_a.type,keyMap=_a.keyMap,value=_this[name];null!=value&&(type===Type.OBJECT?value=getKeyFromValue(keyMap,value):type!==Type.ARRAY_NUMBER&&type!==Type.ARRAY_STRING||(value=value.join(",")),props.push(name+"="+value))}),getHideProps(this).forEach(function(prop){props.push(prop+"="+_this[prop])}),window.location.hash=props.join("&")},State.prototype.getHiddenProps=function(){var result=[];for(var prop in this)endsWith(prop,"_hide")&&"true"===String(this[prop])&&result.push(prop.replace("_hide",""));return result},State.prototype.setHideProperty=function(name,hidden){this[name+"_hide"]=hidden},State}();State.PROPS=[{name:"activation",type:Type.OBJECT,keyMap:exports.activations},{name:"regularization",type:Type.OBJECT,keyMap:exports.regularizations},{name:"batchSize",type:Type.NUMBER},{name:"dataset",type:Type.OBJECT,keyMap:exports.datasets},{name:"regDataset",type:Type.OBJECT,keyMap:exports.regDatasets},{name:"learningRate",type:Type.NUMBER},{name:"regularizationRate",type:Type.NUMBER},{name:"noise",type:Type.NUMBER},{name:"networkShape",type:Type.ARRAY_NUMBER},{name:"seed",type:Type.STRING},{name:"showTestData",type:Type.BOOLEAN},{name:"discretize",type:Type.BOOLEAN},{name:"percTrainData",type:Type.NUMBER},{name:"x",type:Type.BOOLEAN},{name:"y",type:Type.BOOLEAN},{name:"xTimesY",type:Type.BOOLEAN},{name:"xSquared",type:Type.BOOLEAN},{name:"ySquared",type:Type.BOOLEAN},{name:"cosX",type:Type.BOOLEAN},{name:"sinX",type:Type.BOOLEAN},{name:"cosY",type:Type.BOOLEAN},{name:"sinY",type:Type.BOOLEAN},{name:"collectStats",type:Type.BOOLEAN},{name:"tutorial",type:Type.STRING},{name:"problem",type:Type.OBJECT,keyMap:exports.problems},{name:"initZero",type:Type.BOOLEAN},{name:"hideText",type:Type.BOOLEAN}],exports.State=State},{"./dataset":1,"./nn":4}]},{},[5]);

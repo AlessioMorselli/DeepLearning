@@ -189,18 +189,25 @@ limitations under the License.
           <div>
             <p>Quale set di dati vuoi usare?</p>
             <div class="dataset-list">
-              <div class="dataset" title="Circle">
+              <div class="dataset" title="Circolo">
                 <canvas class="data-thumbnail" data-dataset="circle"></canvas>
               </div>
-              <div class="dataset" title="Exclusive or">
+              <div class="dataset" title="Exclusive or (XOR)">
                 <canvas class="data-thumbnail" data-dataset="xor"></canvas>
               </div>
-              <div class="dataset" title="Gaussian">
+              <div class="dataset" title="Gaussiano">
                 <canvas class="data-thumbnail" data-dataset="gauss"></canvas>
               </div>
-              <div class="dataset" title="Spiral">
+              <div class="dataset" title="Spiraleggiante">
                 <canvas class="data-thumbnail" data-dataset="spiral"></canvas>
               </div>
+              <div class="dataset" title="Casuale">
+                <canvas class="data-thumbnail" data-dataset="random"></canvas>
+              </div>
+              <div class="dataset" title="Semplice">
+                <canvas class="data-thumbnail" data-dataset="simple"></canvas>
+              </div>
+              
               <div class="dataset" title="Plane">
                 <canvas class="data-thumbnail" data-regDataset="reg-plane"></canvas>
               </div>
@@ -229,7 +236,7 @@ limitations under the License.
               </p>
             </div>
               <button class="btn btn-info" id="data-regen-button" title="Regenerate data">
-                Regenerate
+                Rigenera
               </button>
           </div>
         </div>
@@ -305,11 +312,11 @@ limitations under the License.
           <h4>Output</h4>
           <div class="metrics">
             <div class="output-stats ui-percTrainData">
-              <span>Costo sui dati di test:</span>
+              <span>Costo test:</span>
               <div class="value" id="loss-test"></div>
             </div>
             <div class="output-stats train">
-              <span>Costo sui dati di allenamento:</span>
+              <span>Costo allen.:</span>
               <div class="value" id="loss-train"></div>
             </div>
             <div id="linechart"></div>
