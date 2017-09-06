@@ -24,10 +24,12 @@ function NPGinit(FPS){
   myinit();
 }
 
-function myinit() { }
+function myinit() { console.log("Inizializzazione - COMPLETATA"); }
 
 function eventClick(e) {
     
+  console.log("Ciaone!");
+  
   //get position of cursor relative to top left of canvas
   var x;
   var y;
@@ -40,6 +42,9 @@ function eventClick(e) {
   } 
   x -= canvas.offsetLeft;
   y -= canvas.offsetTop;
+  
+  
+  console.log("Coordinate: x = " + x + " - y = " + y);
   
   //call user-defined callback
   mouseClick(x, y, e.shiftKey, e.ctrlKey);

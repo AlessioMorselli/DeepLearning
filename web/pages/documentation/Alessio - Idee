@@ -22,12 +22,16 @@ REINFORCEMENT
      - Terza cosa: come stabilire chi vince? Chi finisce prima o chi fa meno morti? Probabilmente
         metteremo chi finisce prima! --- FATTO
 
-CLASSIFY2D
- - La base è ottima: c'è da sistemare solo il css per uniformare lo stile e sistamare la grafica --- FATTO
- - Scrivere qualcosa per introdurre alla demo
-
  - Migliorare il testo che introduce la sifda breakout --- FATTO
  - Inserire la spiegazione del perché il x2 --- FATTO
+
+CLASSIFY2D
+ - La base è ottima: c'è da sistemare solo il css per uniformare lo stile e sistamare la grafica --- FATTO
+ - Scrivere qualcosa per introdurre alla demo --- FATTO
+ - Volevamo mettere che cliccando si aggiungono i punti, ma il file js è scritto troppo male -> Proviamo
+    ad inserire qualche distribuzione di dati in più!
+
+ 
 
 PRATICA
  - Riutilizzo dell'header senza dover fare copia e incolla: come farlo in HTML?
