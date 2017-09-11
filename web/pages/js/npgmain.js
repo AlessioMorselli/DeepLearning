@@ -129,6 +129,6 @@ function NPGinit(FPS){
 }
 
 function NPGtick() {
-    update();
+    update(3);
     draw();
 }

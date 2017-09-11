@@ -22,22 +22,23 @@ function myinit() {
   initLinks();
 }
 
-function update() {
+function update(iters) {
+  if(typeof iters === "undefined") iters = 5;
   if (stop) return;
   // forward prop the data
 
   var netx = new convnetjs.Vol(1, 1, 1);
-  epochs++;
-  document.getElementById("iter-number").innerHTML = pad(epochs, 6);
 
   avloss = 0.0;
+  for(var i=0; i<iters; i++) {
+    for (var ix = 0; ix < N; ix++) {
+        netx.w = data[ix];
+        var stats = trainer.train(netx, labels[ix]);
+        avloss += stats.loss;
 
-  for (var iters = 0; iters < 5; iters++) {
-      for (var ix = 0; ix < N; ix++) {
-          netx.w = data[ix];
-          var stats = trainer.train(netx, labels[ix]);
-          avloss += stats.loss;
-      }
+    }
+    epochs++;
+    document.getElementById("iter-number").innerHTML = pad(epochs, 6);
   }
 
   avloss /= N * iters;
@@ -243,6 +244,18 @@ function reset() {
   }
 }
 
+function step() {
+  stop = false;
+  update(1);
+  stop = true;
+  var btn_stop = document.getElementById("btn-stop");
+  if(stop) {
+    btn_stop.innerHTML = "<i class='glyphicon glyphicon-play'></i>";
+  } else {
+    btn_stop.innerHTML = "<i class='glyphicon glyphicon-pause'></i>";
+  }
+}
+
 function regen_data() {
     N = 10;
     data = [];
@@ -254,8 +267,6 @@ function regen_data() {
         labels.push([y]);
     }
 }
-
-
 
 function mouseClick(x, y, shiftPressed){
   console.log(x+", "+y);

@@ -49,11 +49,11 @@
           font-size: 1.5em;
         }
 
-        .navbar-nav li {
+        #top-controls ul li {
           margin: 0px 20px 0px 20px;
           text-align: center;
         }
-        .navbar-nav li span {
+        #top-controls ul li span {
           color: #777777;
         }
     </style>
@@ -78,10 +78,10 @@
               <button onclick="reset();" class="btn btn-default" id="reset-button" title="Reset">
                 <i class="glyphicon glyphicon-repeat"></i>
               </button>
-              <button onclick="stopTime();" class="btn btn-default" id="btn-stop" data-toggle="button" aria-pressed="false" title="Inizia/Pausa">
+              <button onclick="stopTime();" class="btn btn-default" id="btn-stop" title="Inizia/Pausa">
                 <i class="glyphicon glyphicon-play"></i>
               </button>
-              <button class="btn btn-default" id="next-step-button" title="Step">
+              <button onclick="step();" class="btn btn-default" id="next-step-button" title="Step">
                 <i class="glyphicon glyphicon-step-forward"></i>
               </button>
             </div>
