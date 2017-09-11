@@ -1,32 +1,247 @@
 var N, data, labels;
-var ss = 30;
-var n_size = 80;
-var layer_defs, net, trainer;
-
-// create neural net
-var layer_defs = [];
-layer_defs.push({ type: 'input', out_sx: 1, out_sy: 1, out_depth: 1 });
-layer_defs.push({ type: 'fc', num_neurons: 4, activation: 'tanh' });
-layer_defs.push({ type: 'fc', num_neurons: 2, activation: 'tanh' });
-layer_defs.push({ type: 'regression', num_neurons: 1 });
-
-net = new convnetjs.Net();
-net.makeLayers(layer_defs);
-
-trainer = new convnetjs.SGDTrainer(net, { learning_rate: 0.01, momentum: 0.0, batch_size: 1, l2_decay: 0.001 });
-
-
-var draw_layers = new Array();
-
-createDivLayers();
-
-createWeightArrows();
-
+var ss = 24;
+var n_size = 64;
+var net, trainer;
 var stop = true;
+var nnt = document.getElementById("nnt");
+var epochs = 0;
+
+var layer_params = [];
+layer_params.push({neurons: 4});
+layer_params.push({neurons: 2});
+var net_params = {activation:'tanh', learning_rate:0.01, reg:"l2", decay:0.001};
 
 $(window).on("load", function() {
-    NPGinit(24);
+  NPGinit(24);
 });
+
+function myinit() {
+  regen_data();
+  initNeuralNetwork();
+  initNeuronsDraw();
+  initLinks();
+}
+
+function update() {
+  if (stop) return;
+  // forward prop the data
+
+  var netx = new convnetjs.Vol(1, 1, 1);
+  epochs++;
+  document.getElementById("iter-number").innerHTML = pad(epochs, 6);
+
+  avloss = 0.0;
+
+  for (var iters = 0; iters < 5; iters++) {
+      for (var ix = 0; ix < N; ix++) {
+          netx.w = data[ix];
+          var stats = trainer.train(netx, labels[ix]);
+          avloss += stats.loss;
+      }
+  }
+
+  avloss /= N * iters;
+}
+
+function draw() {
+  drawOutput();
+  drawLinks();
+}
+
+function initNeuralNetwork() {
+  epochs = 0;
+  document.getElementById("iter-number").innerHTML = pad(epochs, 6);
+  // create neural net
+  var layer_defs = [];
+  layer_defs.push({ type: 'input', out_sx: 1, out_sy: 1, out_depth: 1 });
+  for(var i=0; i<layer_params.length; i++) {
+    layer_defs.push({ type: 'fc', num_neurons: layer_params[i].neurons, activation: net_params.activation });
+  }
+  layer_defs.push({ type: 'regression', num_neurons: 1 });
+
+  net = new convnetjs.Net();
+  net.makeLayers(layer_defs);
+
+  console.log(net.layers);
+  
+  if(net_params.reg === "l1") trainer = new convnetjs.SGDTrainer(net, { learning_rate: net_params.learning_rate, momentum: 0.0, batch_size: 1, l1_decay: net_params.decay});
+  else if(net_params.reg === "l2") trainer = new convnetjs.SGDTrainer(net, { learning_rate: net_params.learning_rate, momentum: 0.0, batch_size: 1, l2_decay: net_params.decay});
+  else trainer = new convnetjs.SGDTrainer(net, { learning_rate: net_params.learning_rate, momentum: 0.0, batch_size: 1});
+}
+
+function initNeuronsDraw() {
+  getTableBody(nnt).innerHTML = "";
+  getTableHead(nnt).children[0].innerHTML = "";
+
+  document.getElementById("layers_number").innerHTML = "<b>"+layer_params.length+"</b> strati";
+
+  var c = 0;
+  for (var i = 0; i < net.layers.length - 1; i++) {
+    var L = net.layers[i]; if (L.layer_type === "fc") continue;
+    if(getNumberColumns(nnt) < c+1) {
+      addColumn(nnt);
+    }
+    for (var j = 0; j < L.out_depth; j++) {
+      if(getColumn(nnt, c).length < j+1) {
+        var canvas = document.createElement("canvas");
+        canvas.width = canvas.height = n_size;
+        canvas.className = "act-canvas";
+        push(nnt, canvas, c);
+      }
+    }
+    c++;
+  }
+
+  for(var i=0; i<getNumberColumns(nnt); i++) {
+    var t = "";
+    if(i===0) t = "<b>Input</b><br/><b>1</b> neurone";
+    else {
+      var acts = ["relu", "sigmoid", "tanh"];
+      t = "<button class='btn btn-default' onclick='removeNeuron("+i+");'><i class='glyphicon glyphicon-minus'></i></button>";
+      t += "<button class='btn btn-default' onclick='addNeuron("+i+");'><i class='glyphicon glyphicon-plus'></i></button><br/>";
+      t += "<b>"+getColumn(nnt, i).length+"</b> neuroni<br/>";
+    }
+    setColumnHeader(nnt, t, i);
+  }
+}
+
+function initLinks() {
+  var svg = document.getElementById("svg");
+  svg.innerHTML = "";
+  
+  // links neuron-neuron
+  var cells = getCells(nnt);
+  for (var i = 0; i < cells.length - 1; i++) {
+    var col = cells[i];
+    var col_after = cells[i + 1];
+
+    for (var j = 0; j < col.length; j++) {
+      for (var k = 0; k < col_after.length; k++) {
+        if(document.getElementById("a_" + i + j + "-" + (i + 1) + k) === null) {
+          var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("fill", "none");
+          g.setAttribute("stroke", "black");
+          g.setAttribute("stroke-width", "1");
+          var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("id", "a_" + i + j + "-" + (i + 1) + k);
+
+          g.appendChild(path);
+          svg.appendChild(g);
+        }
+      }
+    }
+  }
+  
+  // Links neuron-output
+  var col = cells[cells.length - 1];
+  var out_canvas = document.getElementById("NPGcanvas");
+  for (var i = 0; i < col.length; i++) {
+    if(document.getElementById("o_" + i) === null) {
+      var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      g.setAttribute("fill", "none");
+      g.setAttribute("stroke", "black");
+      g.setAttribute("stroke-width", "1");
+      var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("id", "o_" + i);
+
+      g.appendChild(path);
+      svg.appendChild(g);
+    }
+  }
+}
+
+function drawLinks() {
+  // Arrows neuron-neuron
+  var cells = getCells(nnt);
+  var l = 0;
+  for (var i = 0; i < cells.length - 1; i++) {
+    var col = cells[i];
+    var col_after = cells[i + 1];
+    for (var j = 0; j < col.length; j++) {
+      for (var k = 0; k < col_after.length; k++) {
+        var net_layer = net.layers[l];
+        if (net_layer.layer_type !== "regression" && net_layer.layer_type !== "fc") {
+            net_layer = net.layers[l+1];
+            var weight = net_layer.filters[k].w[j];
+            drawConnector("a_" + i + j + "-" + (i + 1) + k, col[j], col_after[k], weight, stop);
+        }
+      }
+    }
+    l+=2;
+  }
+  // Links neuron-output
+  var col = cells[cells.length - 1];
+  var out_canvas = document.getElementById("NPGcanvas");
+  for (var i = 0; i < col.length; i++) {
+      var net_layer = net.layers[net.layers.length - 2];
+      var weight = net_layer.filters[0].w[i];
+      drawConnector("o_" + i, col[i], out_canvas, weight, stop);
+  }
+}
+
+function addLayer() {
+  if(layer_params.length >= 6) return;
+  layer_params.push({neurons:4});
+  initNeuralNetwork();
+  initNeuronsDraw();
+  initLinks();
+}
+
+function removeLayer() {
+  if(layer_params.length <= 1) return;
+  layer_params.pop();
+  initNeuralNetwork();
+  initNeuronsDraw();
+  initLinks();
+}
+
+function addNeuron(col) {
+  if(layer_params[col-1].neurons >= 8) return;
+  layer_params[col-1].neurons++;
+  initNeuralNetwork();
+  initNeuronsDraw();
+  initLinks();
+}
+
+function removeNeuron(col) {
+  if(layer_params[col-1].neurons <= 1) return;
+  layer_params[col-1].neurons--;
+  initNeuralNetwork();
+  initNeuronsDraw();
+  initLinks();
+}
+
+function changeActivation(act) {
+  net_params.activation = act;
+  initNeuralNetwork();
+}
+
+function changeLearningRate(lr) {
+  net_params.learning_rate = lr;
+  initNeuralNetwork();
+}
+
+function changeReg(reg) {
+  net_params.reg = reg;
+  initNeuralNetwork();
+}
+
+function changeDecay(decay) {
+  net_params.decay = decay;
+  initNeuralNetwork();
+}
+
+function reset() {
+  regen_data();
+  initNeuralNetwork();
+  stop = true;
+  var btn_stop = document.getElementById("btn-stop");
+  if(stop) {
+    btn_stop.innerHTML = "<i class='glyphicon glyphicon-play'></i>";
+  } else {
+    btn_stop.innerHTML = "<i class='glyphicon glyphicon-pause'></i>";
+  }
+}
 
 function regen_data() {
     N = 10;
@@ -40,111 +255,89 @@ function regen_data() {
     }
 }
 
-function myinit() {
-    regen_data();
-}
-
-function update() {
-    if (stop) return;
-    // forward prop the data
-
-    var netx = new convnetjs.Vol(1, 1, 1);
-    avloss = 0.0;
-
-    for (var iters = 0; iters < 5; iters++) {
-        for (var ix = 0; ix < N; ix++) {
-            netx.w = data[ix];
-            var stats = trainer.train(netx, labels[ix]);
-            avloss += stats.loss;
-        }
-    }
-
-    avloss /= N * iters;
-
-}
-
-function draw() {
-  var svg = document.getElementById("svg");
-  //svg.setAttribute("transform", "translate(0,"+ (window.scrollY) +")");
-  //console.log(window.screenY);
 
 
-    drawOutput();
+function mouseClick(x, y, shiftPressed){
+  console.log(x+", "+y);
+  // add datapoint at location of click
+  data.push([(x-WIDTH/2)/ss]);
+  labels.push([-(y-HEIGHT/2)/ss]);
+  N += 1;
 
-    drawArrows(stop);
 }
 
 function drawOutput() {
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = "black";
+  var cells = getCells(nnt);
 
-    var netx = new convnetjs.Vol(1, 1, 1);
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = "black";
 
-    var density = 5.0;
+  var netx = new convnetjs.Vol(1, 1, 1);
 
-    var neurons = [draw_layers.length];
-    for (var i = 0; i < draw_layers.length; i++) {
-        neurons[i] = new Array();
-    }
+  var density = 5.0;
 
-    ctx.beginPath();
-    for (var x = 0.0; x <= WIDTH; x += density) {
+  var neurons = [cells.length];
+  for (var i = 0; i < cells.length; i++) {
+      neurons[i] = new Array();
+  }
 
-        netx.w[0] = (x - WIDTH / 2) / ss;
-        var a = net.forward(netx);
-        var y = a.w[0];
+  ctx.beginPath();
+  for (var x = 0.0; x <= WIDTH; x += density) {
 
-        if (x === 0) ctx.moveTo(x, -y * ss + HEIGHT / 2);
-        else ctx.lineTo(x, -y * ss + HEIGHT / 2);
+      netx.w[0] = (x - WIDTH / 2) / ss;
+      var a = net.forward(netx);
+      var y = a.w[0];
 
-        for (var i = 0; i < draw_layers.length; i++) {
-            var ws = [].slice.call(net.layers[draw_layers[i].net_layer].out_act.w);
-            neurons[i].push(ws);
-        }
-    }
-    ctx.stroke();
+      if (x === 0) ctx.moveTo(x, -y * ss + HEIGHT / 2);
+      else ctx.lineTo(x, -y * ss + HEIGHT / 2);
 
-    for (var i = 0; i < draw_layers.length; i++) {
-        for (var j = 0; j < draw_layers[i].part_draw.childNodes.length; j++) {
-            var ncanvas = draw_layers[i].part_draw.childNodes[j];
-            var nctx = ncanvas.getContext("2d");
+      var l=0;
+      for (var i = 0; i < neurons.length; i++) {
+        if(net.layers[l].layer_type === "fc") l++;
+        var ws = [].slice.call(net.layers[l].out_act.w);
+        neurons[i].push(ws);
+        l++;
+      }
+  }
+  ctx.stroke();
 
-            var temp = createEmptyCanvas(WIDTH, HEIGHT, "white");
-            var tctx = temp.getContext("2d");
+  for (var i = 0; i < cells.length; i++) {
+      for (var j = 0; j < cells[i].length; j++) {
+          var ncanvas = cells[i][j];
+          var nctx = ncanvas.getContext("2d");
+          
+          nctx.clearRect(0, 0, n_size, n_size);
 
-            tctx.strokeStyle = 'rgb(250,50,50)';
-            tctx.lineWidth = 10;
-            tctx.beginPath();
-            var n = 0;
-            for (var x = 0.0; x <= WIDTH; x += density) {
-                if (x === 0) tctx.moveTo(x, -neurons[i][n][j] * ss + HEIGHT / 2);
-                else tctx.lineTo(x, -neurons[i][n][j] * ss + HEIGHT / 2);
-                n++;
-            }
-            tctx.stroke();
+          nctx.strokeStyle = 'rgb(250,50,50)';
+          nctx.lineWidth = 1;
+          nctx.beginPath();
+          var n = 0;
+          for (var x = 0.0; x <= n_size; x += 1) {
+              if (x === 0) nctx.moveTo(x, -neurons[i][n][j] * 5 + n_size / 2);
+              else nctx.lineTo(x, -neurons[i][n][j] * 5 + n_size / 2);
+              n++;
+          }
+          nctx.stroke();
 
-            //temp = resize(temp, n_size, n_size);
-            nctx.drawImage(temp, 0, 0, WIDTH, HEIGHT, 0, 0, n_size, n_size);
+      }
+  }
 
-        }
-    }
+  // draw axes
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgb(140,140,140)';
+  ctx.lineWidth = 0.5;
+  ctx.moveTo(0, HEIGHT / 2);
+  ctx.lineTo(WIDTH, HEIGHT / 2);
+  ctx.moveTo(WIDTH / 2, 0);
+  ctx.lineTo(WIDTH / 2, HEIGHT);
+  ctx.stroke();
 
-    // draw axes
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgb(140,140,140)';
-    ctx.lineWidth = 0.5;
-    ctx.moveTo(0, HEIGHT / 2);
-    ctx.lineTo(WIDTH, HEIGHT / 2);
-    ctx.moveTo(WIDTH / 2, 0);
-    ctx.lineTo(WIDTH / 2, HEIGHT);
-    ctx.stroke();
-
-    // draw datapoints. Draw support vectors larger
-    ctx.strokeStyle = 'rgb(0,0,0)';
-    ctx.lineWidth = 1;
-    for (var i = 0; i < N; i++) {
-        drawCircle(data[i] * ss + WIDTH / 2, -labels[i] * ss + HEIGHT / 2, 4.0);
-    }
+  // draw datapoints. Draw support vectors larger
+  ctx.strokeStyle = 'rgb(0,0,0)';
+  ctx.lineWidth = 1;
+  for (var i = 0; i < N; i++) {
+      drawCircle(data[i] * ss + WIDTH / 2, -labels[i] * ss + HEIGHT / 2, 4.0);
+  }
 }
 
 function drawArrows(stop) {
@@ -253,10 +446,16 @@ function createSection(net_layer) {
 }
 
 function stopTime() {
-    stop = !stop;
-    if (!stop) {
-        draw();
-    } else {
-        console.log(net.toJSON());
-    }
+  stop = !stop;
+  var btn_stop = document.getElementById("btn-stop");
+  if(stop) {
+    btn_stop.innerHTML = "<i class='glyphicon glyphicon-play'></i>";
+  } else {
+    btn_stop.innerHTML = "<i class='glyphicon glyphicon-pause'></i>";
+  }
+}
+
+function pad(num, size){
+  var s = ('000000000' + num).substr(-size);
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

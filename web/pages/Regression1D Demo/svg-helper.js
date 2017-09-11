@@ -11,6 +11,18 @@ function getOffsetTop( elem )
     return offsetTop;
 }
 
+function getOffsetLeft( elem )
+{
+    var offsetLeft = 0;
+    do {
+      if ( !isNaN( elem.offsetLeft ) )
+      {
+          offsetLeft += elem.offsetLeft;
+      }
+    } while( elem = elem.offsetParent );
+    return offsetLeft;
+}
+
 var drawConnector = function(idArrow, A, B, weight, stop) {
     var arrow = document.getElementById(idArrow);
     var g = arrow.parentElement;
@@ -20,28 +32,29 @@ var drawConnector = function(idArrow, A, B, weight, stop) {
     var offY = 0;
 
     var posA = {
-        x: a.left + A.width / 2,
-        y: getOffsetTop(A) + A.height + offY + 1
+        x: a.left + A.width + 2,
+        y: getOffsetTop(A) + A.height/2 + offY
     };
     var posB = {
-        x: b.left + B.width / 2,
-        y: getOffsetTop(B) + offY + 1
+        x: b.left,
+        y: getOffsetTop(B) + B.height/2 + offY
     };
+    var dx = (posB.x - posA.x) / 2;
     var dy = (posA.y - posB.y) / 2;
     var dArrow =
         "M" +
-        (posB.x) + "," + (posB.y) + " " +
+        (posA.x) + "," + (posA.y) + " " +
         "C" +
-        (posB.x) + "," + (posB.y + dy - 16) + " " +
-        (posA.x) + "," + (posB.y + dy + 16) + " " +
-        (posA.x) + "," + (posA.y);
+        (posA.x + dx) + "," + (posA.y) + " " +
+        (posA.x + dx) + "," + (posB.y) + " " +
+        (posB.x) + "," + (posB.y);
     arrow.setAttribute("d", dArrow);
 
     arrow.setAttribute("stroke-dasharray", "10,1");
 
     if (!stop) {
         var last_offset = Number(arrow.getAttribute("stroke-dashoffset"));
-        arrow.setAttribute("stroke-dashoffset", (last_offset + 1));
+        arrow.setAttribute("stroke-dashoffset", (last_offset - 1));
     }
 
     var width = 2 * Math.abs(weight) + Math.pow(2, -Math.abs(weight) / 2); // 2x+2^(-x/2)

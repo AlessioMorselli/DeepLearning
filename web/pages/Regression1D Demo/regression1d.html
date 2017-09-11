@@ -16,7 +16,7 @@
     <style>
         .act-canvas {
             padding: 0px;
-            margin: 16px;
+            margin: 4px;
             border: 1px solid rgb(180, 180, 180);
         }
         
@@ -26,10 +26,17 @@
             top: 0;
             z-index: -1;
         }
+
+        td, th {
+          text-align:center; 
+          vertical-align:middle;
+        }
         
         .section {
-            z-index: -2;
-            background-color: white;
+          z-index: -2;
+          background-color: #f8f8f8;
+          border: 1px solid #e7e7e7;
+          border-radius: 4px;
         }
         
         @media (min-width: 1200px) {
@@ -37,11 +44,23 @@
                 width: 1170px;
             }
         }
+
+        body {
+          font-size: 1.5em;
+        }
+
+        .navbar-nav li {
+          margin: 0px 20px 0px 20px;
+          text-align: center;
+        }
+        .navbar-nav li span {
+          color: #777777;
+        }
     </style>
 </head>
 
 <body>
-    <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="160%">
     </svg>
 
     <div class="container-fluid">
@@ -50,21 +69,120 @@
                 $("#header").load("../shared/header.html");
             </script>
         </div>
+        
+        
+      <nav id="top-controls" class="navbar navbar-default" style="padding: 15px;">
+        <ul class="nav navbar-nav">
+          <li>
+            <div class="btn-group btn-group-lg" role="group">
+              <button onclick="reset();" class="btn btn-default" id="reset-button" title="Reset">
+                <i class="glyphicon glyphicon-repeat"></i>
+              </button>
+              <button onclick="stopTime();" class="btn btn-default" id="btn-stop" data-toggle="button" aria-pressed="false" title="Inizia/Pausa">
+                <i class="glyphicon glyphicon-play"></i>
+              </button>
+              <button class="btn btn-default" id="next-step-button" title="Step">
+                <i class="glyphicon glyphicon-step-forward"></i>
+              </button>
+            </div>
+          </li>
 
-        <button class="btn btn-default" type="button" onclick="stopTime();" style="z-index:5;">Stop</button>
-        <div class="row">
-            <div id="div-layers" class="col-xs-12">
+          <li>
+            <span>Epoche</span><br/>
+            <text id="iter-number" style="font-size:1.7em;">000,000</text>
+          </li>
+          
+          <li>
+            <span>Tasso di apprendimento</span><br/>
+            <div class="form-group">
+              <select class="form-control" onchange="changeLearningRate(this.options[this.selectedIndex].value)">
+                <option value="0.00001">0.00001</option>
+                <option value="0.0001">0.0001</option>
+                <option value="0.001">0.001</option>
+                <option value="0.003">0.003</option>
+                <option value="0.01" selected>0.01</option>
+                <option value="0.03">0.03</option>
+                <option value="0.1">0.1</option>
+                <option value="0.3">0.3</option>
+              </select>
             </div>
-            <!-- div-layers -->
-            <div class="col-xs-2">
+          </li>
+          
+          <li>
+            <span>Funzione di attivazione</span><br/>
+            <div class="form-group">
+              <select class="form-control" onchange="changeActivation(this.options[this.selectedIndex].value)">
+                <option value="sigmoid">Sigmoid</option>
+                <option value="relu">ReLu</option>
+                <option value="tanh" selected>Tanh</option>
+              </select>
             </div>
-            <div class="col-xs-10 wrap">
-                <div id="out-canvas-section" class="fit-content">
-                    <canvas id="NPGcanvas" class="act-canvas" width="400" height="400"></canvas>
-                </div>
+          </li>
+
+          <li>
+            <span>Regolarizzazione</span><br/>
+            <div class="form-group">
+              <select class="form-control" onchange="changeReg(this.options[this.selectedIndex].value)">
+                <option value="no">No</option>
+                <option value="l1">L1</option>
+                <option value="l2" selected>L2</option>
+              </select>
             </div>
+          </li>
+          
+          <li>
+            <span>Tasso di regolarizzazione</span><br/>
+            <div class="form-group">
+              <select class="form-control" onchange="changeDecay(this.options[this.selectedIndex].value)">
+                <option value="0.00001">0.00001</option>
+                <option value="0.0001">0.0001</option>
+                <option value="0.001" selected>0.001</option>
+                <option value="0.003">0.003</option>
+                <option value="0.01">0.01</option>
+                <option value="0.03">0.03</option>
+                <option value="0.1">0.1</option>
+                <option value="0.3">0.3</option>
+                <option value="1">1</option>
+                <option value="3">3</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+          </li>
+
+        </ul>
+      </nav>
+
+        <div style="width:calc(100% - 360px);display:inline-block;vertical-align: text-top;">
+          <table style="width:96%;">
+            <tr>
+              <td style="width:120px;"></td>
+              <td style="border-bottom: 1px solid #DFDFDF;">
+                <button class="btn btn-default" onclick="removeLayer()">
+                  <i class="glyphicon glyphicon-minus"></i>
+                </button>
+                <button class="btn btn-default" onclick="addLayer()">
+                  <i class="glyphicon glyphicon-plus"></i>
+                </button><br/>
+                <text id="layers_number"><b></b> strati</text>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:120px;"></td>
+              <td style="border-left: 1px solid #DFDFDF;border-right: 1px solid #DFDFDF;"><br/></td>
+            </tr>
+          </table>
+          <table id="nnt" style="width:96%; margin-top:24px;">
+            <thead>
+              <tr></tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
         </div>
-        <!-- row -->
+        <div style="width:320px;display:inline-block;vertical-align: text-top; margin-top:64px;">
+          <canvas id="NPGcanvas" class="act-canvas" width="320" height="320"></canvas>
+        </div>
     </div>
     <!-- container -->
 
@@ -74,6 +192,7 @@
     <script src="../js/convnet-min.js"></script>
     <script src="../js/pica.js"></script>
     <script src="../js/image-helpers.js"></script>
+    <script src="vtable.js"></script>
     <script src="svg-helper.js"></script>
     <script src="regression1d.js"></script>
 </body>

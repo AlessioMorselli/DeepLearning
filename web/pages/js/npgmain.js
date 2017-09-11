@@ -89,8 +89,8 @@ function eventClick(e) {
     x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
     y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
   } 
-  x -= canvas.offsetLeft;
-  y -= canvas.offsetTop;
+  x -= getOffsetLeft(canvas);
+  y -= getOffsetTop(canvas);
   
   //call user-defined callback
   mouseClick(x, y, e.shiftKey, e.ctrlKey);
