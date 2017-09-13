@@ -108,6 +108,7 @@ function initNeuronsDraw() {
 
 function initLinks() {
   var svg = document.getElementById("svg");
+  svg.setAttribute("height", $(document).height());
   svg.innerHTML = "";
   
   // links neuron-neuron

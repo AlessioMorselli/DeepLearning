@@ -20,7 +20,7 @@
             border: 1px solid rgb(180, 180, 180);
         }
         
-        svg {
+        #svg {
             position: absolute;
             left: 0;
             top: 0;
@@ -64,12 +64,38 @@
     </svg>
 
     <div class="container-fluid">
-        <div id="header">
-            <script>
-                $("#header").load("../shared/header.html");
-            </script>
-        </div>
+      <div id="header">
+          <script>
+              $("#header").load("../shared/header.html");
+          </script>
+      </div>
+      
+      <h1 class="centrato">Regressione 1D</h1>
         
+      <p class="centrato">
+        In questa demo viene affrontato un problema di regressione ad una dimensione con 
+        l'utilizzo di reti neurali.<br/>
+        L'obiettivo di un problema di regressione consiste nel prevedere il valore di una variabile numerica 
+        (nel nostro caso la coordinata y) in base ai valori di uno o più variabili predittive (coordinata x).
+      </p>
+      <p class="centrato">
+        Una possibile applicazione di questo tipo di rete neurale è nel campo delle previsioni metereologiche:
+        dando in input alla rete alcuni parametri come pressione atmosferica, umidità dell'aria, velocità del vento, 
+        si ottiene come output la probabilità di pioggia in una certa zona.
+      </p>
+      <p class="centrato">
+        In questa demo si possono cambiare diversi parametri: <a href="../teoria/home.html#tasso-apprendimento">Tasso di apprendimento</a>, 
+        <a href="">Funzione di attivazione</a>, <a href="../teoria/regularization.html">Regolarizzazione</a>; ed aggiungere punti nel grafico a
+        destra per vedere come si adatta la rete.<br/>
+        Quando sei pronto a far allenare la rete premi il pulsante
+        <i class="glyphicon glyphicon-play" style="
+        border:  1px solid lightgrey;
+        padding: 4px;
+        border-radius: 2px;
+        "></i>.
+      </p>
+
+      <div style="height:32px;"></div>
         
       <nav id="top-controls" class="navbar navbar-default" style="padding: 15px;">
         <ul class="nav navbar-nav">
@@ -87,7 +113,7 @@
             </div>
           </li>
 
-          <li>
+          <li style="width:102px;">
             <span>Epoche</span><br/>
             <text id="iter-number" style="font-size:1.7em;">000,000</text>
           </li>
@@ -171,7 +197,7 @@
               <td style="border-left: 1px solid #DFDFDF;border-right: 1px solid #DFDFDF;"><br/></td>
             </tr>
           </table>
-          <table id="nnt" style="width:96%; margin-top:24px;">
+          <table id="nnt" style="width:96%; margin-top:8px;">
             <thead>
               <tr></tr>
             </thead>
@@ -180,8 +206,27 @@
             </tbody>
           </table>
         </div>
-        <div style="width:320px;display:inline-block;vertical-align: text-top; margin-top:64px;">
+        <div style="width:320px;display:inline-block;vertical-align: text-top; margin-top:48px;">
+          <div style="text-align:center;">Clicca per aggiungere dei punti</div>
           <canvas id="NPGcanvas" class="act-canvas" width="320" height="320"></canvas>
+          <div class="my-jumbotron">
+            <svg width="150" height="30" id="colormap">
+              <defs>
+                <lineargradient id="gradient" x1="0%" y1="100%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f59322" stop-opacity="1"></stop>
+                  <stop offset="50%" stop-color="#e8eaeb" stop-opacity="1"></stop>
+                  <stop offset="100%" stop-color="#0877bd" stop-opacity="1"></stop>
+                </lineargradient>
+              </defs>
+              <g class="core" transform="translate(3, 0)">
+                <rect width="144" height="10" style="fill: url('#gradient');"></rect>
+              <g class="x axis" transform="translate(0,10)"><g class="tick" transform="translate(0,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="font-size:0.8em; color:#777777; text-anchor: middle;">-1</text></g><g class="tick" transform="translate(72,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="font-size:0.8em; color:#777777; text-anchor: middle;">0</text></g><g class="tick" transform="translate(144,0)" style="opacity: 1;"><line y2="6" x2="0"></line><text dy=".71em" y="9" x="0" style="font-size:0.8em; color:#777777; text-anchor: middle;">1</text></g></g></g>
+            </svg>
+            <br>
+            <div><small>
+              I colori indicano il valore di dati, pesi e <i>bias</i>.
+            </small></div>
+          </div>
         </div>
     </div>
     <!-- container -->
