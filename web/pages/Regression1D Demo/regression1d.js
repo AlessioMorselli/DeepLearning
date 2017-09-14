@@ -348,7 +348,7 @@ function drawOutput() {
   ctx.strokeStyle = 'rgb(0,0,0)';
   ctx.lineWidth = 1;
   for (var i = 0; i < N; i++) {
-      drawCircle(data[i] * ss + WIDTH / 2, -labels[i] * ss + HEIGHT / 2, 4.0);
+      drawCircle(data[i] * ss + WIDTH / 2, -labels[i] * ss + HEIGHT / 2, 3.0);
   }
 }
 

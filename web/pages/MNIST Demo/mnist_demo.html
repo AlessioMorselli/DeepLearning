@@ -19,6 +19,26 @@
   <div class="container">
     <div id="header"><script>$("#header").load("../shared/header.html");</script></div>
 
+    <h1 class="centrato">Riconoscimento cifre</h1>
+    
+    <p class="centrato">
+      In questa demo andremo a vedere il riconoscimento di cifre tramite reti neurali.<br/>
+      La rete che andremo ad utilizzare è già stata allenata con il dataset MNIST, che 
+      consiste in 60000 esempi di caratteri numerici scritti a mano.<br/>
+      Ciascuna cifra è rappresentata da una immagine di 28x28 pixel in scala di grigi.
+    </p>
+    <p class="centrato">
+      La demo presenta due modalità attraverso il quale testare la rete: puoi disegnare una cifra 
+      da 0 a 9 nello spazio qui sotto e vedere come si comporta la rete; oppure puoi utilizzare 
+      il dataset di validazione MNIST, 10000 immagini con il quale si puo valutare l'accuratezza della rete.
+    </p>
+    <p class="centrato">
+      Più sotto è possibile vedere come "ragiona" la rete neurale e le operazioni che vengono 
+      svolte in ogni strato con relativo output.
+    </p>
+
+    <div style="height:32px;"></div>
+
     <div class="row">
 
       <div id="div-control" class="col-xs-12">
