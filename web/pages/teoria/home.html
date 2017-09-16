@@ -113,7 +113,7 @@
       </div>
       <p class="centrato">I neuroni da soli non riescono ovviamente ad imparare. Per fare in modo che una
         rete neurale possa imparare si deve fare in modo di cambiare in modo appropriato i <b>pesi</b> dei
-        collegamenti tra i neuroni e i <b>bias</b>, le costanti tipiche di ciascun neurone. Sono i valori
+        collegamenti tra i neuroni e i <b><i>bias</i></b>, le costanti tipiche di ciascun neurone. Sono i valori
         di questi parametri che differenziano le reti neurali dei due giocatori dell'esempio iniziale, in
         quanto la loro struttura è identica.</p>
       <p class="centrato">Ma come possiamo identificare i valori corretti? Dietro tutto il procedimento vi
@@ -123,7 +123,7 @@
         <b>di costo</b>, che misura quanto la rete si sta comportando bene. Il nostro obiettivo è trovare
         il valore di uscita della rete che minimizza tale funzione. Tuttavia, farlo in maniera analitica,
         svolgendo ovvero tutti i calcoli esatti, risulterebbe troppo pesante, in quanto i parametri di cui
-        dovremmo tenere conto sono davvero tanti (con un bias per ogni neurone e con un peso per ogni
+        dovremmo tenere conto sono davvero tanti (con un <i>bias</i> per ogni neurone e con un peso per ogni
         collegamento tra neuroni si arriva tranquillamente a qualche migliaia di parametri!).
         L'algoritmo che si segue è chiamato <b>algoritmo del gradiente decrescente</b>. Ve lo spiego
         ricorrendo ad un esempio.</p>
@@ -140,11 +140,11 @@
         sorpasserà la buca, allontanandoci dal nostro obiettivo. Ripetendo quindi la sequenza calcolo del
         gradiente - tiro della pallina ci avvicineremo sempre di più alla buca, finché non la raggiungiamo
         (e avremo trovato quindi il minimo della funzione costo!). Il procedimento concettuale è quindi questo.</p>
-      <p class="centrato">Nella pratica, per allenare la rete si prendono una serie di input di allenamento
-        di cui si conosce il valore corretto di output e si danno in pasto alla rete per osservarne il
+      <p class="centrato">Nella pratica, per allenare la rete si prende una serie di input di allenamento
+        di cui si conosce il valore corretto di output e si dà in pasto alla rete per osservarne il
         risultato. Si procede quindi come descritto sopra, calcolando il gradiente del costo e aggiustando
-        ciascuno dei parametri (pesi e bias) per muoverci verso il minimo della funzione costo. Calcolare
-        però il gradiente su ognuno dei possibili input è tuttavia molto dispendioso. Si procede quindi
+        ciascuno dei parametri (pesi e <i>bias</i>) per muoverci verso il minimo della funzione costo. Calcolare
+        però il gradiente su ognuno dei possibili input è molto dispendioso. Si procede quindi
         a calcolare il gradiente su un gruppo di input di allenamento scelti casualmente detto
         <b><i>mini-batch</i></b>. Quindi: scegliamo un <i>mini-batch</i>, alleniamo la rete con quello,
         scegliamo un altro <i>mini-batch</i>, la alleniamo... e così via, finché non finiamo una cosiddetta

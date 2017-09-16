@@ -51,9 +51,10 @@
         stesso modo di prima. Ora potrete modificare i diversi parametri: forma del campo, numero di <i>hidden layer</i>,
         numero di neuroni presenti in ognuno di essi, tasso di apprendimento, <i>batch size</i>,
         parametro di <a href="../toeria/regularization.html">regolarizzazione</a> (se non hai letto l'approfondimento relativo puoi lasciarlo così)
-        e tasso &epsilon;. Quest'ultimo rappresenta la probabilità che l'agente compia un'azione casuale,
-        invece che eseguire quella che gli darebbe una ricompensa più alta  (tutti noi, ogni tanto, facciamo
-        un'azione senza motivo).</p>
+        e tasso di esplorazione &epsilon;. Quest'ultimo rappresenta la probabilità che l'agente compia un'azione casuale,
+        invece che eseguire quella che gli darebbe una ricompensa più alta: infatti, il nostro agente deve imparare
+        quali mosse sono quelle ottimali e, soprattutto in fase di allenamento, deve quindi esplorare nuove azioni
+        che non ha mai compiuto prima.</p>
       <p class="centrato">Una breve spiegazione: di fianco al campo del numero di <i>hidden layer</i>
         vi è un "x2" perché in realtà servono due strati per ogni livello nascosto: uno
         <i>completamente connesso</i> ("fc") e uno con neuroni <i>lineari</i> ("relu") (vedi il capitolo

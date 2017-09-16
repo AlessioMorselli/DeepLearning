@@ -30,8 +30,8 @@
       
       <p class="centrato">Le reti neurali, durante il loro processo di apprendimento, sfruttano, come abbiamo
         visto, la funzione costo per decidere come sistemare i propri parametri, ovvero <i>pesi</i> e <i>bias</i>.
-        Abbiamo visto che c'è anche un grande problema, che è quello dell'
-        <i><a href="overfitting.html">overfitting</a></i>. Sono state sviluppate alcune tecniche che, operando
+        Abbiamo visto che c'è anche un grande problema, che è quello dell'<i><a href="overfitting.html">overfitting</a></i>.
+        Sono state sviluppate alcune tecniche che, operando
         sulla funzione costo, aiutano a ridurre gli effetti del sovraallenamento di una rete neurale.
         Tali tecniche prendono il nome di <b>tecniche di regolarizzazione</b>.</p>
       
@@ -60,8 +60,8 @@
         <li>La tecnica di <b><i>dropout</i></b> invece funziona diversamente, in quanto modifica non la funzione
           di costo della rete, ma la rete stessa. Abbiamo visto il principio di funzionamento di una rete neurale
           e come essa riesca ad allenarsi. Ecco, questa tecnica prevede di applicare il solito procedimento
-          dimezzando prima i neuroni degli <i>hidden layer</i>! Per ogni epoca di allenamento si scelgono
-          (casualmente) la metà dei neuroni da tenere e quella dei neuroni da scartare e si allena la rete così
+          dimezzando prima i neuroni degli <i>hidden layer</i>! Per ogni epoca di allenamento si sceglie
+          (casualmente) quale metà dei neuroni tenere e quale scartare e si allena la rete così
           ottenuta. Si ripete quindi il procedimento, tenendo e scartando neuroni diversi ad ogni epoca:
           una volta che si ritiene che la rete sia pronta, si prende la rete originale e si dimezzano i pesi
           uscenti dai neuroni nascosti: abbiamo ottenuto una rete pronta a svolgere il proprio compito. In poche
