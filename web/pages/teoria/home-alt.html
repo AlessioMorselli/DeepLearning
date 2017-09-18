@@ -13,6 +13,11 @@
     <!-- Common stylesheet -->
     <link rel="stylesheet" href="../css/style.css">
 
+    <style>
+      h3 {
+        margin-top:10px;
+      }
+    </style>
 </head>
 
 <body>
@@ -20,19 +25,68 @@
     <div id="header"><script>$("#header").load("../shared/header.html");</script></div>
       
     <p class="centrato">
-      Qualcosa di scritto per l'introduzione, circa 3-4 righe
+      Le <b>reti neurali artificiali</b> sono dei modelli che simulano il funzionamento dei neuroni nel cervello umano.<br/>
+      La principale caratteristica di una rete neurale è la sua capacità di essere <b>allenata</b>, e di sapersi quindi evolvere per risolvere un certo problema.<br/>
+      Qui di seguito sono presentati alcuni esempi interattivi che fanno uso delle reti neurali artificiali.<br/>
+      Se vuoi imparare di più sull'argomento puoi partire da <a href="basi-deeplearning.html">questa introduzione</a> che espone le basi del deep learning e delle reti neurali artificiali.
     </p>
 
     <div style="height:32px;"></div>
 
     <div class="row my-jumbotron">
         <div class="col-sm-2">
-          <a href="#">
-            <img src="http://www.immersion-3d.com/wp-content/uploads/2015/12/image-placeholder-500x500.jpg" style="width: 90%; padding:8px;">
+          <a href="../MNIST Demo/mnist_demo.html">
+            <img class="img-thumbnail" src="https://raw.githubusercontent.com/GarryMorrison/Feynman-knowledge-engine/master/work-on-images/mnist-100-images.jpg" style="width: 90%; padding:8px;">
           </a>
         </div>
         <div class="col-sm-10">
-          <a href="#"><h3>Titolo della demo</h3></a>
+          <h3><a href="../MNIST Demo/mnist_demo.html">Riconoscimento cifre</a></h3>
+          <p>
+            In questa demo viene affrontato il problema del riconoscimento di cifre scritte a mano.<br/>
+            La rete che viene utilizzata è già stata allenata con il dataset MNIST, un database di 60000 immagini comunemente utilizzato per allenare vari sistemi di riconoscimento immagini.<br/>
+
+          </p>
+          Alcune letture: <a href="funzioni-attivazione.html">funzioni di attivazione</a>, <a href="convoluzione.html">convoluzione</a>
+        </div>
+    </div>
+    
+    <div class="row my-jumbotron">
+        <div class="col-sm-2">
+          <a href="../Regression1D Demo/regression1d.html">
+            <img class="img-thumbnail" src="http://cs.stanford.edu/people/karpathy/convnetjs/regression.png" style="width: 90%; padding:8px;">
+          </a>
+        </div>
+        <div class="col-sm-10">
+          <h3><a href="../Regression1D Demo/regression1d.html">Regressione 1D</a></h3>
+          <p>
+            Questa esempio utilizza le reti neurali per prevedere la coordinata y data quella x.<br/>
+            Hai inoltre la possibilità di vedere come si comporta la rete cambiando alcuni parametri.
+          </p>
+          Alcune letture: <a href="hyper-param.html">parametri secondari</a>, <a href="regularization.html">regolarizzazione</a>
+        </div>
+    </div>
+      
+    <div class="row my-jumbotron">
+        <div class="col-sm-2">
+          <a href="../classify2D/classify2D.html">
+            <img class="img-thumbnail" src="../documentation/classify2d.png" style="width: 90%; padding:8px;">
+          </a>
+        </div>
+        <div class="col-sm-10">
+          <h3><a href="../classify2D/classify2D.html">Classificazione di dati 2D</a></h3>
+          <p>descrizione lunga cica 3 righe della demo</p>
+          Alcune letture: <a>Letture</a>, <a>riguardanti questa</a>, <a>demo con link</a>
+        </div>
+    </div>
+
+    <div class="row my-jumbotron">
+        <div class="col-sm-2">
+          <a href="../reinforcement/reinforcement.html">
+            <img class="img-thumbnail" src="../documentation/reinforcement-l.png" style="width: 90%; padding:8px;">
+          </a>
+        </div>
+        <div class="col-sm-10">
+          <h3><a href="../reinforcement/reinforcement.html">Reinforcement Learning</a></h3>
           <p>descrizione lunga cica 3 righe della demo</p>
           Alcune letture: <a>Letture</a>, <a>riguardanti questa</a>, <a>demo con link</a>
         </div>
@@ -40,31 +94,18 @@
     
     <div class="row my-jumbotron">
         <div class="col-sm-2">
-          <a href="#">
-            <img src="http://www.immersion-3d.com/wp-content/uploads/2015/12/image-placeholder-500x500.jpg" style="width: 90%; padding:8px;">
+          <a href="../reinforcement/breakout.html">
+            <img class="img-thumbnail" src="../documentation/breakout.png" style="width: 90%; padding:8px;">
           </a>
         </div>
         <div class="col-sm-10">
-          <a href="#"><h3>Titolo della demo</h3></a>
-          <p>descrizione lunga cica 3 righe della demo</p>
-          Alcune letture: <a>Letture</a>, <a>riguardanti questa</a>, <a>demo con link</a>
-        </div>
-    </div>
-      
-    <div class="row my-jumbotron">
-        <div class="col-sm-2">
-          <a href="#">
-            <img src="http://www.immersion-3d.com/wp-content/uploads/2015/12/image-placeholder-500x500.jpg" style="width: 90%; padding:8px;">
-          </a>
-        </div>
-        <div class="col-sm-10">
-          <a href="#"><h3>Titolo della demo</h3></a>
+          <h3><a href="../reinforcement/breakout.html">Sfida Breakout</a></h3>
           <p>descrizione lunga cica 3 righe della demo</p>
           Alcune letture: <a>Letture</a>, <a>riguardanti questa</a>, <a>demo con link</a>
         </div>
     </div>
 
-
+    <div style="height:32px;"></div>
   </div> <!-- container -->
 
 </body>
