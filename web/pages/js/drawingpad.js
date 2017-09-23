@@ -36,7 +36,7 @@ drawingpad = {
   }
 }
 
-
+var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 drawingpad.canvas = document.getElementById("drawingpad");
 drawingpad.context = drawingpad.canvas.getContext('2d');
 drawingpad.clear();
@@ -45,7 +45,9 @@ drawingpad.clear();
 drawingpad.canvas.addEventListener( 'mousedown', function(e) {
   drawingpad.onDrawStart();
 
-  drawingpad.lastEvent = e;
+  if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
+  else drawingpad.lastEvent = e;
+
   drawingpad.mouseDown = true;
 }
 , false);
@@ -63,7 +65,8 @@ drawingpad.canvas.addEventListener( 'mousemove', function(e) {
     drawingpad.context.lineCap = 'round';
     drawingpad.context.stroke();
     
-    drawingpad.lastEvent = e;
+    if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
+    else drawingpad.lastEvent = e;
   }
 }
 , false);
@@ -84,7 +87,9 @@ drawingpad.canvas.addEventListener( 'mouseleave', function(e) {
 drawingpad.canvas.addEventListener( 'touchstart', function(e) {
   drawingpad.onDrawStart();
 
-  drawingpad.lastEvent = e;
+  if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
+  else drawingpad.lastEvent = e;
+  
   drawingpad.mouseDown = true;
 }
 , false);
@@ -106,7 +111,8 @@ drawingpad.canvas.addEventListener( 'touchmove', function(e) {
     drawingpad.context.lineCap = 'round';
     drawingpad.context.stroke();
     
-    drawingpad.lastEvent = e;
+    if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
+    else drawingpad.lastEvent = e;
   }
 }, false);
 
