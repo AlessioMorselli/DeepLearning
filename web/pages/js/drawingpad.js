@@ -2,7 +2,7 @@ drawingpad = {
   canvas: undefined,
   context: undefined,
   marker: {width: 28, color: "rgb(0,0,0)"},
-  lastEvent: undefined,
+  lastPos: {x:0, y:0},
   mouseDown: false,
 
   onDrawStart: function() {},
@@ -45,8 +45,7 @@ drawingpad.clear();
 drawingpad.canvas.addEventListener( 'mousedown', function(e) {
   drawingpad.onDrawStart();
 
-  if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
-  else drawingpad.lastEvent = e;
+  drawingpad.lastPos = {x:e.offsetX, y:e.offsetY};
 
   drawingpad.mouseDown = true;
 }
@@ -58,15 +57,14 @@ drawingpad.canvas.addEventListener( 'mousemove', function(e) {
   if(drawingpad.mouseDown){
     drawingpad.context.beginPath();
     
-    drawingpad.context.moveTo(drawingpad.lastEvent.offsetX, drawingpad.lastEvent.offsetY);
+    drawingpad.context.moveTo(drawingpad.lastPos.x, drawingpad.lastPos.y);
     drawingpad.context.lineTo(e.offsetX,e.offsetY);
     drawingpad.context.lineWidth = drawingpad.marker.width;
     drawingpad.context.strokeStyle = drawingpad.marker.color;
     drawingpad.context.lineCap = 'round';
     drawingpad.context.stroke();
     
-    if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
-    else drawingpad.lastEvent = e;
+    drawingpad.lastPos = {x:e.offsetX, y:e.offsetY};
   }
 }
 , false);
@@ -87,8 +85,7 @@ drawingpad.canvas.addEventListener( 'mouseleave', function(e) {
 drawingpad.canvas.addEventListener( 'touchstart', function(e) {
   drawingpad.onDrawStart();
 
-  if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
-  else drawingpad.lastEvent = e;
+  drawingpad.lastPos = {x:e.targetTouches[0].pageX, y:e.targetTouches[0].pageY};
   
   drawingpad.mouseDown = true;
 }
@@ -104,15 +101,14 @@ drawingpad.canvas.addEventListener( 'touchmove', function(e) {
     var offsetLeft = drawingpad.canvas.getBoundingClientRect().left;
     var offsetTop = drawingpad.canvas.getBoundingClientRect().top;
     console.log(offsetLeft+", "+offsetTop);
-    drawingpad.context.moveTo(drawingpad.lastEvent.targetTouches[0].pageX - offsetLeft, drawingpad.lastEvent.targetTouches[0].pageY - offsetTop);
+    drawingpad.context.moveTo(drawingpad.lastPos.x - offsetLeft, drawingpad.lastPos.y - offsetTop);
     drawingpad.context.lineTo(e.targetTouches[0].pageX - offsetLeft, e.targetTouches[0].pageY - offsetTop);
     drawingpad.context.lineWidth = drawingpad.marker.width;
     drawingpad.context.strokeStyle = drawingpad.marker.color;
     drawingpad.context.lineCap = 'round';
     drawingpad.context.stroke();
     
-    if(isFirefox) drawingpad.lastEvent = JSON.parse(JSON.stringify(e));
-    else drawingpad.lastEvent = e;
+    drawingpad.lastPos = {x:e.targetTouches[0].pageX, y:e.targetTouches[0].pageY};
   }
 }, false);
 
