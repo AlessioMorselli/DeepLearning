@@ -5,6 +5,7 @@ var net, trainer;
 var stop = true;
 var nnt = document.getElementById("nnt");
 var epochs = 0;
+var avloss = 0;
 
 var layer_params = [];
 layer_params.push({neurons: 4});
@@ -350,6 +351,10 @@ function drawOutput() {
   for (var i = 0; i < N; i++) {
       drawCircle(data[i] * ss + WIDTH / 2, -labels[i] * ss + HEIGHT / 2, 3.0);
   }
+
+  ctx.fillStyle = "black";
+  ctx.font = "16px Calibri";
+  ctx.fillText("Errore: " + trunc(avloss,7), 20, 20);
 }
 
 function drawArrows(stop) {
@@ -470,4 +475,9 @@ function stopTime() {
 function pad(num, size){
   var s = ('000000000' + num).substr(-size);
   return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function trunc(num, size) {
+  var s = ""+num;
+  return s.substring(0, size);
 }
